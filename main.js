@@ -110,24 +110,7 @@ function traverseToNearbyAvailable({z, y, x}) {
 	return {"z": -1, "y": -1, "x": -1};
 }
 
-function shuffle(array) {
-  var currentIndex = array.length, temporaryValue, randomIndex;
 
-  // While there remain elements to shuffle...
-  while (0 !== currentIndex) {
-
-    // Pick a remaining element...
-    randomIndex = Math.floor(Math.random() * currentIndex);
-    currentIndex -= 1;
-
-    // And swap it with the current element.
-    temporaryValue = array[currentIndex];
-    array[currentIndex] = array[randomIndex];
-    array[randomIndex] = temporaryValue;
-  }
-
-  return array;
-}
 
 function getRandomDirections() {
 	return shuffle([north,south,west,east]);
@@ -306,48 +289,3 @@ function isNavigatableCell(z, y, x) {
 
 //
 // creates an ascii maze from a 2D array (mazeGrid)
-function displayMaze() {
-	console.log("dislaying maze");
-	var asciiMaze = "";
-	for (let level = 0; level < mazeGrid.length; level++) {
-
-		asciiMaze += '<div id="level-' + level + '"><h3>Level #' + level + '</h3>\n';
-		for (let row = 0; row < mazeGrid[level].length; row++) {
-
-			asciiMaze += "<p>";
-			for(let column = 0; column < mazeGrid[level][row].length; column++) {
-
-				switch (mazeGrid[level][row][column]) {
-					case startCell:
-						asciiMaze += "S";
-						break;
-					case finishCell:
-						asciiMaze += "F";
-						break;
-					case emptyCell:
-						asciiMaze += "&#11034;";
-						break;
-					case abovePassthroughCell:
-						asciiMaze += "&uarr;";
-						break;
-					case belowPassthroughCell:
-						asciiMaze += "&darr;";
-						break;
-					case verticalPassthroughCell:
-						asciiMaze += "&varr;";
-						break;
-					case wallCell:
-						asciiMaze += "&#11035;";
-						break;
-					case tempWallCell:
-						asciiMaze += "&#11034;";
-						break;
-				}
-			}
-
-			asciiMaze += "</p>";
-		}
-		asciiMaze += "</div>";
-	}
-	$("#maze-game").html(asciiMaze);
-}
