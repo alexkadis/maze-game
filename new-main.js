@@ -48,15 +48,19 @@ class Maze {
 		this.mazeGrid = tempGrid;
 
 
-		// fill from a starting point
-		this.cellsList.push({
+		// set the starting point
+		this.cellsList = [{ 
 					"z": 0,
 					"y": 0,
-					"x": this.getRandomIntInclusive(0,this.gridWidth - 1)});
+					"x": this.getRandomIntInclusive(0,this.gridWidth - 1)
+		}];
+
+		// console.log(this.cellsList);
+		// this.cellsList.push({ "z": 0, "y": 1, "x": 1});
 		this.fillMaze();
 
 		// Builds the maze
-		console.log(this.cellsList);
+		//console.log(this.cellsList);
 		this.displayMaze();
 
 	}
@@ -66,32 +70,60 @@ class Maze {
 		return Math.floor(Math.random() * (max - min + 1)) + min; //The maximum is inclusive and the minimum is inclusive 
 	}
 
-
 	// carve the path
-	fillMaze() {
+	fillMaze(cellNumber = this.cellsList.length - 1) {
+		// while(this.cellsList.length > 0) {
 
-		var directions = this.getRandomDirections();
-		for (var i = 0; i < directions.length - 1; i++) {
-			var tempNewCell = this.traverseGrid(
-								this.cellsList[this.cellsList.length - 1]["z"],
-								this.cellsList[this.cellsList.length - 1]["y"],
-								this.cellsList[this.cellsList.length - 1]["x"],
-								directions[i]);
-			if (tempNewCell["x"] != -1 ) {
-				this.cellsList.push(tempNewCell);
-				this.addCellToGrid(this.cellsList.length - 1);
+
+		// }
+		console.log("cell: " + cellNumber);
+		// console.log(this.cellsList[cellNumber]["z"]);
+		
+
+		if(typeof this.cellsList[cellNumber] !== "undefined") {
+			// see if the current cell is filled
+
+			var currentCell = {"z": this.cellsList[cellNumber]["z"],
+							"y": this.cellsList[cellNumber]["y"],
+							"x": this.cellsList[cellNumber]["x"]};
+			
+			if (this.isEmptyCell(currentCell)) {
+				console.log("current added");
 			}
+
+			// Go in a random direction
+			var directions = this.getRandomDirections();
+			
+			for (var i = 0; i < directions.length - 1; i++) {
+
+				if(this.isEmptyCell(currentCell, directions[i])) {
+					console.log ("direction added: " + directions[i]);
+					this.fillMaze(currentCell);
+				} else {
+					console.log("not used: " + directions[i]);
+				}
+
+				// var newCell = this.traverseGrid(currentCell, directions[i]);
+				// if (newCell["z"] != -1 ) {
+				// 	this.cellsList.push(newCell);
+				// 	this.addCellToGrid(this.cellsList.length - 1);
+				// 	this.fillMaze(cellNumber);
+				// 	console.log("direction added");
+				// } else { //if (cellNumber != -1) {
+				// 	// backtrace
+				// 	this.fillMaze(cellNumber + 1);
+				// }
+			}
+			console.log(currentCell);
+			//this.cellsList.pop();
 		}
 
-			this.addCellToGrid(0);
-		// while(this.cellsList.length > 0) {
-			
-		// }
+
 	}
 
 	// move a path cell to a grid cell
 	addCellToGrid (cellNumber) {
-		this.mazeGrid[this.cellsList[cellNumber]["z"]][this.cellsList[cellNumber]["y"]][this.cellsList[cellNumber]["x"]]= this.pathCell;
+		this.mazeGrid[this.cellsList[cellNumber]["z"]][this.cellsList[cellNumber]["y"]][this.cellsList[cellNumber]["x"]] = this.pathCell;
 	}
 
 	reverseDirection(direction) {
@@ -123,61 +155,6 @@ class Maze {
 		return this.shuffle([this.north,this.south,this.west,this.east]);
 	}
 
-
-
-	traverseGrid(z, y, x, direction) {
-		switch (direction) {
-			case this.north:
-				if (this.isEmptyCell(z, y - 1, x)) {
-					return {"z": z, "y": (y - 1), "x": x};
-				}
-				break;
-			case this.south:
-				if (this.isEmptyCell(z, y + 1, x)) {
-					return {"z": z, "y": (y + 1), "x": x};
-				}
-				break;
-			case this.west:
-				if (this.isEmptyCell(z, y, x - 1)) {
-					return {"z": z, "y": y, "x": (x - 1)};
-				}
-				break;
-			case this.east:
-				if (this.isEmptyCell(z, y, x + 1)) {
-					return {"z": z, "y": y, "x": (x + 1)};
-				}
-				break;
-			case this.up:
-				// if we're at the top level, loop around
-				if (z == gridLevels - 1) {
-					let tempNewZ = 0;
-				} else {
-					let tempNewZ = z + 1;
-				}
-				if(this.isEmptyCell(tempNewZ, y, x)) {
-					return {"z": tempNewZ, "y": y, "x": x};
-				}
-				break;
-			case this.down:
-				// if we're at the bottom level, loop around
-				if (z == 0) {
-					let tempNewZ = gridLevels - 1;
-				} else {
-					let tempNewZ = z - 1;
-				}
-				if(this.isEmptyCell(tempNewZ, y, x)) {
-					return {"z": tempNewZ, "y": y, "x": x};
-				}
-				break;
-			default:
-				console.log ("not a direction");
-				// incorrect direction, throw error
-				// TODO: need error handling
-		}
-
-		return {"z": -1, "y": -1, "x": -1};
-	}
-
 	shuffle(array) {
 		var currentIndex = array.length, temporaryValue, randomIndex;
 
@@ -193,18 +170,64 @@ class Maze {
 			array[currentIndex] = array[randomIndex];
 			array[randomIndex] = temporaryValue;
 		}
-
 		return array;
 	}
 
-	isEmptyCell(z, y, x, direction) {
-		if (	z >= 0 && z < this.gridLevels 
-			&& 	y >= 0 && y < this.gridHeight 
-			&&  x >= 0 && x < this.gridWidth) {
-			return (this.mazeGrid[z][y][x] == this.emptyCell);
+	isEmptyCell({z, y, x}, direction) {
+		switch (direction) {
+			case this.north:
+				return this.isEmptyCell({"z": z, "y": y - 1, "x": x}, null);
+				break;
+			case this.south:
+				return this.isEmptyCell({"z": z, "y": y + 1, "x": x}, null);
+				break;
+			case this.west:
+				return this.isEmptyCell({"z": z, "y": y, "x": x - 1}, null);
+				break;
+			case this.east:
+				return this.isEmptyCell({"z": z, "y": y, "x": x + 1}, null);
+				break;
+			case this.up:
+				// if we're at the top level, loop around
+				if (z == this.gridLevels - 1) {
+					return this.isEmptyCell({"z": 0, "y": y, "x": x}, null);
+				} else {
+					return this.isEmptyCell({"z": z + 1, "y": y, "x": x}, null);
+				}
+				break;
+			case this.down:
+				// if we're at the bottom level, loop around
+				if (z == 0) {
+					return this.isEmptyCell({"z": this.gridLevels - 1, "y": y, "x": x}, null);
+				} else {
+					return 	this.isEmptyCell({"z": z - 1, "y": y, "x": x}, null);
+				}
+				break;
+			default:
+				if (z >= 0 && z < this.gridLevels 
+				&& 	y >= 0 && y < this.gridHeight 
+				&&  x >= 0 && x < this.gridWidth) {
+					if (this.mazeGrid[z][y][x] == this.emptyCell) {
+						console.log(`pushing: z:${z} y:${y} x:${x}`);
+						this.cellsList.push({"z": z, "y": y, "x": x});
+						this.addCellToGrid(this.cellsList.length - 1);
+						return true;
+					}
+				} else {
+					console.log("grid error");
+				}
 		}
 		return false;
 	}
+
+	// isEmptyCell(z, y, x, direction) {
+	// 	if (	z >= 0 && z < this.gridLevels 
+	// 		&& 	y >= 0 && y < this.gridHeight 
+	// 		&&  x >= 0 && x < this.gridWidth) {
+	// 		return (this.mazeGrid[z][y][x] == this.emptyCell);
+	// 	}
+	// 	return false;
+	// }
 
 	displayMaze() {
 		console.log("dislaying maze");
