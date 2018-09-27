@@ -1,291 +1,236 @@
-const gridWidth = 10;
-const gridHeight = 10;
-const gridLevels = 2;
-
-//  
-// On the grid, a cell can be:
-const emptyCell = "empty";
-const abovePassthroughCell = "passthrough_above";
-const belowPassthroughCell = "passthrough_below";
-const verticalPassthroughCell = "vertical_above_below";
-const wallCell = "wall";
-const tempWallCell = "temporary_wall";
-const startCell = "start";
-const finishCell = "finish";
-
-// Directions
-const north = "North";
-const south = "South";
-const east 	= "East";
-const west 	= "West";
-const up 	= "Up";
-const down 	= "Down";
-
-
-
-// Grid is mazeGrid[level][width][height]
-var mazeGrid = [];
+"use strict";
 
 function main() {
-	buildGrid();
-	buildMaze();
-	displayMaze();
-	console.log(mazeGrid);
-	// console.log(traverseMaze(1,2,0,north));
+	var myMaze = new Maze(5,5,1);
 }
+class Maze {
+	constructor(gridHeight, gridWidth, gridLevels) {
 
-function buildGrid() {
-	// Builds the grid initially all empty
-	console.log("building grid");
-	// mazeGrid = Array(gridLevels).fill(Array(gridWidth).fill(Array(gridHeight).fill(emptyCell)));
-	mazeGrid = new Array(gridLevels); 
- 
-	for(let i = 0; i < gridLevels; i++) {
-		mazeGrid[i] = new Array(gridHeight);
-		for(let j = 0; j < gridHeight; j++) {
-			mazeGrid[i][j] = new Array(gridWidth);
-			mazeGrid[i][j].fill(emptyCell);
-		}
-	}
+		// Builds the grid initially all empty
+		// console.log("building grid");
 
-}
+		this.gridHeight = gridHeight;
+		this.gridWidth = gridWidth;
+		this.gridLevels = gridLevels;
+		
+		// cells
+		this.emptyCell = "empty";
+		this.abovePassthroughCell = "passthrough_above";
+		this.belowPassthroughCell = "passthrough_below";
+		this.verticalPassthroughCell = "passthrough_vertical";
+		this.wallCell = "wall";
+		this.tempWallCell = "temporary_wall";
+		this.startCell = "start";
+		this.finishCell = "finish";
 
-function buildMaze() {
-	// start somewhere on the edge 
-	// [z][y][x]
-	console.log("building maze");
-	let currentZ = 0;
-	let currentY = 0;
-	let currentX = 0;
+		this.cellsList = [];
 
-	let cellsRemaining = gridLevels * gridWidth * gridHeight;
+		// Directions
+		this.north = "North";
+		this.south = "South";
+		this.east  = "East";
+		this.west  = "West";
+		this.up    = "Up";
+		this.down  = "Down";
+	 	
+		// generate the grid
+		this.mazeGrid = this.generateGrid();
 
-	let tempColumn =  getRandomIntInclusive(0,gridWidth - 1);
 
-	// start on the top
-	mazeGrid[0][0][tempColumn] = startCell;
-	currentX = tempColumn;
-	mazeGrid[0][gridHeight - 1 ][tempColumn] = finishCell;
 
-	// cellList = [];
-	// cellsRemaining = 10;
-	// while (cellsRemaining > 0) {
-	// // 	let direc = getRandomDirection();
-	// // 	let directions = traverseMaze(currentZ, currentY, currentX, direc);
-	// // 	if ( directions == {"z": currentZ, "y": currentY, "x": currentX} ) {
-	// // 		directions = traverseMaze(currentZ, currentY, currentX, reverseDirection(direc));
-	// // 		console.log ("reverse");
-	// // 	}
-	// // 	else {
-	// // 		setCellValue(directions, wallCell); 
-	// // 	}
-	// // 	console.log(direc);
-	// // 	console.log(directions);
+		// Builds the maze
+		this.fillMaze();
 
 		
-	// 	cellsRemaining--;
-	// }
-	console.log({"z": currentZ, "y": currentY, "x": currentX});
-	console.log(traverseToNearbyAvailable({"z": currentZ, "y": currentY, "x": currentX}));
+		this.displayMaze();
 
-	// let direc = getRandomDirection();
-	// let directions = traverseMaze(currentZ, currentY, currentX, direc);
-	// let curr = {"z": currentZ, "y": currentY, "x": currentX};
-	// console.log (curr);
-	// console.log(direc);
-	// console.log (directions);
+	}
 
+	fillMaze() {
+		// console.log("filling maze");
 
-}
+		// initialize the cellsList and add the first cell to the list
+		// this.cellsList.push({ "z": 0, "y": 0, "x": random});
+		this.cellsList = [{ 
+			"z": 0,
+			"y": 0,
+			"x": this.getRandomIntInclusive(0,this.gridWidth - 1)
+		}];
 
-function traverseToNearbyAvailable({z, y, x}) {
-	theDirections = getRandomDirections();
-	for (var i = 0; i <= theDirections.length - 1; i++) {
-		theCell = traverseGrid(z, y, x, theDirections[i]);
-		if ( theCell["x"] != -1) {
-			console.log(theDirections[i]);
-			return theCell;
+		while (this.cellsList.length > 0) {
+
+			// index is the newest
+			var index = this.cellsList.length - 1; //getRandomIntInclusive(0, this.cellsList.length);
+			var currentCell = this.cellsList[index];
+			// console.log(currentCell);
+			var directions = this.getRandomDirections();
+
+			for (let i = 0; i < directions.length; i++) {
+				var nextCell = this.directionModifier(this.cellsList[index],directions[i])
+				if (this.isEmptyCell(nextCell)) {
+					// console.log(directions[i]);
+					// we found a workable direction
+					this.mazeGrid[currentCell["z"]][currentCell["y"]][currentCell["x"]] = directions[i];
+					this.mazeGrid[nextCell["z"]][nextCell["y"]][nextCell["x"]] = this.reverseDirection(directions[i]);
+					this.cellsList.push(nextCell);
+					index = null;
+					break;	
+				}
+			}
+			if (index != null)
+				this.cellsList.splice(index,1);
+
+				
 		}
 	}
-	return {"z": -1, "y": -1, "x": -1};
-}
 
-
-
-function getRandomDirections() {
-	return shuffle([north,south,west,east]);
-}
-
-function reverseDirection(direction) {
-	switch (direction) {
-		case north:
-			return south;
-			break;
-		case south:
-			return north;
-			break;
-		case west:
-			return east;
-			break;
-		case east:
-			return west;
-			break;
-		case up:
-			return down;
-			break;
-		case down:
-			return up;
-			break;
-	}
-}
-
-function getRandomIntInclusive(min, max) {
-	min = Math.ceil(min);
-	max = Math.floor(max);
-	return Math.floor(Math.random() * (max - min + 1)) + min; //The maximum is inclusive and the minimum is inclusive 
-}
-
-
-// see if we can build a maze there
-function isEmptyCell(z, y, x, direction) {
-	if (	z >= 0 && z < gridLevels 
-		&& 	y >= 0 && y < gridHeight 
-		&&  x >= 0 && x < gridWidth) {
-		return (mazeGrid[z][y][x] == emptyCell);
-	}
-	return false;
-}
-
-
-function traverseGrid(z, y, x, direction) {
-	switch (direction) {
-		case north:
-			if (isEmptyCell(z, y - 1, x)) {
-				return {"z": z, "y": (y - 1), "x": x};
-			}
-			break;
-		case south:
-			if (isEmptyCell(z, y + 1, x)) {
-				return {"z": z, "y": (y + 1), "x": x};
-			}
-			break;
-		case west:
-			if (isEmptyCell(z, y, x - 1)) {
-				return {"z": z, "y": y, "x": (x - 1)};
-			}
-			break;
-		case east:
-			if (isEmptyCell(z, y, x + 1)) {
-				return {"z": z, "y": y, "x": (x + 1)};
-			}
-			break;
-		case up:
-			// if we're at the top level, loop around
-			if (z == gridLevels - 1) {
-				let tempNewZ = 0;
-			} else {
-				let tempNewZ = z + 1;
-			}
-			if(isEmptyCell(tempNewZ, y, x)) {
-				return {"z": tempNewZ, "y": y, "x": x};
-			}
-			break;
-		case down:
-			// if we're at the bottom level, loop around
-			if (z == 0) {
-				let tempNewZ = gridLevels - 1;
-			} else {
-				let tempNewZ = z - 1;
-			}
-			if(isEmptyCell(tempNewZ, y, x)) {
-				return {"z": tempNewZ, "y": y, "x": x};
-			}
-			break;
-		default:
-			console.log ("not a direction");
-			// incorrect direction, throw error
-			// TODO: need error handling
+	copyCellToGrid (cellNumber) {
+		this.mazeGrid[this.cellsList[cellNumber]["z"]][this.cellsList[cellNumber]["y"]][this.cellsList[cellNumber]["x"]] = this.pathCell;
 	}
 
-	return {"z": -1, "y": -1, "x": -1};
-}
-
-// checks to see if we can move in a direction in the maze:
-// if we can, it returns an array with the new cell location
-// else it returns an array with the same location
-
-function traverseMaze(z, y, x, direction) {
-
-	// set the default return values
-	let newZ = z;
-	let newX = x;
-	let newY = y;
-
-	switch (direction) {
-		case north:
-			if (y != 0 && isNavigatableCell(z, y - 1, x)) {
-				newY = y - 1;
-			} // else we keep it how it is
-			break;
-		case south:
-			if (y != gridHeight - 1 && isNavigatableCell(z, y + 1, x)) {
-				newY = y + 1; 
-			} // else we're at the bottom of the grid, stay at the same place
-			break;
-		case west:
-			if (x != 0 && isNavigatableCell(z, y, x - 1)) {
-				newX = x - 1;
-			} // else we keep it how it is
-			break;
-		case east:
-			if (x != gridWidth - 1 && isNavigatableCell(z, y, x + 1)) {
-				newX = x + 1; 
-			} // else we're at the right edge of the grid, stay at the same place
-			break;
-		case up:
-			// if we're at the top level, loop around
-			if (z == gridLevels - 1) {
-				let tempNewZ = 0;
-			} else {
-				let tempNewZ = z + 1;
+	generateGrid() {
+		var tempGrid = new Array(this.gridLevels);
+		for(let i = 0; i < this.gridLevels; i++) {
+			tempGrid[i] = new Array(this.gridHeight);
+			for(let j = 0; j < this.gridHeight; j++) {
+				tempGrid[i][j] = new Array(this.gridWidth);
+				tempGrid[i][j].fill(this.emptyCell);
 			}
-			if(isNavigatableCell(tempNewZ, y, x)) {
-				newZ = tempNewZ;
-			} // else we keep it how it is
-			break;
-		case down:
-			// if we're at the bottom level, loop around
-			if (z == 0) {
-				let tempNewZ = gridLevels - 1;
-			} else {
-				let tempNewZ = z - 1;
-			}
-			if(isNavigatableCell(tempNewZ, y, x)) {
-				newZ = tempNewZ;
-			} // else we keep it how it is
-			break;
-		default:
-			console.log ("not a direction");
-			// incorrect direction, throw error
-			// TODO: need error handling
+		}
+		return tempGrid;
 	}
 
-	return {"z": newZ, "y": newY, "x": newX};
-}
-
-// see if a user can navigate there
-function isNavigatableCell(z, y, x) {
-	if (	z >= 0 && z <= gridLevels 
-		&& 	y >= 0 && y <= gridHeight 
-		&&  x >= 0 && x <= gridWidth) {
-		return (mazeGrid[z][y][x] == emptyCell
-			||  mazeGrid[z][y][x] == abovePassthroughCell
-			||  mazeGrid[z][y][x] == belowPassthroughCell
-			||  mazeGrid[z][y][x] == verticalPassthroughCell);
-
+	isEmptyCell({"z": z, "y": y, "x": x}) {
+		return (z >= 0 && z < this.gridLevels 
+			&& 	y >= 0 && y < this.gridHeight 
+			&&  x >= 0 && x < this.gridWidth
+			&& this.mazeGrid[z][y][x] == this.emptyCell);
 	}
-	return false;
-}
+	
+	directionModifier({"z": z, "y": y, "x": x}, direction) {
+		switch (direction) {
+			case this.north:
+				return {"z": z, "y": y - 1, "x": x};
+				break;
+			case this.south:
+				return {"z": z, "y": y + 1, "x": x};
+				break;
+			case this.west:
+				return {"z": z, "y": y, "x": x - 1};
+				break;
+			case this.east:
+				return {"z": z, "y": y, "x": x + 1};
+				break;
+			case this.up:
+				// if we're at the top level, loop around
+				if (z == this.gridLevels - 1) {
+					return {"z": 0, "y": y, "x": x};
+				} else {
+					return {"z": z + 1, "y": y, "x": x};
+				}
+				break;
+			case this.down:
+				// if we're at the bottom level, loop around
+				if (z == 0) {
+					return {"z": this.gridLevels - 1, "y": y, "x": x};
+				} else {
+					return {"z": z - 1, "y": y, "x": x};
+				}
+				break;
+		}
+		return {"z": z, "y": y, "x": x}; 
+	}
 
-//
-// creates an ascii maze from a 2D array (mazeGrid)
+	// start utility functions
+
+	getRandomDirections() {
+		return this.shuffle([this.north,this.south,this.west,this.east]);
+	}
+
+	reverseDirection(direction) {
+		switch (direction) {
+			case this.north:
+				return this.south;
+				break;
+			case this.south:
+				return this.north;
+				break;
+			case this.west:
+				return this.east;
+				break;
+			case this.east:
+				return this.west;
+				break;
+			case this.up:
+				return this.down;
+				break;
+			case this.down:
+				return this.up;
+				break;
+			default:
+				return undefined;
+		}
+	}
+	getRandomIntInclusive(min, max) {
+		min = Math.ceil(min);
+		max = Math.floor(max);
+		return Math.floor(Math.random() * (max - min + 1)) + min; //The maximum is inclusive and the minimum is inclusive 
+	}
+
+	shuffle(array) {
+		var currentIndex = array.length, temporaryValue, randomIndex;
+
+		// While there remain elements to shuffle...
+		while (0 !== currentIndex) {
+
+			// Pick a remaining element...
+			randomIndex = Math.floor(Math.random() * currentIndex);
+			currentIndex -= 1;
+
+			// And swap it with the current element.
+			temporaryValue = array[currentIndex];
+			array[currentIndex] = array[randomIndex];
+			array[randomIndex] = temporaryValue;
+		}
+		return array;
+	}
+
+	// end utility functions
+
+	// view functions
+	displayMaze() {
+		// console.log("dislaying maze grid:");
+		console.log(this.mazeGrid);
+		var asciiMaze = "";
+		for (let level = 0; level < this.mazeGrid.length; level++) {
+
+			asciiMaze += '<div id="level-' + level + '"><h3>Level #' + level + '</h3>\n';
+			for (let row = 0; row < this.mazeGrid[level].length; row++) {
+				
+				var row1 = "<div class='row1'>";
+				var row2 = "<div class='row2'>";
+				for(let column = 0; column < this.mazeGrid[level][row].length; column++) {
+					
+					// asciiMaze += this.mazeGrid[level][row][column];
+					
+					row1 += "<div class='cell empty'>&nbsp;</div>";
+					if (this.mazeGrid[level][row][column] == this.east)
+						row1 += "<div class='cell empty'>&nbsp;</div>";
+					else
+						row1 += "<div class='cell wall'>&nbsp;</div>";
+				
+					if (this.mazeGrid[level][row][column] == this.south)
+						row2 += "<div class='cell empty'>&nbsp;</div>";
+					else
+						row2 += "<div class='cell wall'>&nbsp;</div>";
+					row2 += "<div class='cell wall'>&nbsp;</div>";
+				}
+				asciiMaze += row1 +"</div>" +row2 + "</div>";
+				// asciiMaze += "</div>";
+			}
+			asciiMaze += "</div>";
+		}
+		$("#maze-game").html(asciiMaze);
+	}
+	// end view functions
+}
