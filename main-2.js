@@ -76,7 +76,7 @@ class Maze {
 
 
 		// }
-		console.log("cell: " + cellNumber);
+		//console.log("cell: " + cellNumber);
 		// console.log(this.cellsList[cellNumber]["z"]);
 		
 
@@ -98,27 +98,29 @@ class Maze {
 
 				if(this.isEmptyCell(currentCell, directions[i])) {
 					console.log ("direction added: " + directions[i]);
-					this.fillMaze(currentCell);
+					break;
 				} else {
 					console.log("not used: " + directions[i]);
 				}
-
-				// var newCell = this.traverseGrid(currentCell, directions[i]);
-				// if (newCell["z"] != -1 ) {
-				// 	this.cellsList.push(newCell);
-				// 	this.addCellToGrid(this.cellsList.length - 1);
-				// 	this.fillMaze(cellNumber);
-				// 	console.log("direction added");
-				// } else { //if (cellNumber != -1) {
-				// 	// backtrace
-				// 	this.fillMaze(cellNumber + 1);
-				// }
 			}
-			console.log(currentCell);
+			console.log(this.cellsList[cellNumber + 1]);
+			if (this.fillMaze(this.cellsList[cellNumber + 1])) {
+				console.log("going to next");
+			}
+			return true;
+			// var newCell = this.traverseGrid(currentCell, directions[i]);
+			// if (newCell["z"] != -1 ) {
+			// 	this.cellsList.push(newCell);
+			// 	this.addCellToGrid(this.cellsList.length - 1);
+			// 	this.fillMaze(cellNumber);
+			// 	console.log("direction added");
+			// } else { //if (cellNumber != -1) {
+			// 	// backtrace
+			// 	this.fillMaze(cellNumber + 1);
+			// }
+
 			//this.cellsList.pop();
 		}
-
-
 	}
 
 	// move a path cell to a grid cell
@@ -149,6 +151,10 @@ class Maze {
 			default:
 				return undefined;
 		}
+	}
+
+	getRandomDirection() {
+		return getRandomDirections[0];
 	}
 
 	getRandomDirections() {

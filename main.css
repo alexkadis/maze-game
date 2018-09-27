@@ -1,7 +1,20 @@
 
-div#maze-game {
-	font-size: 200%; 
-	font-family: monospace;
-	padding: 0;
-	line-height: 0;
+#maze-game {
+	width: 500px;
+	display: block;
+}
+.row {
+	display: block;
+}
+.cell {
+	width: 20px;
+	height: 20px;
+	display: inline-block;
+	border: 1px solid grey;
+}
+.wall {
+	background: black;
+}
+.empty {
+	background: white;
 }

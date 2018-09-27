@@ -89,7 +89,7 @@ Maze = (function() {
     list = Maze.List.slice(0);
     i = list.length - 1;
     while (i > 0) {
-      j = this.rand(i + 1);
+      j = i; //this.rand(i + 1);
       _ref = [list[j], list[i]], list[i] = _ref[0], list[j] = _ref[1];
       i--;
     }
@@ -119,19 +119,32 @@ Maze = (function() {
         html += "<div class='w'></div>";
       }
       html += "</div>\n";
+      console.log(this.grid);
       for (y = 0, _ref3 = this.height; 0 <= _ref3 ? y < _ref3 : y > _ref3; 0 <= _ref3 ? y++ : y--) {
-        className = this.isWest(0, y, z) ? "b" : "w";
-        row1 = "<div class='r'><div class='" + className + "'></div>";
-        row2 = "<div class='r'><div class='w'></div>";
+        // className = this.isWest(0, y, z) ? "b" : "w";
+        // row1 = "<div class='r'><div class='" + className + "'></div>";
+        // row2 = "<div class='r'><div class='w'></div>";
+        row1 = "<div class='r'>";
+        row2 = "<div class='r'>";
         for (x = 0, _ref4 = this.width; 0 <= _ref4 ? x < _ref4 : x > _ref4; 0 <= _ref4 ? x++ : x--) {
           eastClass = this.isEast(x, y, z) ? "b" : "w";
           southClass = this.isSouth(x, y, z) ? "b" : "w";
-          cell = "<div class='b'>";
-          cell += "<div class='" + (this.isUp(x, y, z) ? 'u' : 'h') + "'></div>";
-          cell += "<div class='" + (this.isDown(x, y, z) ? 'd' : 'h') + "'></div>";
+          
+          if (this.isEast(x, y, z))
+            eee = "E";
+          else
+            eee = "e";
+          if (this.isSouth(x, y, z))
+            sss = "S";
+          else
+            sss = "s";
+
+          cell = "<div class='b'>"; 
+          // cell += "<div class='" + (this.isUp(x, y, z) ? 'u' : 'h') + "'></div>";
+          // cell += "<div class='" + (this.isDown(x, y, z) ? 'd' : 'h') + "'></div>";
           cell += "</div>";
-          row1 += "" + cell + "<div class='" + eastClass + "'></div>";
-          row2 += "<div class='" + southClass + "'></div><div class='w'></div>";
+          row1 += "" + cell + "<div class='" + eastClass + "'>" + ""  + "</div>";
+          row2 += "<div class='" + southClass + "'>"+ "" +"</div><div class='w'></div>";
         }
         html += row1 + "</div>\n" + row2 + "</div>\n";
       }
