@@ -60,9 +60,44 @@ Maze = (function() {
         cells.splice(index, 1);
       }
     }
-    this.grid[0][0][0] |= Maze.W;
+    
+    if(typeof (this.grid[0]) !== 'undefined')
+    {
+      this.grid[0][0][0] |= Maze.W;
+    
     this.grid[this.depth - 1][this.height - 1][this.width - 1] |= Maze.E;
+    }
+    console.log(this.grid);
+    console.log(this.loopThrough());
   }
+
+  Maze.prototype.loopThrough = function() {
+    let newGrid = new Array();
+    for (let n = 0; n < this.grid.length; n++) {
+      newGrid[n] = new Array();
+      for (let i = 0; i < this.grid[n].length; i++) {
+        newGrid[n][i] = new Array();
+        for (let j = 0; j < this.grid[n][i].length; j++) {
+          newGrid[n][i][j] = this.translate(this.grid[0][i][j]);
+        }
+      }
+    }
+    return newGrid[0];
+  };
+  Maze.prototype.translate = function(num) {
+
+    if (String(num & Maze.N) == Maze.N)
+      return "North";
+    if (String(num & Maze.S) == Maze.S)
+      return "South";
+    if (String(num & Maze.E) == Maze.E)
+      return "East";
+    if (String(num & Maze.W) == Maze.W)
+      return "West";
+    else
+      return "ERR" + num;
+  };
+
   Maze.prototype.isNorth = function(x, y, z) {
     return (this.grid[z][y][x] & Maze.N) === Maze.N;
   };
@@ -119,25 +154,41 @@ Maze = (function() {
         html += "<div class='w'></div>";
       }
       html += "</div>\n";
-      console.log(this.grid);
+      // console.log(this.grid);
+      
+      // this.grid = [[[Maze.S, Maze.S, Maze.W, Maze.S, Maze.S],
+      // [Maze.N, Maze.N, Maze.S, Maze.N, Maze.N],
+      // [Maze.N, Maze.S, Maze.N, Maze.S, Maze.S],
+      // [Maze.N, Maze.N, Maze.N, Maze.N, Maze.N],
+      // [Maze.N, Maze.N, Maze.N, Maze.E, Maze.E]]];
+      
+      
+      
+      cellList = [];
+
       for (y = 0, _ref3 = this.height; 0 <= _ref3 ? y < _ref3 : y > _ref3; 0 <= _ref3 ? y++ : y--) {
-        // className = this.isWest(0, y, z) ? "b" : "w";
-        // row1 = "<div class='r'><div class='" + className + "'></div>";
-        // row2 = "<div class='r'><div class='w'></div>";
-        row1 = "<div class='r'>";
-        row2 = "<div class='r'>";
+        className = this.isWest(0, y, z) ? "b" : "w";
+        row1 = "<div class='r'><div class='" + className + "'></div>";
+        row2 = "<div class='r'><div class='w'></div>";
+        // row1 = "<div class='r'>";
+        // row2 = "<div class='r'>";
+        cellList[y] = new Array();
+        
+        
         for (x = 0, _ref4 = this.width; 0 <= _ref4 ? x < _ref4 : x > _ref4; 0 <= _ref4 ? x++ : x--) {
           eastClass = this.isEast(x, y, z) ? "b" : "w";
           southClass = this.isSouth(x, y, z) ? "b" : "w";
           
-          if (this.isEast(x, y, z))
-            eee = "E";
-          else
-            eee = "e";
-          if (this.isSouth(x, y, z))
-            sss = "S";
-          else
-            sss = "s";
+          
+          if(this.isEast(x, y, z))
+            cellList[y][x] = "East";
+          if(this.isWest(x, y, z))
+            cellList[y][x] = "West";
+          if(this.isNorth(x, y, z))
+            cellList[y][x] = "North";
+          if(this.isSouth(x, y, z))
+            cellList[y][x] = "South";
+
 
           cell = "<div class='b'>"; 
           // cell += "<div class='" + (this.isUp(x, y, z) ? 'u' : 'h') + "'></div>";
@@ -145,9 +196,12 @@ Maze = (function() {
           cell += "</div>";
           row1 += "" + cell + "<div class='" + eastClass + "'>" + ""  + "</div>";
           row2 += "<div class='" + southClass + "'>"+ "" +"</div><div class='w'></div>";
+
         }
         html += row1 + "</div>\n" + row2 + "</div>\n";
       }
+
+      console.log(cellList);
       html += "\n</div>\n";
     }
     return html;

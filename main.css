@@ -1,4 +1,4 @@
-
+/* 
 #maze-game {
 	width: 500px;
 	display: block;
@@ -17,4 +17,35 @@
 }
 .empty {
 	background: white;
-}
+} */
+
+
+h1, p {
+	color: #777;
+	font-family: sans-serif;
+  }
+
+  .footer {
+	border-top: 1px solid #ccc;
+	margin-top: 20px;
+	font-size: 80%;
+  }
+
+  .blockMaze .b,
+  .blockMaze .w {
+	display: inline-block;
+	width: 20px;
+	height: 20px;
+  }
+
+  .blockMaze .u,
+  .blockMaze .d,
+  .blockMaze .h {
+	width: 20px;
+	height: 10px;
+  }
+
+  .blockMaze .b { background: white; border: 1px solid #ddd; }
+  .blockMaze .w { background: #777; border: 1px solid #aaa; }
+  .blockMaze .u { background: #ff7; }
+  .blockMaze .d { background: #7ff; }

@@ -119,11 +119,25 @@ Maze = (function() {
         html += "<div class='w'></div>";
       }
       html += "</div>\n";
+      cellList = [];
       for (y = 0, _ref3 = this.height; 0 <= _ref3 ? y < _ref3 : y > _ref3; 0 <= _ref3 ? y++ : y--) {
         className = this.isWest(0, y, z) ? "b" : "w";
         row1 = "<div class='r'><div class='" + className + "'></div>";
         row2 = "<div class='r'><div class='w'></div>";
+        console.log("APPLE");
+
         for (x = 0, _ref4 = this.width; 0 <= _ref4 ? x < _ref4 : x > _ref4; 0 <= _ref4 ? x++ : x--) {
+          console.log(this.isEast(x, y, z));
+          if(this.isEast(x, y, z))
+            cellList[y][x] = "East";
+          if(this.isWest(x, y, z))
+            cellList[y][x] = "West";
+          if(this.isNorth(x, y, z))
+            cellList[y][x] = "North";
+          if(this.isSouth(x, y, z))
+            cellList[y][x] = "South";
+
+
           eastClass = this.isEast(x, y, z) ? "b" : "w";
           southClass = this.isSouth(x, y, z) ? "b" : "w";
           cell = "<div class='b'>";
@@ -135,6 +149,7 @@ Maze = (function() {
         }
         html += row1 + "</div>\n" + row2 + "</div>\n";
       }
+        console.log(cellList);
       html += "\n</div>\n";
     }
     return html;
