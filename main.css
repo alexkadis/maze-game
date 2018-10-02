@@ -48,6 +48,23 @@ h1, p {
 	height: 10px;
 } */
 
+.blockMaze .rotate90 {
+	-ms-transform: rotate(90deg); /* IE 9 */
+    -webkit-transform: rotate(90deg); /* Safari */
+	transform: rotate(90deg);
+}
+
+.blockMaze .rotate180 {
+	-ms-transform: rotate(180deg); /* IE 9 */
+    -webkit-transform: rotate(180deg); /* Safari */
+	transform: rotate(180deg);
+}
+
+.blockMaze .rotate270 {
+	-ms-transform: rotate(270deg); /* IE 9 */
+    -webkit-transform: rotate(270deg); /* Safari */
+	transform: rotate(270deg);
+}
 
 .blockMaze {
 	border: 2px solid black;

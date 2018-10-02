@@ -1,10 +1,14 @@
 "use strict";
 
 function main() {
+
 	var myMaze = new Maze(5,5,1);
 }
 class Maze {
 	constructor(gridHeight, gridWidth, gridLevels) {
+
+		// clear previous maze:
+		$("#maze-game").html("");
 
 		// Builds the grid initially all empty
 		// console.log("building grid");
@@ -45,7 +49,7 @@ class Maze {
 		this.displayMaze();
 	}
 
-	async fillMaze() {
+	fillMaze() {
 		// console.log("filling maze");
 
 		// initialize the cellsList and add the first cell to the list
@@ -87,7 +91,7 @@ class Maze {
 			}
 			
 			this.displayMaze();
-			await this.sleep(800);
+			// await this.sleep(500);
 		} 
 	}
 	
@@ -229,6 +233,7 @@ class Maze {
 	}
 	
 	turnDirection(direction1, direction2) {
+		// console.log(`direction1: ${direction1}, direction2: ${direction2}`);
 			if ((direction1 == this.north && direction2 == this.east) 
 			|| (direction1 == this.east && direction2 == this.south)
 			|| (direction1 == this.south && direction2 == this.west)
@@ -238,14 +243,51 @@ class Maze {
 			|| (direction1 == this.west && direction2 == this.south)
 			|| (direction1 == this.south && direction2 == this.east)
 			|| (direction1 == this.east && direction2 == this.north))
-				return left;
+				return "left";
 			else
 				return "straight";
 	}
 
-	borderPlacement(cell) {
-		var direction = cell;
-		var turn = this.turnDirection(cell);
+	arrowCorners(turn, direction) {
+		// console.log(turn);
+		if (direction == this.north) {
+			if (turn == "right") {
+				return "'>&#8625;";
+			} else if (turn == "left") {
+				return "'>&#8624;";
+			} else {
+				return "'>&#8593;";
+			}
+		} else if (direction == this.east) {
+			if (turn == "right") {
+				return " rotate90'>&#8625;";
+			} else if (turn == "left") {
+				return " rotate90'>&#8624;";
+			} else {
+				return "'>&#8594;";
+			}
+		} else if (direction == this.south) {
+			if (turn == "right") {
+				return " rotate180'>&#8625;";
+			} else if (turn == "left") {
+				return " rotate180'>&#8624;";
+			} else {
+				return "'>&#8595;";
+			}
+		}  else if (direction == this.west) {
+			if (turn == "right") {
+				return " rotate270'>&#8625;";
+			} else if (turn == "left") {
+				return " rotate270'>&#8624;";
+			} else {
+				return "'>&#8592;";
+			}
+		} else {
+			return "'>E";
+		}
+	}
+	borderPlacement(turn, direction) {
+		// console.log(turn);
 		if (direction == this.north) {
 			if (turn == "right") {
 				return "top left";
@@ -344,15 +386,15 @@ class Maze {
 					
 					// if(this.isTurn((this.mazeGrid[level][row][column - 1], this.mazeGrid[level][row][column])))
 						// console.log ("TURN: " + this.mazeGrid[level][row][column] + " to " + this.mazeGrid[level][row][column + 1]);
+					var turn = this.turnDirection(this.mazeGrid[level][row][column], this.mazeGrid[level][row][column + 1]);
+					html += "<div class='b " + this.borderPlacement(turn, this.mazeGrid[level][row][column]); 
+					// + this.arrow(this.mazeGrid[level][row][column]); 
+					html += this.arrowCorners(turn, this.mazeGrid[level][row][column]);
 
-					var cell = "<div class='b " + this.borderPlacement(this.mazeGrid[level][row][column]) + " blue'>" + this.arrow(this.mazeGrid[level][row][column]); 
 					
-
-					
-					// cell += "<div class='" + upClass + "'></div>";
-					// cell += "<div class='" + downClass + "'></div>";
-					cell += "</div>";
-					html += cell;
+					// html += "<div class='" + upClass + "'></div>";
+					// html += "<div class='" + downClass + "'></div>";
+					html += "</div>";
 
 				}
 				html += "</div>"; 
