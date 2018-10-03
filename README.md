@@ -19,3 +19,17 @@ https://github.com/airbnb/javascript
 4. Keep going until you can't move in any direction
 5. Backtrack until you can go another direction
 6. Repeat 2-4 until you've filled the entire maze (number of cells left is 0)
+
+##Algorithm
+Cells have all directions (north, east, south, west, up, down) which refer to different cells or "wall" 
+- Edges are `wall`
+
+###When you loop:
+If it's an empty cell, instead of cardinal direction, it'll be a cell reference
+
+1. new cell's relative direction refers to this cell
+2. this cell's relative direction refers to the new cell. If it's not an empty cell, the direction will be `wall`
+
+### Display
+1. Loop through the grid (z, y, x)
+2. If a direction is a wall, set that border wall (top border, east border, south border, west border)
