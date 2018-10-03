@@ -1,12 +1,48 @@
+var currentLayer : number;
+var availableLayers : number;
+
 function main() {
-	let layers : number = Number($("#layers").find(":selected").val());
-	let myMaze = new Maze(layers, 10, 10);
+	currentLayer = 0;
+	availableLayers = Number($("#layers").find(":selected").val());
+
+	let myMaze = new Maze(availableLayers, 5, 5);
 	myMaze.fillMaze();
 	myMaze.displayMaze();
+	showLayerHideOthers(currentLayer);
+}
+
+function showLayerHideOthers(layerChoice : number) {
+	if (availableLayers > 1) {
+		for(let layer = 0; layer < availableLayers; layer++) {
+			let layerId :string = `#layer${layer}`;
+			if (layer == layerChoice) {
+				$(layerId).show();
+			} else {
+				$(layerId).hide();
+			}
+		}
+	}
+}
+
+function goUp() {
+	if(currentLayer < availableLayers - 1) {
+		currentLayer++;
+	} else {
+		currentLayer = 0;
+	}
+	showLayerHideOthers(currentLayer);
+}
+function goDown() {
+	if(currentLayer == 0) {
+		currentLayer = availableLayers - 1;
+	} else {
+		
+	}
+	showLayerHideOthers(currentLayer);
 }
 
 class Maze {
-	GridLevels: number;
+	GridLayers: number;
 	GridWidth: number;
 	GridHeight: number;
 	MazeGrid: cell[][][];
@@ -20,8 +56,8 @@ class Maze {
 	up: string;
 	down: string;
 	
-	constructor (public gridLevels : number, public gridWidth : number, public gridHeight : number) {
-		this.GridLevels	= gridLevels;
+	constructor (public gridLayers : number, public gridWidth : number, public gridHeight : number) {
+		this.GridLayers	= gridLayers;
 		this.GridWidth	= gridWidth;
 		this.GridHeight	= gridHeight;
 		
@@ -43,8 +79,8 @@ class Maze {
 	}
 
 	generateGrid() {
-		let tempGrid : any[] = new Array(this.GridLevels);
-		for(let i = 0; i < this.GridLevels; i++) {
+		let tempGrid : any[] = new Array(this.GridLayers);
+		for(let i = 0; i < this.GridLayers; i++) {
 			tempGrid[i] = new Array(this.GridHeight);
 			for(let j = 0; j < this.GridHeight; j++) {
 				tempGrid[i][j] = new Array(this.GridWidth);
@@ -162,7 +198,7 @@ class Maze {
 	}
 
 	isEmptyCell(z : number, y : number, x : number) {
-		if (z >= 0 && z < this.gridLevels 
+		if (z >= 0 && z < this.gridLayers 
 			&& 	y >= 0 && y < this.gridHeight 
 			&&  x >= 0 && x < this.gridWidth) {
 				if (this.MazeGrid[z][y][x] === null || this.MazeGrid[z][y][x] === undefined)
@@ -182,15 +218,15 @@ class Maze {
 			case this.west:
 				return this.createCell(cell.Z, cell.Y, cell.X - 1);
 			case this.up:
-				// if we're at the top level, loop around
-				if (cell.Z == this.gridLevels - 1)
+				// if we're at the top layer, loop around
+				if (cell.Z == this.gridLayers - 1)
 					return this.createCell(0, cell.Y, cell.X);
 				else
 					return this.createCell(cell.Z + 1, cell.Y, cell.X);
 			case this.down:
-				// if we're at the bottom level, loop around
+				// if we're at the bottom layer, loop around
 				if (cell.Z == 0)
-					return this.createCell(this.GridLevels - 1, cell.Y, cell.X);
+					return this.createCell(this.GridLayers - 1, cell.Y, cell.X);
 				else
 					return this.createCell(cell.Z - 1, cell.Y, cell.X);
 		}
@@ -215,6 +251,7 @@ class Maze {
 	}
 
 	getClassesFromCell(cell : cell) {
+		
 		let classes : string = "";
 
 		if (cell.North == this.WallCell.South)
@@ -225,27 +262,52 @@ class Maze {
 			classes += " bottom ";
 		if (cell.West == this.WallCell.East)
 			classes += " left ";
+		if (cell.Up != this.WallCell.Down)
+			classes += " up ";
+		if (cell.Down != this.WallCell.Up)
+			classes += " down ";
+	
 		return classes;
+	}
+
+	getNameFromLayer(layer : number) {
+		switch(layer) {
+			case 0:
+				return "winter";
+			case 1:
+				return "spring";
+			case 2:
+				return "summer";
+			case 3:
+				return "fall";
+			default:
+				return "";
+		}
 	}
 
 	displayMaze () {
 		let html : string = "";
 		
-		for (let level = 0; level < this.MazeGrid.length; level++) {
-			html += '<table id="level-' + level + '"><h3>Level #' + level + '</h3>\n';
+		for (let layer = 0; layer < this.MazeGrid.length; layer++) {
+			let layerName : string = this.getNameFromLayer(layer);
 
-			for (let row = 0; row < this.MazeGrid[level].length; row++) {
+			html += `<div id="layer${layer}" class="${layerName}">`;
+			html += `<h3>Layer # ${layer}</h3>`;
+			html += `<table id="layer${layer}-table class="${layerName}">`;
+
+			for (let row = 0; row < this.MazeGrid[layer].length; row++) {
 				html += "<tr class='r'>";
 
 				for(let column = 0; column < this.gridWidth; column++) {
-					let classes : string = this.getClassesFromCell(this.MazeGrid[level][row][column]);
-					html += `<td class="b ${classes}">&nbsp;`;
+					let classes : string = this.getClassesFromCell(this.MazeGrid[layer][row][column]);
+					html += `<td class="b ${classes} ${layerName}">&nbsp;`;
 					html += "</td>";
 
 				}
 				html += "</tr> <!-- end row -->\n"; 
 			}
 			html += "</table>";
+			html += "</div>";
 		}
 		$("#maze-game").html(html);
 

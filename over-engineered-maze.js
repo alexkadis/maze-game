@@ -1,15 +1,49 @@
+var currentLayer;
+var availableLayers;
 function main() {
-    var layers = Number($("#layers").find(":selected").val());
-    var myMaze = new Maze(layers, 10, 10);
+    currentLayer = 0;
+    availableLayers = Number($("#layers").find(":selected").val());
+    var myMaze = new Maze(availableLayers, 5, 5);
     myMaze.fillMaze();
     myMaze.displayMaze();
+    showLayerHideOthers(currentLayer);
+}
+function showLayerHideOthers(layerChoice) {
+    if (availableLayers > 1) {
+        for (var layer = 0; layer < availableLayers; layer++) {
+            var layerId = "#layer" + layer;
+            if (layer == layerChoice) {
+                $(layerId).show();
+            }
+            else {
+                $(layerId).hide();
+            }
+        }
+    }
+}
+function goUp() {
+    if (currentLayer < availableLayers - 1) {
+        currentLayer++;
+    }
+    else {
+        currentLayer = 0;
+    }
+    showLayerHideOthers(currentLayer);
+}
+function goDown() {
+    if (currentLayer == 0) {
+        currentLayer = availableLayers - 1;
+    }
+    else {
+    }
+    showLayerHideOthers(currentLayer);
 }
 var Maze = /** @class */ (function () {
-    function Maze(gridLevels, gridWidth, gridHeight) {
-        this.gridLevels = gridLevels;
+    function Maze(gridLayers, gridWidth, gridHeight) {
+        this.gridLayers = gridLayers;
         this.gridWidth = gridWidth;
         this.gridHeight = gridHeight;
-        this.GridLevels = gridLevels;
+        this.GridLayers = gridLayers;
         this.GridWidth = gridWidth;
         this.GridHeight = gridHeight;
         // generate the grid
@@ -26,8 +60,8 @@ var Maze = /** @class */ (function () {
         this.down = "Down";
     }
     Maze.prototype.generateGrid = function () {
-        var tempGrid = new Array(this.GridLevels);
-        for (var i = 0; i < this.GridLevels; i++) {
+        var tempGrid = new Array(this.GridLayers);
+        for (var i = 0; i < this.GridLayers; i++) {
             tempGrid[i] = new Array(this.GridHeight);
             for (var j = 0; j < this.GridHeight; j++) {
                 tempGrid[i][j] = new Array(this.GridWidth);
@@ -129,7 +163,7 @@ var Maze = /** @class */ (function () {
         ]);
     };
     Maze.prototype.isEmptyCell = function (z, y, x) {
-        if (z >= 0 && z < this.gridLevels
+        if (z >= 0 && z < this.gridLayers
             && y >= 0 && y < this.gridHeight
             && x >= 0 && x < this.gridWidth) {
             if (this.MazeGrid[z][y][x] === null || this.MazeGrid[z][y][x] === undefined)
@@ -148,15 +182,15 @@ var Maze = /** @class */ (function () {
             case this.west:
                 return this.createCell(cell.Z, cell.Y, cell.X - 1);
             case this.up:
-                // if we're at the top level, loop around
-                if (cell.Z == this.gridLevels - 1)
+                // if we're at the top layer, loop around
+                if (cell.Z == this.gridLayers - 1)
                     return this.createCell(0, cell.Y, cell.X);
                 else
                     return this.createCell(cell.Z + 1, cell.Y, cell.X);
             case this.down:
-                // if we're at the bottom level, loop around
+                // if we're at the bottom layer, loop around
                 if (cell.Z == 0)
-                    return this.createCell(this.GridLevels - 1, cell.Y, cell.X);
+                    return this.createCell(this.GridLayers - 1, cell.Y, cell.X);
                 else
                     return this.createCell(cell.Z - 1, cell.Y, cell.X);
         }
@@ -186,22 +220,44 @@ var Maze = /** @class */ (function () {
             classes += " bottom ";
         if (cell.West == this.WallCell.East)
             classes += " left ";
+        if (cell.Up != this.WallCell.Down)
+            classes += " up ";
+        if (cell.Down != this.WallCell.Up)
+            classes += " down ";
         return classes;
+    };
+    Maze.prototype.getNameFromLayer = function (layer) {
+        switch (layer) {
+            case 0:
+                return "winter";
+            case 1:
+                return "spring";
+            case 2:
+                return "summer";
+            case 3:
+                return "fall";
+            default:
+                return "";
+        }
     };
     Maze.prototype.displayMaze = function () {
         var html = "";
-        for (var level = 0; level < this.MazeGrid.length; level++) {
-            html += '<table id="level-' + level + '"><h3>Level #' + level + '</h3>\n';
-            for (var row = 0; row < this.MazeGrid[level].length; row++) {
+        for (var layer = 0; layer < this.MazeGrid.length; layer++) {
+            var layerName = this.getNameFromLayer(layer);
+            html += "<div id=\"layer" + layer + "\" class=\"" + layerName + "\">";
+            html += "<h3>Layer # " + layer + "</h3>";
+            html += "<table id=\"layer" + layer + "-table class=\"" + layerName + "\">";
+            for (var row = 0; row < this.MazeGrid[layer].length; row++) {
                 html += "<tr class='r'>";
                 for (var column = 0; column < this.gridWidth; column++) {
-                    var classes = this.getClassesFromCell(this.MazeGrid[level][row][column]);
-                    html += "<td class=\"b " + classes + "\">&nbsp;";
+                    var classes = this.getClassesFromCell(this.MazeGrid[layer][row][column]);
+                    html += "<td class=\"b " + classes + " " + layerName + "\">&nbsp;";
                     html += "</td>";
                 }
                 html += "</tr> <!-- end row -->\n";
             }
             html += "</table>";
+            html += "</div>";
         }
         $("#maze-game").html(html);
         console.log(this.MazeGrid[0]);

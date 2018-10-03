@@ -12,15 +12,18 @@
   crossorigin="anonymous"></script>
     <script src="over-engineered-maze.js"></script>
 </head>
-<body>
-    <h1>Maze</h1>
+<body onload="main();">
+	<h1>Maze</h1>
+	<button onclick="test();">test</button>
     <button onclick="main();">New Maze</button>
     <select id="layers" name="layers" size="4">
         <option value="1" selected>1 level</option>
         <option value="2">2 levels</option>
         <option value="3">3 levels</option>
         <option value="4">4 levels</option>
-      </select>
+	  </select>
+	<button onclick="goUp()">Up</button>
+	<button onclick="goDown()">Down</button>
     <br /><br /><br /><br />
 
     <div id="maze-game" class="blockMaze" style="line-height: 0;">
