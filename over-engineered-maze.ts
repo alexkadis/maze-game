@@ -1,19 +1,37 @@
 var currentLayer : number;
-var availableLayers : number;
+var MazeGrid: Cell[][][];
+var GridLayers : number;
+var GridHeight : number;
+var GridWidth : number;
 
 function main() {
 	currentLayer = 0;
-	availableLayers = Number($("#layers").find(":selected").val());
+	GridLayers = 4;
+	GridHeight = 5;
+	GridWidth = 5;
 
-	let myMaze = new Maze(availableLayers, 5, 5);
+	MazeGrid = generateGrid();
+	let myMaze = new Maze(GridLayers, GridHeight, GridWidth);
 	myMaze.fillMaze();
 	myMaze.displayMaze();
 	showLayerHideOthers(currentLayer);
 }
 
+function generateGrid() {
+	let tempGrid : any[] = new Array(GridLayers);
+	for(let i = 0; i < GridLayers; i++) {
+		tempGrid[i] = new Array(GridHeight);
+		for(let j = 0; j < GridHeight; j++) {
+			tempGrid[i][j] = new Array(GridWidth);
+			tempGrid[i][j].fill();
+		}
+	}
+	return tempGrid;
+}
+
 function showLayerHideOthers(layerChoice : number) {
-	if (availableLayers > 1) {
-		for(let layer = 0; layer < availableLayers; layer++) {
+	if (GridLayers > 1) {
+		for(let layer = 0; layer < GridLayers; layer++) {
 			let layerId :string = `#layer${layer}`;
 			if (layer == layerChoice) {
 				$(layerId).show();
@@ -25,7 +43,7 @@ function showLayerHideOthers(layerChoice : number) {
 }
 
 function goUp() {
-	if(currentLayer < availableLayers - 1) {
+	if(currentLayer < GridLayers - 1) {
 		currentLayer++;
 	} else {
 		currentLayer = 0;
@@ -34,20 +52,92 @@ function goUp() {
 }
 function goDown() {
 	if(currentLayer == 0) {
-		currentLayer = availableLayers - 1;
+		currentLayer = GridLayers - 1;
 	} else {
-		
+		currentLayer--;
 	}
 	showLayerHideOthers(currentLayer);
+}
+
+
+
+class Cell {
+	North: Cell | null;
+	East: Cell | null;
+	South: Cell | null;
+	West: Cell | null;
+	Up: Cell | null;
+	Down: Cell | null;
+	Z: number;
+	Y: number;
+	X: number;
+	isWall : boolean;
+
+	constructor() {
+		this.North = null;
+		this.East = null;
+		this.South = null;
+		this.West = null;
+		this.Up = null;
+		this.Down = null;
+		this.Z = -1;
+		this.Y = -1;
+		this.X = -1;
+		this.isWall = false;
+	}
+}
+
+/*
+Figure out a way to have a "character" that can move North, South, East, West
+	- The character starts at the starting point
+	- Character ends at the ending point
+	- Character can't move past a wall
+*/
+class Character {
+	GridWidth: number;
+	GridHeight: number;
+
+	Color: string;
+	Name: string;
+	Y: number;
+	X: number;
+
+	north: string;
+	east: string;
+	south: string;
+	west: string;
+
+	constructor(name : string, startingX : number, startingY : number, ) {
+		
+		this.Color = "blue";
+		this.Name = name;
+		this.Y = startingY; 
+		this.X = startingX;
+
+		this.north	= "North";
+		this.east	= "East";
+		this.south	= "South";
+		this.west	= "West";
+	}
+
+	canMoveToCell(x : number, y : number) {
+		if (z >= 0 && z < this.gridLayers 
+			&& 	y >= 0 && y < this.gridHeight 
+			&&  x >= 0 && x < this.gridWidth) {
+				if (MazeGrid[z][y][x] === null || MazeGrid[z][y][x] === undefined)
+					return true;
+			} 
+		return false;
+	}
 }
 
 class Maze {
 	GridLayers: number;
 	GridWidth: number;
 	GridHeight: number;
-	MazeGrid: cell[][][];
-	CellsList: cell[];
-	WallCell: cell;
+
+	CellsList: Cell[];
+	WallCell: Cell;
 	
 	north: string;
 	east: string;
@@ -62,7 +152,7 @@ class Maze {
 		this.GridHeight	= gridHeight;
 		
 		// generate the grid
-		this.MazeGrid = this.generateGrid();
+		
 		
 		// create the wall cell, any cell that needs a wall references this one
 		this.WallCell = this.createCell(-1, -1, -1, true);
@@ -76,18 +166,6 @@ class Maze {
 		this.west	= "West";
 		this.up		= "Up";
 		this.down	= "Down";
-	}
-
-	generateGrid() {
-		let tempGrid : any[] = new Array(this.GridLayers);
-		for(let i = 0; i < this.GridLayers; i++) {
-			tempGrid[i] = new Array(this.GridHeight);
-			for(let j = 0; j < this.GridHeight; j++) {
-				tempGrid[i][j] = new Array(this.GridWidth);
-				tempGrid[i][j].fill();
-			}
-		}
-		return tempGrid;
 	}
 
 	fillMaze() {
@@ -107,19 +185,19 @@ class Maze {
 			// random index (something about this fails)
 			// let index = this.getRandomIntInclusive(0, this.cellsList.length);
 		
-			let currentCell : cell = this.CellsList[index];
+			let currentCell : Cell = this.CellsList[index];
 			// console.log(currentCell);
 			let directions : string[] = this.getRandomDirections();
 
 			for (let i = 0; i < directions.length; i++) {
-				let nextCell : cell = this.directionModifier(this.CellsList[index],directions[i])
+				let nextCell : Cell = this.directionModifier(this.CellsList[index],directions[i])
 				if (this.isEmptyCell(nextCell.Z, nextCell.Y, nextCell.X)) {
 					// console.log(directions[i]);
 					// we found a workable direction
 					
 					let result : any = this.assignCellDirections(currentCell, nextCell, directions[i]);
-					this.MazeGrid[currentCell.Z][currentCell.Y][currentCell.X] = result.current;
-					this.MazeGrid[nextCell.Z][nextCell.Y][nextCell.X] = result.next;
+					MazeGrid[currentCell.Z][currentCell.Y][currentCell.X] = result.current;
+					MazeGrid[nextCell.Z][nextCell.Y][nextCell.X] = result.next;
 
 					this.CellsList.push(nextCell);
 					index = -1;
@@ -127,7 +205,7 @@ class Maze {
 				} else {
 					// we're facing what should be a wall
 					// let result : any = this.assignCellDirectionToWall(currentCell, directions[i]);
-					// this.MazeGrid[currentCell.Z][currentCell.Y][currentCell.X] = result.current;
+					// MazeGrid[currentCell.Z][currentCell.Y][currentCell.X] = result.current;
 				}
 			}
 			if (index != -1) {
@@ -136,11 +214,11 @@ class Maze {
 		} 
 	}
 
-	assignCellDirectionToWall(currentCell : cell, direction : string) {
+	assignCellDirectionToWall(currentCell : Cell, direction : string) {
 		return this.assignCellDirections(currentCell, this.WallCell, direction);
 	}
 
-	assignCellDirections(currentCell : cell, nextCell : cell, direction : string) {
+	assignCellDirections(currentCell : Cell, nextCell : Cell, direction : string) {
 		switch(direction) {
 			case this.north:
 				currentCell.North = nextCell;
@@ -171,7 +249,7 @@ class Maze {
 	}
 
 	createCell(z : number, y : number, x : number, isWall : boolean = false) {
-		let tempCell : cell = new cell();
+		let tempCell : Cell = new Cell();
 		tempCell.Z = z;
 		tempCell.Y = y;
 		tempCell.X = x;
@@ -198,16 +276,16 @@ class Maze {
 	}
 
 	isEmptyCell(z : number, y : number, x : number) {
-		if (z >= 0 && z < this.gridLayers 
-			&& 	y >= 0 && y < this.gridHeight 
-			&&  x >= 0 && x < this.gridWidth) {
-				if (this.MazeGrid[z][y][x] === null || this.MazeGrid[z][y][x] === undefined)
+		if (z >= 0 && z < this.GridLayers 
+			&& 	y >= 0 && y < this.GridHeight 
+			&&  x >= 0 && x < this.GridWidth) {
+				if (MazeGrid[z][y][x] === null || MazeGrid[z][y][x] === undefined)
 					return true;
 			} 
 		return false;
 	}
 
-	directionModifier(cell : cell, direction : string) {
+	directionModifier(cell : Cell, direction : string) {
 		switch (direction) {
 			case this.north:
 				return this.createCell(cell.Z, cell.Y - 1, cell.X);
@@ -250,7 +328,7 @@ class Maze {
 		return array;
 	}
 
-	getClassesFromCell(cell : cell) {
+	getClassesFromCell(cell : Cell) {
 		
 		let classes : string = "";
 
@@ -288,19 +366,19 @@ class Maze {
 	displayMaze () {
 		let html : string = "";
 		
-		for (let layer = 0; layer < this.MazeGrid.length; layer++) {
+		for (let layer = 0; layer < MazeGrid.length; layer++) {
 			let layerName : string = this.getNameFromLayer(layer);
 
 			html += `<div id="layer${layer}" class="${layerName}">`;
-			html += `<h3>Layer # ${layer}</h3>`;
+			html += `<h3>Layer ${layerName}</h3>`;
 			html += `<table id="layer${layer}-table class="${layerName}">`;
 
-			for (let row = 0; row < this.MazeGrid[layer].length; row++) {
+			for (let row = 0; row < MazeGrid[layer].length; row++) {
 				html += "<tr class='r'>";
 
 				for(let column = 0; column < this.gridWidth; column++) {
-					let classes : string = this.getClassesFromCell(this.MazeGrid[layer][row][column]);
-					html += `<td class="b ${classes} ${layerName}">&nbsp;`;
+					let classes : string = this.getClassesFromCell(MazeGrid[layer][row][column]);
+					html += `<td class="cell ${classes} ${layerName} y[${row}]x[${column}]">&nbsp;`;
 					html += "</td>";
 
 				}
@@ -311,32 +389,6 @@ class Maze {
 		}
 		$("#maze-game").html(html);
 
-		console.log(this.MazeGrid[0]);
-	}
-}
-
-class cell {
-	North: cell | null;
-	East: cell | null;
-	South: cell | null;
-	West: cell | null;
-	Up: cell | null;
-	Down: cell | null;
-	Z: number;
-	Y: number;
-	X: number;
-	isWall : boolean;
-
-	constructor() {
-		this.North = null;
-		this.East = null;
-		this.South = null;
-		this.West = null;
-		this.Up = null;
-		this.Down = null;
-		this.Z = -1;
-		this.Y = -1;
-		this.X = -1;
-		this.isWall = false;
+		console.log(MazeGrid[0]);
 	}
 }

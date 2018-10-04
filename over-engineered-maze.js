@@ -1,16 +1,33 @@
 var currentLayer;
-var availableLayers;
+var MazeGrid;
+var GridLayers;
+var GridHeight;
+var GridWidth;
 function main() {
     currentLayer = 0;
-    availableLayers = Number($("#layers").find(":selected").val());
-    var myMaze = new Maze(availableLayers, 5, 5);
+    GridLayers = 4;
+    GridHeight = 5;
+    GridWidth = 5;
+    MazeGrid = generateGrid();
+    var myMaze = new Maze(GridLayers, GridHeight, GridWidth);
     myMaze.fillMaze();
     myMaze.displayMaze();
     showLayerHideOthers(currentLayer);
 }
+function generateGrid() {
+    var tempGrid = new Array(GridLayers);
+    for (var i = 0; i < GridLayers; i++) {
+        tempGrid[i] = new Array(GridHeight);
+        for (var j = 0; j < GridHeight; j++) {
+            tempGrid[i][j] = new Array(GridWidth);
+            tempGrid[i][j].fill();
+        }
+    }
+    return tempGrid;
+}
 function showLayerHideOthers(layerChoice) {
-    if (availableLayers > 1) {
-        for (var layer = 0; layer < availableLayers; layer++) {
+    if (GridLayers > 1) {
+        for (var layer = 0; layer < GridLayers; layer++) {
             var layerId = "#layer" + layer;
             if (layer == layerChoice) {
                 $(layerId).show();
@@ -22,7 +39,7 @@ function showLayerHideOthers(layerChoice) {
     }
 }
 function goUp() {
-    if (currentLayer < availableLayers - 1) {
+    if (currentLayer < GridLayers - 1) {
         currentLayer++;
     }
     else {
@@ -32,12 +49,39 @@ function goUp() {
 }
 function goDown() {
     if (currentLayer == 0) {
-        currentLayer = availableLayers - 1;
+        currentLayer = GridLayers - 1;
     }
     else {
+        currentLayer--;
     }
     showLayerHideOthers(currentLayer);
 }
+var Cell = /** @class */ (function () {
+    function Cell() {
+        this.North = null;
+        this.East = null;
+        this.South = null;
+        this.West = null;
+        this.Up = null;
+        this.Down = null;
+        this.Z = -1;
+        this.Y = -1;
+        this.X = -1;
+        this.isWall = false;
+    }
+    return Cell;
+}());
+/*
+Figure out a way to have a "character" that can move North, South, East, West
+    - The character starts at the starting point
+    - Character ends at the ending point
+    - Character can't move past a wall
+*/
+var Character = /** @class */ (function () {
+    function Character() {
+    }
+    return Character;
+}());
 var Maze = /** @class */ (function () {
     function Maze(gridLayers, gridWidth, gridHeight) {
         this.gridLayers = gridLayers;
@@ -47,7 +91,6 @@ var Maze = /** @class */ (function () {
         this.GridWidth = gridWidth;
         this.GridHeight = gridHeight;
         // generate the grid
-        this.MazeGrid = this.generateGrid();
         // create the wall cell, any cell that needs a wall references this one
         this.WallCell = this.createCell(-1, -1, -1, true);
         // create the cells list
@@ -59,17 +102,6 @@ var Maze = /** @class */ (function () {
         this.up = "Up";
         this.down = "Down";
     }
-    Maze.prototype.generateGrid = function () {
-        var tempGrid = new Array(this.GridLayers);
-        for (var i = 0; i < this.GridLayers; i++) {
-            tempGrid[i] = new Array(this.GridHeight);
-            for (var j = 0; j < this.GridHeight; j++) {
-                tempGrid[i][j] = new Array(this.GridWidth);
-                tempGrid[i][j].fill();
-            }
-        }
-        return tempGrid;
-    };
     Maze.prototype.fillMaze = function () {
         // initialize the cellsList and add the first cell to the list
         this.CellsList.push(this.createCell(0, this.getRandomIntInclusive(0, this.gridHeight - 1), this.getRandomIntInclusive(0, this.gridWidth - 1)));
@@ -88,8 +120,8 @@ var Maze = /** @class */ (function () {
                     // console.log(directions[i]);
                     // we found a workable direction
                     var result = this.assignCellDirections(currentCell, nextCell, directions[i]);
-                    this.MazeGrid[currentCell.Z][currentCell.Y][currentCell.X] = result.current;
-                    this.MazeGrid[nextCell.Z][nextCell.Y][nextCell.X] = result.next;
+                    MazeGrid[currentCell.Z][currentCell.Y][currentCell.X] = result.current;
+                    MazeGrid[nextCell.Z][nextCell.Y][nextCell.X] = result.next;
                     this.CellsList.push(nextCell);
                     index = -1;
                     break;
@@ -97,7 +129,7 @@ var Maze = /** @class */ (function () {
                 else {
                     // we're facing what should be a wall
                     // let result : any = this.assignCellDirectionToWall(currentCell, directions[i]);
-                    // this.MazeGrid[currentCell.Z][currentCell.Y][currentCell.X] = result.current;
+                    // MazeGrid[currentCell.Z][currentCell.Y][currentCell.X] = result.current;
                 }
             }
             if (index != -1) {
@@ -139,7 +171,7 @@ var Maze = /** @class */ (function () {
     };
     Maze.prototype.createCell = function (z, y, x, isWall) {
         if (isWall === void 0) { isWall = false; }
-        var tempCell = new cell();
+        var tempCell = new Cell();
         tempCell.Z = z;
         tempCell.Y = y;
         tempCell.X = x;
@@ -166,7 +198,7 @@ var Maze = /** @class */ (function () {
         if (z >= 0 && z < this.gridLayers
             && y >= 0 && y < this.gridHeight
             && x >= 0 && x < this.gridWidth) {
-            if (this.MazeGrid[z][y][x] === null || this.MazeGrid[z][y][x] === undefined)
+            if (MazeGrid[z][y][x] === null || MazeGrid[z][y][x] === undefined)
                 return true;
         }
         return false;
@@ -242,16 +274,16 @@ var Maze = /** @class */ (function () {
     };
     Maze.prototype.displayMaze = function () {
         var html = "";
-        for (var layer = 0; layer < this.MazeGrid.length; layer++) {
+        for (var layer = 0; layer < MazeGrid.length; layer++) {
             var layerName = this.getNameFromLayer(layer);
             html += "<div id=\"layer" + layer + "\" class=\"" + layerName + "\">";
-            html += "<h3>Layer # " + layer + "</h3>";
+            html += "<h3>Layer " + layerName + "</h3>";
             html += "<table id=\"layer" + layer + "-table class=\"" + layerName + "\">";
-            for (var row = 0; row < this.MazeGrid[layer].length; row++) {
+            for (var row = 0; row < MazeGrid[layer].length; row++) {
                 html += "<tr class='r'>";
                 for (var column = 0; column < this.gridWidth; column++) {
-                    var classes = this.getClassesFromCell(this.MazeGrid[layer][row][column]);
-                    html += "<td class=\"b " + classes + " " + layerName + "\">&nbsp;";
+                    var classes = this.getClassesFromCell(MazeGrid[layer][row][column]);
+                    html += "<td class=\"cell " + classes + " " + layerName + "\">&nbsp;";
                     html += "</td>";
                 }
                 html += "</tr> <!-- end row -->\n";
@@ -260,22 +292,7 @@ var Maze = /** @class */ (function () {
             html += "</div>";
         }
         $("#maze-game").html(html);
-        console.log(this.MazeGrid[0]);
+        console.log(MazeGrid[0]);
     };
     return Maze;
-}());
-var cell = /** @class */ (function () {
-    function cell() {
-        this.North = null;
-        this.East = null;
-        this.South = null;
-        this.West = null;
-        this.Up = null;
-        this.Down = null;
-        this.Z = -1;
-        this.Y = -1;
-        this.X = -1;
-        this.isWall = false;
-    }
-    return cell;
 }());

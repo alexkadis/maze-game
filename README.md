@@ -33,9 +33,9 @@ If it's an empty cell, instead of cardinal direction, it'll be a cell reference
 ### Display
 1. Loop through the grid (z, y, x)
 2. If a direction is a wall, set that border wall (top border, east border, south border, west border)
+3. "overlapping" mazes, when you hit the up/down buttons, it changes the level you're on
 
 # TO DO
-1. "overlapping" mazes, when you hit the up/down buttons, it changes the level you're on
 2. Choose a starting and ending point to the maze, where doesn't exactly matter, as long as they're on opposite sides, no matter what, you can get to any part of a maze (that's how mazes work...)
 3. Figure out a way to have a "character" that can move North, South, East, West
 	- The character starts at the starting point
