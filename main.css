@@ -127,6 +127,9 @@ h1, p {
 }
 
 
+.blockMaze .cell.pinkdude {
+	background-color: pink;
+}
 
 
 

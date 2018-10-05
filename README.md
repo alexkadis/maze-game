@@ -42,3 +42,5 @@ If it's an empty cell, instead of cardinal direction, it'll be a cell reference
 	- Character ends at the ending point
 	- Character can't move past a wall
 4. Might want to go to using canvas and making it look *good*
+
+Instead of *null*, I need a way to indicate that a direction is a wall 
