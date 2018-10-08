@@ -20,7 +20,7 @@ h1, p {
 .blockMaze table {
 	border-spacing: 1px;
 	border-collapse: separate;
-	background-image: url("./cream-paper.png");
+	background-image: url("./img/cream-paper.png");
 }
 
 .blockMaze .cell {

@@ -1,0 +1,23 @@
+{
+    "defaultSeverity": "error",
+    "extends": [
+        "tslint:recommended"
+    ],
+    "jsRules": {},
+    "rules": {
+        "indent": [
+            true, 
+            "tabs", 
+            4
+        ],
+        "curly": [
+            true,
+            "as-needed"
+        ],
+        "space-before-function-paren": [
+            true,
+            "always"
+        ]
+    },
+    "rulesDirectory": []
+}
