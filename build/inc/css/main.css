@@ -1,0 +1,158 @@
+:root {
+	--winter-light: #9ecfec;
+	--winter-dark: #4698be;
+
+	--spring-light: #a8dba6;
+	--spring-dark: #60c75c;
+
+	--summer-light: #f1ecbc;
+	--summer-dark: #e2d242;
+
+	--fall-light: #f1d7ab;
+	--fall-dark: #F0B659;
+}
+
+body {
+	/* background-image: url("./img/cream-paper.png"); */
+}
+h1, p {
+	color: #777;
+	font-family: sans-serif;
+}
+
+.blockMaze table {
+	border-spacing: 1px;
+	border-collapse: separate;
+	
+}
+
+.blockMaze .cell {
+	display: inline-block;
+	width: 25px;
+	height: 25px;
+	/* background-image: url("./img/cream-paper.png"); */
+	border: 1px solid #fff;
+	/* text-align: center; */
+	/* font-size: 30px; */
+	/* vertical-align: middle; */
+	/* padding: 5px 5px; */
+	display: table-cell; 
+}
+
+
+
+.blockMaze .top {
+	border-top: 2px solid black;
+}
+.blockMaze .bottom {
+	border-bottom: 2px solid black;
+}
+.blockMaze .right {
+	border-right: 2px solid black;
+}
+.blockMaze .left { 
+	border-left: 2px solid black;
+}
+
+
+/* seasons */
+/* winter */
+.blockMaze .cell.winter {
+	background-color: var(--winter-light);
+	border: 4px solid var(--winter-light);
+}
+.blockMaze .top.winter  {
+	border-top: 4px solid var(--winter-dark);
+}
+.blockMaze .bottom.winter {
+	border-bottom: 4px solid var(--winter-dark);
+}
+.blockMaze .right.winter {
+	border-right: 4px solid var(--winter-dark);
+}
+.blockMaze .left.winter { 
+	border-left: 4px solid var(--winter-dark);
+}
+
+/* spring */
+.blockMaze .cell.spring {
+	background-color: var(--spring-light);
+	border: 4px solid var(--spring-light);
+}
+.blockMaze .top.spring  {
+	border-top: 4px solid var(--spring-dark);
+}
+.blockMaze .bottom.spring {
+	border-bottom: 4px solid var(--spring-dark);
+}
+.blockMaze .right.spring {
+	border-right: 4px solid var(--spring-dark);
+}
+.blockMaze .left.spring { 
+	border-left: 4px solid var(--spring-dark);
+}
+
+
+/* summer */
+.blockMaze .cell.summer {
+	background-color: var(--summer-light);
+	border: 4px solid var(--summer-light);
+}
+.blockMaze .top.summer  {
+	border-top: 4px solid var(--summer-dark);
+}
+.blockMaze .bottom.summer {
+	border-bottom: 4px solid var(--summer-dark);
+}
+.blockMaze .right.summer {
+	border-right: 4px solid var(--summer-dark);
+}
+.blockMaze .left.summer { 
+	border-left: 4px solid var(--summer-dark);
+}
+
+/* fall */
+.blockMaze .cell.fall {
+	background-color: var(--fall-light);
+	border: 4px solid var(--fall-light);
+}
+.blockMaze .top.fall  {
+	border-top: 4px solid var(--fall-dark);
+}
+.blockMaze .bottom.fall {
+	border-bottom: 4px solid var(--fall-dark);
+}
+.blockMaze .right.fall {
+	border-right: 4px solid var(--fall-dark);
+}
+.blockMaze .left.fall { 
+	border-left: 4px solid var(--fall-dark);
+}
+
+
+.blockMaze .cell.pinkdude {
+	background-color: pink;
+}
+
+
+
+/* ////// */
+
+
+.blockMaze .rotate90 {
+	-ms-transform: rotate(90deg); /* IE 9 */
+    -webkit-transform: rotate(90deg); /* Safari */
+	transform: rotate(90deg);
+}
+
+.blockMaze .rotate180 {
+	-ms-transform: rotate(180deg); /* IE 9 */
+    -webkit-transform: rotate(180deg); /* Safari */
+	transform: rotate(180deg);
+}
+
+.blockMaze .rotate270 {
+	-ms-transform: rotate(270deg); /* IE 9 */
+    -webkit-transform: rotate(270deg); /* Safari */
+	transform: rotate(270deg);
+}
