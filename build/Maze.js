@@ -315,8 +315,8 @@ var MyCharacter;
 function main() {
     currentLayer = 0;
     GridLayers = 4;
-    GridHeight = 5;
-    GridWidth = 5;
+    GridHeight = 8;
+    GridWidth = 8;
     var myMaze = new Maze(GridLayers, GridHeight, GridWidth);
     myMaze.fillMaze();
     var mazeViewer = new MazeView(myMaze.MazeGrid, myMaze.WallCell);

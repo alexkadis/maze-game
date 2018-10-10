@@ -4,28 +4,30 @@
     <meta charset="utf-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <title>Maze Game Simple</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=0">
     <link rel="stylesheet" type="text/css" media="screen" href="main.css" />
     <script
   src="https://code.jquery.com/jquery-3.3.1.min.js"
   integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
   crossorigin="anonymous"></script>
-    <script src="maze.js"></script>
+    <script src="Maze.js"></script>
     
 </head>
 <body onload="main();">
 	<h1>Maze</h1>
-    <button onclick="main();">New Maze</button>
-	<button onclick="goUp()">Next Season</button>
-	<button onclick="goDown()">Previous Season</button>
-    <br />
-    <button onclick="goNorth()">North</button>
-    <br />
-    <button onclick="goWest()">West</button>
-    <button onclick="goEast()">East</button>
-    <br />
-    <button onclick="goSouth()">South</button>
-    <br />
+	<div class="gameButtons">
+		<button onclick="main();">New Maze</button>
+		<button onclick="goUp()">Next Season</button>
+		<button onclick="goDown()">Previous Season</button>
+		<br />
+		<button onclick="goNorth()">North</button>
+		<br />
+		<button onclick="goWest()">West</button>
+		<button onclick="goEast()">East</button>
+		<br />
+		<button onclick="goSouth()">South</button>
+		<br />
+	</div>
 
     <div id="maze-game" class="blockMaze" style="line-height: 0;">
         Replaced with the maze.

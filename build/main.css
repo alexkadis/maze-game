@@ -1,3 +1,54 @@
+/* http://meyerweb.com/eric/tools/css/reset/ 
+   v2.0 | 20110126
+   License: none (public domain)
+*/
+
+html, body, div, span, applet, object, iframe,
+h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+a, abbr, acronym, address, big, cite, code,
+del, dfn, em, img, ins, kbd, q, s, samp,
+small, strike, strong, sub, sup, tt, var,
+b, u, i, center,
+dl, dt, dd, ol, ul, li,
+fieldset, form, label, legend,
+table, caption, tbody, tfoot, thead, tr, th, td,
+article, aside, canvas, details, embed, 
+figure, figcaption, footer, header, hgroup, 
+menu, nav, output, ruby, section, summary,
+time, mark, audio, video {
+	margin: 0;
+	padding: 0;
+	border: 0;
+	font-size: 100%;
+	font: inherit;
+	vertical-align: baseline;
+}
+/* HTML5 display-role reset for older browsers */
+article, aside, details, figcaption, figure, 
+footer, header, hgroup, menu, nav, section {
+	display: block;
+}
+body {
+	line-height: 1;
+}
+ol, ul {
+	list-style: none;
+}
+blockquote, q {
+	quotes: none;
+}
+blockquote:before, blockquote:after,
+q:before, q:after {
+	content: '';
+	content: none;
+}
+table {
+	border-collapse: collapse;
+	border-spacing: 0;
+}
+
+/* My work: */
+
 :root {
 	--winter-light: #9ecfec;
 	--winter-dark: #4698be;
@@ -12,25 +63,60 @@
 	--fall-dark: #F0B659;
 }
 
-body {
-	/* background-image: url("./img/cream-paper.png"); */
+
+/** Basic styling */
+body { 
+	font-family: Helvetica, sans-serif;
+	font-size: 1em;
+	line-height: 1.375;
+	font-weight: 300;
+	color: #111;
+	background-color: #fdfdfd;
+	-webkit-text-size-adjust: 100%;
+	margin: 0px auto;
+	width: 90%;
 }
+
 h1, h2, h3, h4, h5, h6, p {
 	font-family: sans-serif;
 	text-transform:capitalize;
+	font-weight: bold;
+	text-align: center;
+}
+
+h1 { font-size: 2em; /* 2x body copy size = 32px */ line-height: 1.25; /* 45px / 36px */ }
+
+h2 { font-size: 1.625em; /* 1.625x body copy size = 26px */ line-height: 1.15384615; /* 30px / 26px */ }
+
+h3 { font-size: 1.375em; /* 1.375x body copy size = 22px */ line-height: 1.13636364; /* 25px / 22px */ }
+
+h4 { font-size: 1.125em; /* 1.125x body copy size = 18px */ line-height: 1.11111111; }
+
+blockquote { font-size: 1.125em; /* 20px / 16px */ line-height: 1.25; /* 25px / 20px */ }
+
+
+.gameButons button {
+	cursor: pointer;
+}
+
+.blockMaze {
+	margin: 20px auto;
+	display: block;
 }
 
 .blockMaze table {
 	border-spacing: 1px;
 	border-collapse: separate;
-	
+	margin: 20px auto;
+	display: flex;
+	align-items: center;
 }
 
 .blockMaze .cell {
 	display: inline-block;
 	width: 25px;
 	height: 25px;
-	background-image: url("./img/cream-paper.png");
+	/* background-image: url("./img/cream-paper.png"); */
 	border: 1px solid #fff;
 	text-align: center;
 	/* font-size: 30px; */
@@ -38,7 +124,6 @@ h1, h2, h3, h4, h5, h6, p {
 	/* padding: 5px 5px; */
 	display: table-cell; 
 }
-
 
 
 .blockMaze .top {

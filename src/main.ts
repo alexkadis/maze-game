@@ -7,8 +7,8 @@ var MyCharacter: Character;
 function main() {
 	currentLayer = 0;
 	GridLayers = 4;
-	GridHeight = 5;
-	GridWidth = 5;
+	GridHeight = 8;
+	GridWidth = 8;
 
 	let myMaze = new Maze(GridLayers, GridHeight, GridWidth);
 	myMaze.fillMaze();
