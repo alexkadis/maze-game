@@ -18,9 +18,11 @@ var Character = /** @class */ (function () {
         this.Down = "Down";
         this.MazeGrid = mazeGrid;
         this.GridLayers = this.MazeGrid.length;
+        $(".y" + this.CurrentLocation.Y + "x" + this.CurrentLocation.X).text("😎");
         $(".y" + this.CurrentLocation.Y + "x" + this.CurrentLocation.X).addClass(this.Name);
     }
     Character.prototype.move = function (direction) {
+        $(".y" + this.CurrentLocation.Y + "x" + this.CurrentLocation.X).text("");
         $(".y" + this.CurrentLocation.Y + "x" + this.CurrentLocation.X).removeClass(this.Name);
         console.log("OLD Location: Z:" + this.CurrentLocation.Z + " y:" + this.CurrentLocation.Y + " x:" + this.CurrentLocation.X);
         switch (direction) {
@@ -56,6 +58,7 @@ var Character = /** @class */ (function () {
                 console.log("Invalid attempt to move from " + this.CurrentLocation + " " + direction);
                 break;
         }
+        $(".y" + this.CurrentLocation.Y + "x" + this.CurrentLocation.X).text("😎");
         console.log("New Location: Z:" + this.CurrentLocation.Z + " y:" + this.CurrentLocation.Y + " x:" + this.CurrentLocation.X);
         $(".y" + this.CurrentLocation.Y + "x" + this.CurrentLocation.X).addClass(this.Name);
     };
