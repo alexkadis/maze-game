@@ -1,4 +1,3 @@
-
 class Cell {
 	public North: Cell | null;
 	public East: Cell | null;
@@ -23,9 +22,4 @@ class Cell {
 		this.X = -1;
 		this.isWall = false;
 	}
-	// public assignCellToNewLocation (newZ: number, newY: number, newX: number) {
-	// 	this.Z = newZ;
-	// 	this.Y = newY;
-	// 	this.X = newX;
-	// }
 }

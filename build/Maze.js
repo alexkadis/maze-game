@@ -1,4 +1,84 @@
 "use strict";
+var Cell = /** @class */ (function () {
+    function Cell() {
+        this.North = null;
+        this.East = null;
+        this.South = null;
+        this.West = null;
+        this.Up = null;
+        this.Down = null;
+        this.Z = -1;
+        this.Y = -1;
+        this.X = -1;
+        this.isWall = false;
+    }
+    return Cell;
+}());
+/*
+Figure out a way to have a "character" that can move North, South, East, West
+    - The character starts at the starting point
+    - Character ends at the ending point
+    - Character can't move past a wall
+*/
+var Character = /** @class */ (function () {
+    function Character(name, color, startingLocation, mazeGrid) {
+        this.Color = color;
+        this.Name = name;
+        this.CurrentLocation = startingLocation;
+        this.North = "North";
+        this.East = "East";
+        this.South = "South";
+        this.West = "West";
+        this.Up = "Up";
+        this.Down = "Down";
+        this.MazeGrid = mazeGrid;
+        this.GridLayers = this.MazeGrid.length;
+        $(".y" + this.CurrentLocation.Y + "x" + this.CurrentLocation.X).text("😎");
+        $(".y" + this.CurrentLocation.Y + "x" + this.CurrentLocation.X).addClass(this.Name);
+    }
+    Character.prototype.move = function (direction) {
+        $(".y" + this.CurrentLocation.Y + "x" + this.CurrentLocation.X).text("");
+        $(".y" + this.CurrentLocation.Y + "x" + this.CurrentLocation.X).removeClass(this.Name);
+        console.log("OLD Location: Z:" + this.CurrentLocation.Z + " y:" + this.CurrentLocation.Y + " x:" + this.CurrentLocation.X);
+        switch (direction) {
+            case this.North:
+                if (this.CurrentLocation.North != null)
+                    this.CurrentLocation = this.CurrentLocation.North;
+                break;
+            case this.East:
+                if (this.CurrentLocation.East != null)
+                    this.CurrentLocation = this.CurrentLocation.East;
+                break;
+            case this.South:
+                if (this.CurrentLocation.South != null)
+                    this.CurrentLocation = this.CurrentLocation.South;
+                break;
+            case this.West:
+                if (this.CurrentLocation.West != null)
+                    this.CurrentLocation = this.CurrentLocation.West;
+                break;
+            case this.Up:
+                if (this.CurrentLocation.Z === this.GridLayers - 1)
+                    this.CurrentLocation = this.MazeGrid[0][this.CurrentLocation.Y][this.CurrentLocation.X];
+                else
+                    this.CurrentLocation = this.MazeGrid[this.CurrentLocation.Z + 1][this.CurrentLocation.Y][this.CurrentLocation.X];
+                break;
+            case this.Down:
+                if (this.CurrentLocation.Z === 0)
+                    this.CurrentLocation = this.MazeGrid[this.GridLayers - 1][this.CurrentLocation.Y][this.CurrentLocation.X];
+                else
+                    this.CurrentLocation = this.MazeGrid[this.CurrentLocation.Z - 1][this.CurrentLocation.Y][this.CurrentLocation.X];
+                break;
+            default:
+                console.log("Invalid attempt to move from " + this.CurrentLocation + " " + direction);
+                break;
+        }
+        $(".y" + this.CurrentLocation.Y + "x" + this.CurrentLocation.X).text("😎");
+        console.log("New Location: Z:" + this.CurrentLocation.Z + " y:" + this.CurrentLocation.Y + " x:" + this.CurrentLocation.X);
+        $(".y" + this.CurrentLocation.Y + "x" + this.CurrentLocation.X).addClass(this.Name);
+    };
+    return Character;
+}());
 var Maze = /** @class */ (function () {
     function Maze(gridLayers, gridWidth, gridHeight) {
         this.gridLayers = gridLayers;
@@ -37,7 +117,7 @@ var Maze = /** @class */ (function () {
                 if (this.isEmptyCell(nextCell.Z, nextCell.Y, nextCell.X)) {
                     // console.log(directions[i]);
                     // we found a workable direction
-                    var result = this.assignCellDirections(currentCell, nextCell, directions[i]);
+                    var result = this.getReverseDirection(currentCell, nextCell, directions[i]);
                     this.MazeGrid[currentCell.Z][currentCell.Y][currentCell.X] = result.current;
                     this.MazeGrid[nextCell.Z][nextCell.Y][nextCell.X] = result.next;
                     this.CellsList.push(nextCell);
@@ -48,28 +128,6 @@ var Maze = /** @class */ (function () {
             if (index !== -1)
                 this.CellsList.splice(index, 1);
         }
-    };
-    Maze.prototype.displayMaze = function () {
-        var html = "";
-        for (var layer = 0; layer < this.MazeGrid.length; layer++) {
-            var layerName = this.getNameFromLayer(layer);
-            html += "<div id=\"layer" + layer + "\" class=\"" + layerName + "\">";
-            html += "<h3>Layer " + layerName + "</h3>";
-            html += "<table id=\"layer" + layer + "-table class=\"" + layerName + "\">";
-            for (var row = 0; row < this.MazeGrid[layer].length; row++) {
-                html += "<tr class='r'>";
-                for (var column = 0; column < this.gridWidth; column++) {
-                    var classes = this.getClassesFromCell(this.MazeGrid[layer][row][column]);
-                    html += "<td class=\"cell " + classes + " " + layerName + " y" + row + "x" + column + "\">&nbsp;";
-                    html += "</td>";
-                }
-                html += "</tr> <!-- end row -->\n";
-            }
-            html += "</table>";
-            html += "</div>";
-        }
-        $("#maze-game").html(html);
-        console.log(this.MazeGrid[0]);
     };
     Maze.prototype.generateGrid = function () {
         var tempGrid = new Array(this.GridLayers);
@@ -82,7 +140,7 @@ var Maze = /** @class */ (function () {
         }
         return tempGrid;
     };
-    Maze.prototype.assignCellDirections = function (currentCell, nextCell, direction) {
+    Maze.prototype.getReverseDirection = function (currentCell, nextCell, direction) {
         switch (direction) {
             case this.North:
                 currentCell.North = nextCell;
@@ -185,21 +243,39 @@ var Maze = /** @class */ (function () {
         }
         return array;
     };
-    // private shuffle (array: any) {
-    // 	let currentIndex: any = array.length, temporaryValue, randomIndex;
-    // 	// While there remain elements to shuffle...
-    // 	while (0 !== currentIndex) {
-    // 		// Pick a remaining element...
-    // 		randomIndex = Math.floor(Math.random() * currentIndex);
-    // 		currentIndex -= 1;
-    // 		// And swap it with the current element.
-    // 		temporaryValue = array[currentIndex];
-    // 		array[currentIndex] = array[randomIndex];
-    // 		array[randomIndex] = temporaryValue;
-    // 	}
-    // 	return array;
-    // }
-    Maze.prototype.getClassesFromCell = function (cell) {
+    return Maze;
+}());
+var MazeView = /** @class */ (function () {
+    function MazeView(mazegrid, wallCell) {
+        this.mazegrid = mazegrid;
+        this.wallCell = wallCell;
+        this.MazeGrid = mazegrid;
+        this.GridWidth = mazegrid[0][0].length;
+        this.WallCell = wallCell;
+    }
+    MazeView.prototype.displayMaze = function () {
+        var html = "";
+        for (var layer = 0; layer < this.MazeGrid.length; layer++) {
+            var layerName = this.getNameFromLayer(layer);
+            html += "<div id=\"layer" + layer + "\" class=\"" + layerName + "\">";
+            html += "<h3 class=\"" + layerName + "\">" + layerName + "</h3>";
+            html += "<table id=\"layer" + layer + "-table class=\"" + layerName + "\">";
+            for (var row = 0; row < this.MazeGrid[layer].length; row++) {
+                html += "<tr class='r'>";
+                for (var column = 0; column < this.GridWidth; column++) {
+                    var classes = this.getClassesFromCell(this.MazeGrid[layer][row][column]);
+                    html += "<td class=\"cell " + classes + " " + layerName + " y" + row + "x" + column + "\">&nbsp;";
+                    html += "</td>";
+                }
+                html += "</tr> <!-- end row -->\n";
+            }
+            html += "</table>";
+            html += "</div>";
+        }
+        $("#maze-game").html(html);
+        console.log(this.MazeGrid[0]);
+    };
+    MazeView.prototype.getClassesFromCell = function (cell) {
         var classes = "";
         if (cell.North === this.WallCell.South)
             classes += " top ";
@@ -215,7 +291,7 @@ var Maze = /** @class */ (function () {
             classes += " down ";
         return classes;
     };
-    Maze.prototype.getNameFromLayer = function (layer) {
+    MazeView.prototype.getNameFromLayer = function (layer) {
         switch (layer) {
             case 0:
                 return "winter";
@@ -229,5 +305,73 @@ var Maze = /** @class */ (function () {
                 return "";
         }
     };
-    return Maze;
+    return MazeView;
 }());
+var currentLayer;
+var GridLayers;
+var GridHeight;
+var GridWidth;
+var MyCharacter;
+function main() {
+    currentLayer = 0;
+    GridLayers = 4;
+    GridHeight = 5;
+    GridWidth = 5;
+    var myMaze = new Maze(GridLayers, GridHeight, GridWidth);
+    myMaze.fillMaze();
+    var mazeViewer = new MazeView(myMaze.MazeGrid, myMaze.WallCell);
+    mazeViewer.displayMaze();
+    showLayerHideOthers(currentLayer);
+    MyCharacter = new Character("pinkdude", "pink", myMaze.MazeGrid[0][0][0], myMaze.MazeGrid);
+}
+function showLayerHideOthers(layerChoice) {
+    if (GridLayers > 1) {
+        for (var layer = 0; layer < GridLayers; layer++) {
+            var layerId = "#layer" + layer;
+            if (layer === layerChoice) {
+                $(layerId).show();
+            }
+            else {
+                $(layerId).hide();
+            }
+        }
+    }
+}
+function goNorth() {
+    MyCharacter.move(MyCharacter.North);
+    console.log(MyCharacter.CurrentLocation);
+}
+function goEast() {
+    MyCharacter.move(MyCharacter.East);
+    console.log(MyCharacter.CurrentLocation);
+}
+function goSouth() {
+    MyCharacter.move(MyCharacter.South);
+    console.log(MyCharacter.CurrentLocation);
+}
+function goWest() {
+    MyCharacter.move(MyCharacter.West);
+    console.log(MyCharacter.CurrentLocation);
+}
+function goUp() {
+    if (currentLayer < GridLayers - 1) {
+        currentLayer++;
+    }
+    else {
+        currentLayer = 0;
+    }
+    showLayerHideOthers(currentLayer);
+    MyCharacter.move(MyCharacter.Up);
+    console.log(MyCharacter.CurrentLocation);
+}
+function goDown() {
+    if (currentLayer === 0) {
+        currentLayer = GridLayers - 1;
+    }
+    else {
+        currentLayer--;
+    }
+    showLayerHideOthers(currentLayer);
+    MyCharacter.move(MyCharacter.Down);
+    console.log(MyCharacter.CurrentLocation);
+}

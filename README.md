@@ -36,11 +36,5 @@ If it's an empty cell, instead of cardinal direction, it'll be a cell reference
 3. "overlapping" mazes, when you hit the up/down buttons, it changes the level you're on
 
 # TO DO
-2. Choose a starting and ending point to the maze, where doesn't exactly matter, as long as they're on opposite sides, no matter what, you can get to any part of a maze (that's how mazes work...)
-3. Figure out a way to have a "character" that can move North, South, East, West
-	- The character starts at the starting point
-	- Character ends at the ending point
-	- Character can't move past a wall
-4. Might want to go to using canvas and making it look *good*
-
-Instead of *null*, I need a way to indicate that a direction is a wall 
+1. Choose a starting and ending point to the maze, where doesn't exactly matter, as long as they're on opposite sides, no matter what, you can get to any part of a maze (that's how mazes work...)
+2. Might want to go to using canvas and making it look *good*

@@ -12,8 +12,12 @@ function main() {
 
 	let myMaze = new Maze(GridLayers, GridHeight, GridWidth);
 	myMaze.fillMaze();
-	myMaze.displayMaze();
+	
+	let mazeViewer = new MazeView(myMaze.MazeGrid,myMaze.WallCell);
+	mazeViewer.displayMaze();
+	
 	showLayerHideOthers(currentLayer);
+
 
 	MyCharacter = new Character("pinkdude", "pink", myMaze.MazeGrid[0][0][0], myMaze.MazeGrid);
 }

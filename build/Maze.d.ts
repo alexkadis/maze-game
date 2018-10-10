@@ -1,10 +1,38 @@
+declare class Cell {
+    North: Cell | null;
+    East: Cell | null;
+    South: Cell | null;
+    West: Cell | null;
+    Up: Cell | null;
+    Down: Cell | null;
+    Z: number;
+    Y: number;
+    X: number;
+    isWall: boolean;
+    constructor();
+}
+declare class Character {
+    Color: string;
+    Name: string;
+    CurrentLocation: Cell;
+    North: string;
+    East: string;
+    South: string;
+    West: string;
+    Up: string;
+    Down: string;
+    private GridLayers;
+    private MazeGrid;
+    constructor(name: string, color: string, startingLocation: Cell, mazeGrid: Cell[][][]);
+    move(direction: string): void;
+}
 declare class Maze {
     gridLayers: number;
     gridWidth: number;
     gridHeight: number;
     MazeGrid: Cell[][][];
     private CellsList;
-    private WallCell;
+    WallCell: Cell;
     private GridLayers;
     private GridWidth;
     private GridHeight;
@@ -16,9 +44,8 @@ declare class Maze {
     private Down;
     constructor(gridLayers: number, gridWidth: number, gridHeight: number);
     fillMaze(): void;
-    displayMaze(): void;
     private generateGrid;
-    private assignCellDirections;
+    private getReverseDirection;
     private createCell;
     private getRandomIntInclusive;
     private getRandomDirections;
@@ -29,6 +56,29 @@ declare class Maze {
      * @param {Array} array items An array containing the items.
      */
     shuffle(array: any): any;
+}
+declare class MazeView {
+    mazegrid: Cell[][][];
+    wallCell: Cell;
+    MazeGrid: Cell[][][];
+    private GridWidth;
+    private WallCell;
+    constructor(mazegrid: Cell[][][], wallCell: Cell);
+    displayMaze(): void;
     private getClassesFromCell;
     private getNameFromLayer;
 }
+declare var currentLayer: number;
+declare var GridLayers: number;
+declare var GridHeight: number;
+declare var GridWidth: number;
+declare var MyCharacter: Character;
+declare function main(): void;
+declare function showLayerHideOthers(layerChoice: number): void;
+declare function goNorth(): void;
+declare function goEast(): void;
+declare function goSouth(): void;
+declare function goWest(): void;
+declare function goUp(): void;
+declare function goDown(): void;
+//# sourceMappingURL=maze.d.ts.map
