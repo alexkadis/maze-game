@@ -38,3 +38,7 @@ If it's an empty cell, instead of cardinal direction, it'll be a cell reference
 # TO DO
 1. Choose a starting and ending point to the maze, where doesn't exactly matter, as long as they're on opposite sides, no matter what, you can get to any part of a maze (that's how mazes work...)
 2. Might want to go to using canvas and making it look *good*
+3. Unit tests https://journal.artfuldev.com/write-tests-for-typescript-projects-with-mocha-and-chai-in-typescript-86e053bdb2b6
+	1. https://medium.com/@FizzyInTheHall/run-typescript-mocha-tests-in-visual-studio-code-58e62a173575
+	2. https://journal.artfuldev.com/unit-testing-node-applications-with-typescript-using-mocha-and-chai-384ef05f32b2
+	3. https://medium.com/@RupaniChirag/writing-unit-tests-in-typescript-d4719b8a0a40

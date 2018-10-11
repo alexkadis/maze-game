@@ -79,26 +79,46 @@ body {
 
 }
 
-h1, h2, h3, h4, h5, h6, p {
+h1, h2, h3, h4, h5, h6 {
 	font-family: sans-serif;
 	text-transform:capitalize;
 	font-weight: bold;
 	text-align: center;
+	vertical-align: center;
 }
 
 h1 { font-size: 2em; /* 2x body copy size = 32px */ line-height: 1.25; /* 45px / 36px */ }
 
 h2 { font-size: 1.625em; /* 1.625x body copy size = 26px */ line-height: 1.15384615; /* 30px / 26px */ }
 
-h3 { font-size: 1.375em; /* 1.375x body copy size = 22px */ line-height: 1.13636364; /* 25px / 22px */ }
+h3 { font-size: 40px; /* 1.375x body copy size = 22px */ line-height: 1.13636364; /* 25px / 22px */ }
 
 h4 { font-size: 1.125em; /* 1.125x body copy size = 18px */ line-height: 1.11111111; }
 
 blockquote { font-size: 1.125em; /* 20px / 16px */ line-height: 1.25; /* 25px / 20px */ }
 
 
+h3 {
+	display: inline-grid;
+}
 
-
+h3 span.layer-name,
+h3 button.up,
+h3 button.down {
+	display: inline-block;
+	grid-row: 1;
+}
+h3 button.up-button {
+	grid-column: 3;
+	margin: 2px;
+}
+h3 span.layer-name {
+	grid-column: 2;
+}
+h3 button.down-button {
+	grid-column: 1;
+	margin: 2px;
+}
 
 div.blockMaze {
 	margin: 20px auto;
@@ -140,11 +160,11 @@ button.new-button {
 	border: none;
 	background-color: transparent;
 
-	background-size: 2em 2em;
+	background-size: 40px 40px;
 	background-repeat: no-repeat;
-	width: 2em;
-	height: 2em;
-	vertical-align: center;
+	width: 40px;
+	height: 40px;
+	vertical-align: bottom;
 }
 
 .gameButtons table {
