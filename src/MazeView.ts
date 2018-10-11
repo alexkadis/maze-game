@@ -18,7 +18,7 @@ class MazeView {
 			const layerName: string = this.getNameFromLayer(layer);
 
 			html += `<div id="layer${layer}" class="${layerName}">`;
-			html += `<h3 class="${layerName}">${layerName}</h3>`;
+			html += `<h3 class="${layerName}"><button onclick="goDown()" class="down-button">&nbsp;</button> ${layerName} <button onclick="goUp()" class="up-button">&nbsp;</button></h3>`;
 			html += `<table id="layer${layer}-table class="${layerName}">`;
 
 			for (let row = 0; row < this.MazeGrid[layer].length; row++) {

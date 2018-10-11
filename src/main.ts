@@ -37,19 +37,19 @@ function showLayerHideOthers(layerChoice: number) {
 
 function goNorth() {
 	MyCharacter.move(MyCharacter.North);
-	console.log(MyCharacter.CurrentLocation);
+	// console.log(MyCharacter.CurrentLocation);
 }
 function goEast() {
 	MyCharacter.move(MyCharacter.East);
-	console.log(MyCharacter.CurrentLocation);
+	// console.log(MyCharacter.CurrentLocation);
 }
 function goSouth() {
 	MyCharacter.move(MyCharacter.South);
-	console.log(MyCharacter.CurrentLocation);
+	// console.log(MyCharacter.CurrentLocation);
 }
 function goWest() {
 	MyCharacter.move(MyCharacter.West);
-	console.log(MyCharacter.CurrentLocation);
+	// console.log(MyCharacter.CurrentLocation);
 }
 
 function goUp() {
@@ -60,7 +60,7 @@ function goUp() {
 	}
 	showLayerHideOthers(currentLayer);
 	MyCharacter.move(MyCharacter.Up);
-	console.log(MyCharacter.CurrentLocation);
+	// console.log(MyCharacter.CurrentLocation);
 }
 
 function goDown() {
@@ -71,6 +71,6 @@ function goDown() {
 	}
 	showLayerHideOthers(currentLayer);
 	MyCharacter.move(MyCharacter.Down);
-	console.log(MyCharacter.CurrentLocation);
+	// console.log(MyCharacter.CurrentLocation);
 }
 

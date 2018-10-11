@@ -75,6 +75,8 @@ body {
 	-webkit-text-size-adjust: 100%;
 	margin: 0px auto;
 	width: 90%;
+	touch-action: manipulation;
+
 }
 
 h1, h2, h3, h4, h5, h6, p {
@@ -95,20 +97,67 @@ h4 { font-size: 1.125em; /* 1.125x body copy size = 18px */ line-height: 1.11111
 blockquote { font-size: 1.125em; /* 20px / 16px */ line-height: 1.25; /* 25px / 20px */ }
 
 
-.gameButons button {
-	cursor: pointer;
-}
 
-.blockMaze {
+
+
+div.blockMaze {
 	margin: 20px auto;
 	display: block;
+	/* align-items: center; */
+	text-align: center;
 }
 
+button.north-button {	
+	background-image: url(./img/north.png);
+}
+button.south-button {
+	background-image: url(./img/south.png);
+}
+button.west-button {
+	background-image: url(./img/west.png);
+}
+button.east-button {
+	background-image: url(./img/east.png);
+}
+button.down-button {
+	background-image: url(./img/down.png);
+}
+button.up-button {
+	background-image: url(./img/up.png);
+}
+button.new-button {
+	background-image: url(./img/new.png);
+}
+
+
+ button {
+	cursor: pointer;
+	/* margin: 0.25em; */
+	padding: 3px;
+	margin: 0;
+	line-height: 0;
+	text-align: center;
+	border: none;
+	background-color: transparent;
+
+	background-size: 2em 2em;
+	background-repeat: no-repeat;
+	width: 2em;
+	height: 2em;
+	vertical-align: center;
+}
+
+.gameButtons table {
+	margin: 20px auto;
+	/* display: flex; */
+	align-items: center;
+	text-align: center;
+}
 .blockMaze table {
 	border-spacing: 1px;
 	border-collapse: separate;
 	margin: 20px auto;
-	display: flex;
+	/* display: flex; */
 	align-items: center;
 }
 
@@ -116,12 +165,9 @@ blockquote { font-size: 1.125em; /* 20px / 16px */ line-height: 1.25; /* 25px / 
 	display: inline-block;
 	width: 25px;
 	height: 25px;
-	/* background-image: url("./img/cream-paper.png"); */
 	border: 1px solid #fff;
 	text-align: center;
-	/* font-size: 30px; */
 	vertical-align: middle;
-	/* padding: 5px 5px; */
 	display: table-cell; 
 }
 
@@ -225,12 +271,6 @@ blockquote { font-size: 1.125em; /* 20px / 16px */ line-height: 1.25; /* 25px / 
 .blockMaze .left.fall { 
 	border-left: 4px solid var(--fall-dark);
 }
-
-
-.blockMaze .cell.pinkdude {
-	/* background-color: pink; */
-}
-
 
 
 /* ////// */

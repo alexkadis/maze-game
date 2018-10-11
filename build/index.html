@@ -3,34 +3,40 @@
 <head>
     <meta charset="utf-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>Maze Game Simple</title>
+    <title>Maze Game</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=0">
     <link rel="stylesheet" type="text/css" media="screen" href="main.css" />
-    <script
-  src="https://code.jquery.com/jquery-3.3.1.min.js"
-  integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
-  crossorigin="anonymous"></script>
-    <script src="Maze.js"></script>
-    
 </head>
 <body onload="main();">
-	<h1>Maze</h1>
+	<h1>Maze Game</h1>
 	<div class="gameButtons">
-		<button onclick="main();">New Maze</button>
-		<button onclick="goUp()">Next Season</button>
-		<button onclick="goDown()">Previous Season</button>
-		<br />
-		<button onclick="goNorth()">North</button>
-		<br />
-		<button onclick="goWest()">West</button>
-		<button onclick="goEast()">East</button>
-		<br />
-		<button onclick="goSouth()">South</button>
-		<br />
-	</div>
-
-    <div id="maze-game" class="blockMaze" style="line-height: 0;">
+			<table>
+				<tr>
+					<td></td>
+					<td><button onclick="goNorth()" class="north-button" title="North">&nbsp;</button></td>
+					<td></td>
+				</tr>
+				<tr>
+					<td><button onclick="goWest()" class="west-button" title="West">&nbsp;</button></td>
+					<td></td>
+					<td><button onclick="goEast()" class="east-button" title="East">&nbsp;</button></td>
+				</tr>
+				<tr>
+					<td></td>
+					<td><button onclick="goSouth()" class="south-button" title="South">&nbsp;</button></td>
+					<td></td>
+				</tr>
+			</table>
+			</div>
+	<div id="maze-game" class="blockMaze" style="line-height: 0;">
         Replaced with the maze.
     </div>
+	<p><button onclick="main();" class="new-button" title="New Maze">&nbsp;</button></p>
 
+	<script
+	src="https://code.jquery.com/jquery-3.3.1.min.js"
+	integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+	crossorigin="anonymous"></script>
+	  <script src="Maze.js"></script>
+	  
 </body>

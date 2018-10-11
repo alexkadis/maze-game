@@ -46,7 +46,7 @@ class Character {
 		
 		$(`.y${this.CurrentLocation.Y}x${this.CurrentLocation.X}`).text("");
 		$(`.y${this.CurrentLocation.Y}x${this.CurrentLocation.X}`).removeClass(this.Name);
-		console.log(`OLD Location: Z:${this.CurrentLocation.Z} y:${this.CurrentLocation.Y} x:${this.CurrentLocation.X}`);
+		// console.log(`OLD Location: Z:${this.CurrentLocation.Z} y:${this.CurrentLocation.Y} x:${this.CurrentLocation.X}`);
 		switch (direction) {
 			case this.North:
 				if (this.CurrentLocation.North != null)
@@ -81,7 +81,7 @@ class Character {
 				break;
 		}
 		$(`.y${this.CurrentLocation.Y}x${this.CurrentLocation.X}`).text("😎");
-		console.log(`New Location: Z:${this.CurrentLocation.Z} y:${this.CurrentLocation.Y} x:${this.CurrentLocation.X}`);
+		// console.log(`New Location: Z:${this.CurrentLocation.Z} y:${this.CurrentLocation.Y} x:${this.CurrentLocation.X}`);
 		$(`.y${this.CurrentLocation.Y}x${this.CurrentLocation.X}`).addClass(this.Name);
 	}
 }
