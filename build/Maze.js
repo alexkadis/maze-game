@@ -80,6 +80,10 @@ var Character = /** @class */ (function () {
             this.CharacterIcon = "😎";
             this.EndIcon = "🎉";
             $(".y" + this.CurrentLocation.Y + "x" + this.CurrentLocation.X).addClass("game-won");
+            $(".new-button").show();
+            $(".desc").hide();
+            $(".gameButtons").hide();
+            $(".mazeHeader").hide();
         }
         $(".winter.y" + this.EndCell.Y + "x" + this.EndCell.X).text(this.EndIcon);
         $(".y" + this.CurrentLocation.Y + "x" + this.CurrentLocation.X).text(this.CharacterIcon);
@@ -267,6 +271,11 @@ var MazeView = /** @class */ (function () {
         this.EndCell = endCell;
     }
     MazeView.prototype.displayMaze = function () {
+        $(".new-button").hide();
+        $(".desc").show();
+        $(".gameButtons").show();
+        $(".gameButtons").show();
+        $(".MazeHeader").show();
         var html = "";
         for (var layer = 0; layer < this.MazeGrid.length; layer++) {
             var layerName = this.getNameFromLayer(layer);

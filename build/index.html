@@ -11,8 +11,9 @@
 	<article>
 		<h1 id="header">Maze of Seasons</h1>
 		<main class="gameDescription">
-			<p>Navigate through a randomly generated multi-level maze towards the finish line (the checkered flag). When you hit a wall, change the season.</p>
-			<p>This game was created in TypeScript, the source and credits are on the <a href="https://github.com/alexkadis/maze-game" title="project&rsquo;s GitHub page">project&rsquo;s GitHub page</a>.</p>
+			<p class="desc">Use the <i class="controls-description">controls</i> to navigate through a randomly generated multi-level maze towards the finish <i class="end-description">line.</i></p>
+			<p class="desc">When you get stuck, <i class="season-description">change</i> the season.</p>
+			<p class="new-button">You won! Play again? <button onclick="main();" title="New Maze">&nbsp;</button></p>
 		</main>
 		<nav class="gameButtons">
 			<button onclick="goNorth()" class="north-button" title="North">&nbsp;</button>
@@ -21,9 +22,15 @@
 			<button onclick="goSouth()" class="south-button" title="South">&nbsp;</button>
 		</nav>
 		<div id="maze-game" class="blockMaze" style="line-height: 0;">
-			Replaced with the maze.
+			Loading...
 		</div>
-		<p class="new-button"><button onclick="main();" title="New Maze">&nbsp;</button></p>
+		
+		<div class="footer">
+			<!-- <p class="new-button">Generate a new game: <button onclick="main();" title="New Maze">&nbsp;</button></p> -->
+			<p>This game was created in TypeScript with a bit of jQuery mixed in. The source and credits are on the <a href="https://github.com/alexkadis/maze-game" title="project&rsquo;s GitHub page">project&rsquo;s GitHub page</a>.</p>
+		</div>
+		
+
 	</article>
 	<script
 	src="https://code.jquery.com/jquery-3.3.1.min.js"

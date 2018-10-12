@@ -11,6 +11,13 @@ class MazeView {
 		this.EndCell = endCell;
 	}
 	public displayMaze() {
+		
+		$(`.new-button`).hide();
+		$(`.desc`).show();
+		$(`.gameButtons`).show();
+		$(`.gameButtons`).show();
+		$(`.MazeHeader`).show();
+		
 		let html: string = "";
 
 		for (let layer = 0; layer < this.MazeGrid.length; layer++) {

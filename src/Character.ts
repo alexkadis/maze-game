@@ -91,6 +91,10 @@ class Character {
 			this.CharacterIcon = "😎";
 			this.EndIcon = "🎉";
 			$(`.y${this.CurrentLocation.Y}x${this.CurrentLocation.X}`).addClass("game-won");
+			$(`.new-button`).show();
+			$(`.desc`).hide();
+			$(`.gameButtons`).hide();
+			$(`.mazeHeader`).hide();
 		}
 		$(`.winter.y${this.EndCell.Y}x${this.EndCell.X}`).text(this.EndIcon);
 		$(`.y${this.CurrentLocation.Y}x${this.CurrentLocation.X}`).text(this.CharacterIcon);
