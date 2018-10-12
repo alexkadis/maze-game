@@ -1,44 +1,117 @@
-# Maze Game
-The goal is to create a multi-level maze game with moving walls
+# Maze of Seasons
+Navigate through a randomly generated multi-level maze towards your goal (the checkered flag). When you hit a wall, change the season.
 
-Trying to re-work it using oop, allowing me to follow the instructions on [Maze Generation: Growing Tree algorithm](http://weblog.jamisbuck.org/2011/1/27/maze-generation-growing-tree-algorithm)
 
-# starting-point.js 
-- From http://jamisbuck.org/mazes/minecraft.html
-- It's a good starting place, but ultimately I'm re-doing it my way
+# Growing Tree Algorithm
+I needed a bit of mental gymnastics to get my head around the growing tree algorithm. It's a method of creating a maze out of a grid. Here's the steps.
 
-# AirBNB style guide
-https://github.com/airbnb/javascript
+## 1. Create a multi-level array (a grid)
+My grid:
+- `z`: 4 (levels/seasons)
+- `y`: 8 cells (rows)
+- `x`: 8 cells (columns)
 
-# The process I'm going for
-1. Choose a starting point along the top
-2. Choose a direction at random, if you can't go that way, choose a different direction
-3. Once you find a direction you can go: 
-	- Add it to the list of cells
-	- Add the cell to the grid
-4. Keep going until you can't move in any direction
-5. Backtrack until you can go another direction
-6. Repeat 2-4 until you've filled the entire maze (number of cells left is 0)
+Each cell is an object from the `Cell` class.
 
-##Algorithm
-Cells have all directions (north, east, south, west, up, down) which refer to different cells or "wall" 
-- Edges are `wall`
+Cells have cardinal directions (`North`, `South`, `East`, `West`, `Up` a layer, `Down` a layer) that can point to other cells on the grid or to `null`. A `null` direction indicates the presence of a wall.
 
-###When you loop:
-If it's an empty cell, instead of cardinal direction, it'll be a cell reference
+For details on each class see the [build/maze.d.ts](https://github.com/alexkadis/maze-game/blob/master/build/Maze.d.ts) file.
 
-1. new cell's relative direction refers to this cell
-2. this cell's relative direction refers to the new cell. If it's not an empty cell, the direction will be `wall`
+## 2. Create a temporary cell stack to hold the cells as you create them
+As a cell is created, it's added to the stack, before the end of this process, it'll be removed.
 
-### Display
-1. Loop through the grid (z, y, x)
-2. If a direction is a wall, set that border wall (top border, east border, south border, west border)
-3. "overlapping" mazes, when you hit the up/down buttons, it changes the level you're on
+For this project, I used an array as JavaScript and TypeScript don't explicitly have stacks.
+
+## 3. Choose a starting point on the grid
+I used `z:0 y:0 x:0`.
+
+## 4. Choose a direction at random
+`North`, `South`, `East`, `West`, `Up` a layer, `Down` a layer
+
+If you can't go that way, (the cell is already full) choose a different direction.
+
+## 5. Once you find a direction you can go:
+- Add it to the stack of cells.
+- Add the cell to the grid.
+- Set the current cell's direction to the next cell's location and visa versa
+
+e.g.: 
+```
+Cell#1
+location:	 grid[0]0][0] // grid[z][y][x]
+North:	null
+South:	null
+East:	null
+West:	null
+Up:	null
+Down:	null
+
+// direction chosen: South //
+// Every null will become a wall if it doesn't eventually point at a cell
+
+Cell#1:
+location:	 grid[0]0][0]
+North:	null
+South:	Cell#2 @ grid[0]1][0]
+East:	null
+West:	null
+Up:	null
+Down:	null
+
+Cell#2:
+location:	 grid[0]1][0]
+North:	Cell#1 @ grid[0]0][0]
+South:	null
+East:	null
+West:	null
+Up:	null
+Down:	null
+```
+
+
+## 6. Keep going until you can't move in any direction
+All of the directions have cells in them.
+
+## 7. Backtrack until you can go another direction
+To backtrack, we pop the last cell off the cell stack and start the process over at step 4.
+
+
+## 8. Repeat steps 4-7 until you've filled the entire maze
+The number of cells left on the stack will be zero (we backtracked all the way to the beginning.)
+
+See links in [Credits](#credits) to Jamis Buck's work for more details.
+
+# Display
+## 1. Loop through the multi-layer array (the grid)
+`// grid[z][y][x] = grid[layer][row][column]`
+## 2. If a direction is null, set that border wall
+In CSS parlance: top border, east border, south border, west border
+
+```
+location:	grid[0]0][0]
+North:	null	= border top
+South:	Cell#2	= transparent border
+East:	null	= border right
+West:	null	= border bottom
+Up:	null
+Down:	null
+```
+
+Up and Down aren't used for display in my maze.
 
 # TO DO
-1. Choose a starting and ending point to the maze, where doesn't exactly matter, as long as they're on opposite sides, no matter what, you can get to any part of a maze (that's how mazes work...)
-2. Might want to go to using canvas and making it look *good*
-3. Unit tests https://journal.artfuldev.com/write-tests-for-typescript-projects-with-mocha-and-chai-in-typescript-86e053bdb2b6
-	1. https://medium.com/@FizzyInTheHall/run-typescript-mocha-tests-in-visual-studio-code-58e62a173575
-	2. https://journal.artfuldev.com/unit-testing-node-applications-with-typescript-using-mocha-and-chai-384ef05f32b2
-	3. https://medium.com/@RupaniChirag/writing-unit-tests-in-typescript-d4719b8a0a40
+## Unit Testing
+1. https://journal.artfuldev.com/write-tests-for-typescript-projects-with-mocha-and-chai-in-typescript-86e053bdb2b6
+1. https://medium.com/@FizzyInTheHall/run-typescript-mocha-tests-in-visual-studio-code-58e62a173575
+2. https://journal.artfuldev.com/unit-testing-node-applications-with-typescript-using-mocha-and-chai-384ef05f32b2
+3. https://medium.com/@RupaniChirag/writing-unit-tests-in-typescript-d4719b8a0a40
+
+
+## Re-design in canvas?
+Might want to go to using canvas and making it look *good*.
+
+
+## Credits
+This project would not be possible without [Jamis Buck](https://github.com/jamis) and his posts on [Maze Generation: Growing Tree algorithm](http://weblog.jamisbuck.org/2011/1/27/maze-generation-growing-tree-algorithm) and [Minecraft Maze Generator](http://jamisbuck.org/mazes/minecraft.html). My algorithmic and display code borrows heavily from his, and lessons learned in his blog posts.
+
+The icons are from [icons8](https://icons8.com/), go check them out.

@@ -73,13 +73,13 @@ body {
 	color: #111;
 	background-color: #fdfdfd;
 	-webkit-text-size-adjust: 100%;
+	touch-action: manipulation;
 }
 article {
 	/* margin: 0px auto; */
 	/* box-align: center; */
-	width: 400px;
+	width: 100%;
 	margin: 0px auto;
-	touch-action: manipulation;
 	display: grid;
 	grid-template-areas:
 			"header"
