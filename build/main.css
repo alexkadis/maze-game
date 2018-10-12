@@ -73,84 +73,45 @@ body {
 	color: #111;
 	background-color: #fdfdfd;
 	-webkit-text-size-adjust: 100%;
+}
+article {
+	/* margin: 0px auto; */
+	/* box-align: center; */
+	width: 400px;
 	margin: 0px auto;
-	width: 90%;
 	touch-action: manipulation;
-
+	display: grid;
+	grid-template-areas:
+			"header"
+			"gameDescription"
+			"gameButtons"
+			"blockMaze"
+			"footer";
 }
-
-h1, h2, h3, h4, h5, h6 {
-	font-family: sans-serif;
-	text-transform:capitalize;
+h1 {
+	font-size: 2em; /* 2x body copy size = 32px */
+	line-height: 1.25; /* 45px / 36px */
+	grid-area: header;
+	text-align: center;
 	font-weight: bold;
-	text-align: center;
-	vertical-align: center;
-}
-
-h1 { font-size: 2em; /* 2x body copy size = 32px */ line-height: 1.25; /* 45px / 36px */ }
-
-h2 { font-size: 1.625em; /* 1.625x body copy size = 26px */ line-height: 1.15384615; /* 30px / 26px */ }
-
-h3 { font-size: 40px; /* 1.375x body copy size = 22px */ line-height: 1.13636364; /* 25px / 22px */ }
-
-h4 { font-size: 1.125em; /* 1.125x body copy size = 18px */ line-height: 1.11111111; }
-
-blockquote { font-size: 1.125em; /* 20px / 16px */ line-height: 1.25; /* 25px / 20px */ }
-
-
-h3 {
-	display: inline-grid;
-}
-
-h3 span.layer-name,
-h3 button.up,
-h3 button.down {
-	display: inline-block;
-	grid-row: 1;
-}
-h3 button.up-button {
-	grid-column: 3;
-	margin: 2px;
-}
-h3 span.layer-name {
-	grid-column: 2;
-}
-h3 button.down-button {
-	grid-column: 1;
-	margin: 2px;
-}
-
-div.blockMaze {
-	margin: 20px auto;
-	display: block;
-	/* align-items: center; */
-	text-align: center;
-}
-
-button.north-button {	
-	background-image: url(./img/north.png);
-}
-button.south-button {
-	background-image: url(./img/south.png);
-}
-button.west-button {
-	background-image: url(./img/west.png);
-}
-button.east-button {
-	background-image: url(./img/east.png);
-}
-button.down-button {
-	background-image: url(./img/down.png);
-}
-button.up-button {
-	background-image: url(./img/up.png);
-}
-button.new-button {
-	background-image: url(./img/new.png);
+	margin: 10px auto;
 }
 
 
- button {
+.gameDescription {
+	grid-area: gameDescription;
+	text-align: justify;
+	line-height: 1.25;
+	margin: 0 0 20px 0;
+}
+
+.gameDescription p {
+	width: 300px;
+	margin: 10px auto;
+}
+
+button {
+	/* outline: 1px solid red; */
 	cursor: pointer;
 	/* margin: 0.25em; */
 	padding: 3px;
@@ -159,32 +120,113 @@ button.new-button {
 	text-align: center;
 	border: none;
 	background-color: transparent;
+}
 
+
+.gameButtons {
+	grid-area: gameButtons;
+	display: grid;
+	grid-template-areas:
+	  ". . north . ."
+	  ". west . east ."
+	  ". . south . .";
+	align-content: center;
+	grid-template-columns: 1fr 40px 40px 40px 1fr;
+	grid-template-rows: 40px 40px 40px;
+  }
+.gameButtons button,
+.mazeHeader button {
 	background-size: 40px 40px;
 	background-repeat: no-repeat;
 	width: 40px;
 	height: 40px;
-	vertical-align: bottom;
 }
 
-.gameButtons table {
-	margin: 20px auto;
-	/* display: flex; */
-	align-items: center;
-	text-align: center;
+.north-button {
+	background-image: url(./img/north.png);
+	grid-area: north;
+	margin: 0px auto;
 }
+.south-button {
+	background-image: url(./img/south.png);
+	grid-area: south;
+	margin: 0px auto;
+}
+.west-button {
+	background-image: url(./img/west.png);
+	grid-area: west;
+	margin: 0 0 0 auto;
+}
+.east-button {
+	background-image: url(./img/east.png);
+	grid-area: east;
+	margin: 0 auto 0 0;
+}
+.down-button {
+	background-image: url(./img/down.png);
+	grid-area: down;
+	margin: 0 0 0 auto;
+}
+.up-button {
+	background-image: url(./img/up.png);
+	grid-area: up;
+	margin: 0 auto 0 0;
+}
+
+#maze-game {
+	grid-area: blockMaze;
+	display: grid;
+	grid-template-areas:
+	 "mazeHeader"
+	 "maze";
+	margin: 20px auto;
+}
+
+.mazeHeader {
+	grid-area: mazeHeader;
+	display: grid;
+	grid-template-areas:
+	 ". . down season up . .";
+	text-transform: capitalize;
+	font-weight: bold;
+}
+.layer-name {
+	grid-area: season;
+	text-align: center;
+	font-size: 40px; /* 1.375x body copy size = 22px */
+	line-height: 1.13636364; /* 25px / 22px */
+}
+
+.new-button {
+	grid-area: footer;
+	display: grid;
+} 
+
+.new-button button {
+	background-image: url(./img/new.png);
+	background-size: 40px 40px;
+	background-repeat: no-repeat;
+	width: 40px;
+	height: 40px;
+	margin: 0px auto;
+}
+
+
+
 .blockMaze table {
 	border-spacing: 1px;
 	border-collapse: separate;
 	margin: 20px auto;
 	/* display: flex; */
 	align-items: center;
+	grid-area: maze;
 }
 
 .blockMaze .cell {
 	display: inline-block;
 	width: 25px;
 	height: 25px;
+	border-style: groove;
 	border: 1px solid #fff;
 	text-align: center;
 	vertical-align: middle;
@@ -292,6 +334,12 @@ button.new-button {
 	border-left: 4px solid var(--fall-dark);
 }
 
+.end {
+	/* background-color: #9c5d5d !important; */
+}
+.end.game-won {
+	/* background-color: #358d32 !important; */
+}
 
 /* ////// */
 

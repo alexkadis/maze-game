@@ -2,6 +2,7 @@ class Maze {
 	public MazeGrid: Cell[][][];
 	private CellsList: Cell[];
 	public WallCell: Cell;
+	public EndCell: Cell;
 
 	private GridLayers: number;
 	private GridWidth: number;
@@ -34,6 +35,8 @@ class Maze {
 		this.West	= "West";
 		this.Up		= "Up";
 		this.Down	= "Down";
+
+		this.EndCell = new Cell();
 	}
 
 	public fillMaze () {
@@ -75,6 +78,7 @@ class Maze {
 			if (index !== -1)
 				this.CellsList.splice(index, 1);
 		}
+		this.EndCell = this.MazeGrid[0][this.getRandomIntInclusive(1, this.gridHeight - 1)][this.getRandomIntInclusive(1, this.gridWidth - 1)];
 	}
 
 

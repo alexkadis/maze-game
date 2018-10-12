@@ -12,6 +12,7 @@ declare class Cell {
     constructor();
 }
 declare class Character {
+    endCell: Cell;
     Color: string;
     Name: string;
     CurrentLocation: Cell;
@@ -23,7 +24,10 @@ declare class Character {
     Down: string;
     private GridLayers;
     private MazeGrid;
-    constructor(name: string, color: string, startingLocation: Cell, mazeGrid: Cell[][][]);
+    EndCell: Cell;
+    CharacterIcon: string;
+    EndIcon: string;
+    constructor(name: string, color: string, startingLocation: Cell, mazeGrid: Cell[][][], endCell: Cell);
     move(direction: string): void;
 }
 declare class Maze {
@@ -33,6 +37,7 @@ declare class Maze {
     MazeGrid: Cell[][][];
     private CellsList;
     WallCell: Cell;
+    EndCell: Cell;
     private GridLayers;
     private GridWidth;
     private GridHeight;
@@ -60,10 +65,12 @@ declare class Maze {
 declare class MazeView {
     mazegrid: Cell[][][];
     wallCell: Cell;
+    endCell: Cell;
     MazeGrid: Cell[][][];
     private GridWidth;
     private WallCell;
-    constructor(mazegrid: Cell[][][], wallCell: Cell);
+    EndCell: Cell;
+    constructor(mazegrid: Cell[][][], wallCell: Cell, endCell: Cell);
     displayMaze(): void;
     private getClassesFromCell;
     private getNameFromLayer;

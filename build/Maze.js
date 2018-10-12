@@ -21,7 +21,8 @@ Figure out a way to have a "character" that can move North, South, East, West
     - Character can't move past a wall
 */
 var Character = /** @class */ (function () {
-    function Character(name, color, startingLocation, mazeGrid) {
+    function Character(name, color, startingLocation, mazeGrid, endCell) {
+        this.endCell = endCell;
         this.Color = color;
         this.Name = name;
         this.CurrentLocation = startingLocation;
@@ -33,8 +34,10 @@ var Character = /** @class */ (function () {
         this.Down = "Down";
         this.MazeGrid = mazeGrid;
         this.GridLayers = this.MazeGrid.length;
-        $(".y" + this.CurrentLocation.Y + "x" + this.CurrentLocation.X).text("😎");
-        $(".y" + this.CurrentLocation.Y + "x" + this.CurrentLocation.X).addClass(this.Name);
+        this.EndCell = endCell;
+        this.CharacterIcon = "😀";
+        this.EndIcon = "🏁";
+        this.move("");
     }
     Character.prototype.move = function (direction) {
         $(".y" + this.CurrentLocation.Y + "x" + this.CurrentLocation.X).text("");
@@ -70,10 +73,16 @@ var Character = /** @class */ (function () {
                     this.CurrentLocation = this.MazeGrid[this.CurrentLocation.Z - 1][this.CurrentLocation.Y][this.CurrentLocation.X];
                 break;
             default:
-                console.log("Invalid attempt to move from " + this.CurrentLocation + " " + direction);
+                // console.log(`Invalid attempt to move from ${this.CurrentLocation} ${direction}`);
                 break;
         }
-        $(".y" + this.CurrentLocation.Y + "x" + this.CurrentLocation.X).text("😎");
+        if (this.MazeGrid[this.CurrentLocation.Z][this.CurrentLocation.Y][this.CurrentLocation.X] == this.EndCell) {
+            this.CharacterIcon = "😎";
+            this.EndIcon = "🎉";
+            $(".y" + this.CurrentLocation.Y + "x" + this.CurrentLocation.X).addClass("game-won");
+        }
+        $(".winter.y" + this.EndCell.Y + "x" + this.EndCell.X).text(this.EndIcon);
+        $(".y" + this.CurrentLocation.Y + "x" + this.CurrentLocation.X).text(this.CharacterIcon);
         // console.log(`New Location: Z:${this.CurrentLocation.Z} y:${this.CurrentLocation.Y} x:${this.CurrentLocation.X}`);
         $(".y" + this.CurrentLocation.Y + "x" + this.CurrentLocation.X).addClass(this.Name);
     };
@@ -99,6 +108,7 @@ var Maze = /** @class */ (function () {
         this.West = "West";
         this.Up = "Up";
         this.Down = "Down";
+        this.EndCell = new Cell();
     }
     Maze.prototype.fillMaze = function () {
         // initialize the cellsList and add the first cell to the list
@@ -128,6 +138,7 @@ var Maze = /** @class */ (function () {
             if (index !== -1)
                 this.CellsList.splice(index, 1);
         }
+        this.EndCell = this.MazeGrid[0][this.getRandomIntInclusive(1, this.gridHeight - 1)][this.getRandomIntInclusive(1, this.gridWidth - 1)];
     };
     Maze.prototype.generateGrid = function () {
         var tempGrid = new Array(this.GridLayers);
@@ -246,19 +257,21 @@ var Maze = /** @class */ (function () {
     return Maze;
 }());
 var MazeView = /** @class */ (function () {
-    function MazeView(mazegrid, wallCell) {
+    function MazeView(mazegrid, wallCell, endCell) {
         this.mazegrid = mazegrid;
         this.wallCell = wallCell;
+        this.endCell = endCell;
         this.MazeGrid = mazegrid;
         this.GridWidth = mazegrid[0][0].length;
         this.WallCell = wallCell;
+        this.EndCell = endCell;
     }
     MazeView.prototype.displayMaze = function () {
         var html = "";
         for (var layer = 0; layer < this.MazeGrid.length; layer++) {
             var layerName = this.getNameFromLayer(layer);
             html += "<div id=\"layer" + layer + "\" class=\"" + layerName + "\">";
-            html += "<h3 class=\"" + layerName + "\"><button onclick=\"goDown()\" class=\"down-button\">&nbsp;</button> <span class=\"layer-name\">" + layerName + "</span> <button onclick=\"goUp()\" class=\"up-button\">&nbsp;</button></h3>";
+            html += "<h3 class=\"" + layerName + " mazeHeader\"><button onclick=\"goDown()\" class=\"down-button\">&nbsp;</button> <span class=\"layer-name\">" + layerName + "</span> <button onclick=\"goUp()\" class=\"up-button\">&nbsp;</button></h3>";
             html += "<table id=\"layer" + layer + "-table class=\"" + layerName + "\">";
             for (var row = 0; row < this.MazeGrid[layer].length; row++) {
                 html += "<tr class='r'>";
@@ -289,6 +302,8 @@ var MazeView = /** @class */ (function () {
             classes += " up ";
         if (cell.Down !== this.WallCell.Up)
             classes += " down ";
+        if (this.MazeGrid[cell.Z][cell.Y][cell.X] == this.EndCell)
+            classes += " end ";
         return classes;
     };
     MazeView.prototype.getNameFromLayer = function (layer) {
@@ -319,10 +334,10 @@ function main() {
     GridWidth = 8;
     var myMaze = new Maze(GridLayers, GridHeight, GridWidth);
     myMaze.fillMaze();
-    var mazeViewer = new MazeView(myMaze.MazeGrid, myMaze.WallCell);
+    var mazeViewer = new MazeView(myMaze.MazeGrid, myMaze.WallCell, myMaze.EndCell);
     mazeViewer.displayMaze();
     showLayerHideOthers(currentLayer);
-    MyCharacter = new Character("pinkdude", "pink", myMaze.MazeGrid[0][0][0], myMaze.MazeGrid);
+    MyCharacter = new Character("pinkdude", "pink", myMaze.MazeGrid[0][0][0], myMaze.MazeGrid, myMaze.EndCell);
 }
 function showLayerHideOthers(layerChoice) {
     if (GridLayers > 1) {

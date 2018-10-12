@@ -13,13 +13,13 @@ function main() {
 	let myMaze = new Maze(GridLayers, GridHeight, GridWidth);
 	myMaze.fillMaze();
 	
-	let mazeViewer = new MazeView(myMaze.MazeGrid,myMaze.WallCell);
+	let mazeViewer = new MazeView(myMaze.MazeGrid,myMaze.WallCell, myMaze.EndCell);
 	mazeViewer.displayMaze();
 	
 	showLayerHideOthers(currentLayer);
 
 
-	MyCharacter = new Character("pinkdude", "pink", myMaze.MazeGrid[0][0][0], myMaze.MazeGrid);
+	MyCharacter = new Character("pinkdude", "pink", myMaze.MazeGrid[0][0][0], myMaze.MazeGrid, myMaze.EndCell);
 }
 
 function showLayerHideOthers(layerChoice: number) {

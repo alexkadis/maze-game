@@ -8,31 +8,23 @@
     <link rel="stylesheet" type="text/css" media="screen" href="main.css" />
 </head>
 <body onload="main();">
-	<h1>Maze Game</h1>
-	<div class="gameButtons">
-			<table>
-				<tr>
-					<td></td>
-					<td><button onclick="goNorth()" class="north-button" title="North">&nbsp;</button></td>
-					<td></td>
-				</tr>
-				<tr>
-					<td><button onclick="goWest()" class="west-button" title="West">&nbsp;</button></td>
-					<td></td>
-					<td><button onclick="goEast()" class="east-button" title="East">&nbsp;</button></td>
-				</tr>
-				<tr>
-					<td></td>
-					<td><button onclick="goSouth()" class="south-button" title="South">&nbsp;</button></td>
-					<td></td>
-				</tr>
-			</table>
-			</div>
-	<div id="maze-game" class="blockMaze" style="line-height: 0;">
-        Replaced with the maze.
-    </div>
-	<p><button onclick="main();" class="new-button" title="New Maze">&nbsp;</button></p>
-
+	<article>
+		<h1 id="header">Maze of Seasons</h1>
+		<main class="gameDescription">
+			<p>Navigate through a randomly generated multi-level maze towards your goal (the checkered flag). When you hit a wall, change the season.</p>
+			<p>This game was created in TypeScript, the source and credits are on the <a href="https://github.com/alexkadis/maze-game" title="project&rsquo;s Github page">project&rsquo;s Github page</a>.</p>
+		</main>
+		<nav class="gameButtons">
+			<button onclick="goNorth()" class="north-button" title="North">&nbsp;</button>
+			<button onclick="goWest()" class="west-button" title="West">&nbsp;</button>
+			<button onclick="goEast()" class="east-button" title="East">&nbsp;</button>
+			<button onclick="goSouth()" class="south-button" title="South">&nbsp;</button>
+		</nav>
+		<div id="maze-game" class="blockMaze" style="line-height: 0;">
+			Replaced with the maze.
+		</div>
+		<p class="new-button"><button onclick="main();" title="New Maze">&nbsp;</button></p>
+	</article>
 	<script
 	src="https://code.jquery.com/jquery-3.3.1.min.js"
 	integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
