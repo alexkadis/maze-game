@@ -1,0 +1,18 @@
+{
+	"name": "maze-of-seasons",
+	"version": "0.1",
+	"description": "Navigatable randomly generated multi-level maze.",
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/alexkadis/maze-game"
+	},
+	"author": "Alex Kadis",
+	"license": "0",
+	"scripts": {
+		"test": "mocha --require ts-node/register test/**/*.ts"
+	},
+	"devDependencies": {
+		"@types/chai": "^4.1.6",
+		"@types/mocha": "^5.2.5"
+	}
+}

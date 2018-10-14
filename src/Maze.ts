@@ -38,10 +38,23 @@ class Maze {
 
 		this.EndCell = new Cell();
 	}
-
+	
 	public fillMaze () {
+		this.fillMazeRandom();
+	}
+
+	private fillMazeProcedural(proceduralMap : string) {
+		
+	}
+
+	private encodeMaze() {
+		
+		// console.log(JSON.stringify(this.MazeGrid));
+	}
+
+	private fillMazeRandom() {
 		// initialize the cellsList and add the first cell to the list
-		this.CellsList.push ( this.createCell (
+		this.CellsList.push(this.createCell(
 			0,
 			this.getRandomIntInclusive(0, this.gridHeight - 1),
 			this.getRandomIntInclusive(0, this.gridWidth - 1),
@@ -79,9 +92,8 @@ class Maze {
 				this.CellsList.splice(index, 1);
 		}
 		this.EndCell = this.MazeGrid[0][this.getRandomIntInclusive(1, this.gridHeight - 1)][this.getRandomIntInclusive(1, this.gridWidth - 1)];
+		this.encodeMaze();
 	}
-
-
 	private generateGrid () {
 		const tempGrid: any[] = new Array(this.GridLayers);
 		for (let i = 0; i < this.GridLayers; i++) {

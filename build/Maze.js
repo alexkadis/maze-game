@@ -115,6 +115,14 @@ var Maze = /** @class */ (function () {
         this.EndCell = new Cell();
     }
     Maze.prototype.fillMaze = function () {
+        this.fillMazeRandom();
+    };
+    Maze.prototype.fillMazeProcedural = function (proceduralMap) {
+    };
+    Maze.prototype.encodeMaze = function () {
+        console.log(JSON.stringify(this.MazeGrid));
+    };
+    Maze.prototype.fillMazeRandom = function () {
         // initialize the cellsList and add the first cell to the list
         this.CellsList.push(this.createCell(0, this.getRandomIntInclusive(0, this.gridHeight - 1), this.getRandomIntInclusive(0, this.gridWidth - 1)));
         var index = -1;
@@ -143,6 +151,7 @@ var Maze = /** @class */ (function () {
                 this.CellsList.splice(index, 1);
         }
         this.EndCell = this.MazeGrid[0][this.getRandomIntInclusive(1, this.gridHeight - 1)][this.getRandomIntInclusive(1, this.gridWidth - 1)];
+        this.encodeMaze();
     };
     Maze.prototype.generateGrid = function () {
         var tempGrid = new Array(this.GridLayers);

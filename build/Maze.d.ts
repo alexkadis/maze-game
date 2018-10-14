@@ -49,6 +49,9 @@ declare class Maze {
     private Down;
     constructor(gridLayers: number, gridWidth: number, gridHeight: number);
     fillMaze(): void;
+    private fillMazeProcedural;
+    private encodeMaze;
+    private fillMazeRandom;
     private generateGrid;
     private getReverseDirection;
     private createCell;
