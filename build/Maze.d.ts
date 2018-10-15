@@ -1,28 +1,29 @@
 declare class Cell {
-    North: Cell | null;
-    East: Cell | null;
-    South: Cell | null;
-    West: Cell | null;
-    Up: Cell | null;
-    Down: Cell | null;
+    North: boolean;
+    East: boolean;
+    South: boolean;
+    West: boolean;
+    Up: boolean;
+    Down: boolean;
     Z: number;
     Y: number;
     X: number;
-    isWall: boolean;
-    constructor();
+    constructor(z: number, y: number, x: number);
 }
 declare class Character {
     endCell: Cell;
     Color: string;
     Name: string;
     CurrentLocation: Cell;
-    North: string;
-    East: string;
-    South: string;
-    West: string;
-    Up: string;
-    Down: string;
+    readonly North: string;
+    readonly East: string;
+    readonly South: string;
+    readonly West: string;
+    readonly Up: string;
+    readonly Down: string;
     private GridLayers;
+    private GridWidth;
+    private GridHeight;
     private MazeGrid;
     EndCell: Cell;
     CharacterIcon: string;
@@ -35,45 +36,44 @@ declare class Maze {
     gridWidth: number;
     gridHeight: number;
     MazeGrid: Cell[][][];
-    private CellsList;
-    WallCell: Cell;
     EndCell: Cell;
+    private CellsList;
     private GridLayers;
     private GridWidth;
     private GridHeight;
-    private North;
-    private East;
-    private South;
-    private West;
-    private Up;
-    private Down;
+    readonly North: string;
+    readonly East: string;
+    readonly South: string;
+    readonly West: string;
+    readonly Up: string;
+    readonly Down: string;
     constructor(gridLayers: number, gridWidth: number, gridHeight: number);
     fillMaze(): void;
-    private fillMazeProcedural;
-    private encodeMaze;
-    private fillMazeRandom;
-    private generateGrid;
-    private getReverseDirection;
-    private createCell;
-    private getRandomIntInclusive;
-    private getRandomDirections;
-    private isEmptyCell;
-    private directionModifier;
+    protected fillMazeProcedural(): void;
+    protected encodeMaze(): void;
+    protected fillMazeRandom(): void;
+    protected generateGrid(): any[];
+    protected getReverseDirection(currentCell: Cell, nextCell: Cell, direction: string): {
+        current: Cell;
+        next: Cell;
+    };
+    protected getRandomIntInclusive(min: number, max: number): number;
+    protected getRandomDirections(): any;
     /**
      * Shuffles array in place.
      * @param {Array} array items An array containing the items.
      */
-    shuffle(array: any): any;
+    protected shuffle(array: any): any;
+    protected isEmptyCell(z: number, y: number, x: number): boolean;
+    protected directionModifier(cell: Cell, direction: string): Cell;
 }
 declare class MazeView {
     mazegrid: Cell[][][];
-    wallCell: Cell;
     endCell: Cell;
     MazeGrid: Cell[][][];
     private GridWidth;
-    private WallCell;
     EndCell: Cell;
-    constructor(mazegrid: Cell[][][], wallCell: Cell, endCell: Cell);
+    constructor(mazegrid: Cell[][][], endCell: Cell);
     displayMaze(): void;
     private getClassesFromCell;
     private getNameFromLayer;

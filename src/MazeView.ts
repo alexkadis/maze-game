@@ -1,13 +1,11 @@
 class MazeView {
 	public MazeGrid: Cell[][][];
 	private GridWidth: number;
-	private WallCell : Cell;
 	public EndCell: Cell;
 
-	constructor(public mazegrid : Cell[][][],  public wallCell : Cell, public endCell : Cell) {
+	constructor(public mazegrid : Cell[][][],  public endCell : Cell) {
 		this.MazeGrid = mazegrid;
 		this.GridWidth = mazegrid[0][0].length;
-		this.WallCell = wallCell;
 		this.EndCell = endCell;
 	}
 	public displayMaze() {
@@ -46,24 +44,22 @@ class MazeView {
 	}
 	
 	private getClassesFromCell (cell: Cell) {
-
 		let classes: string = "";
 
-		if (cell.North === this.WallCell.South)
+		if (!cell.North)
 			classes += " top ";
-		if (cell.East === this.WallCell.West)
+		if (!cell.East)
 			classes += " right ";
-		if (cell.South === this.WallCell.North)
+		if (!cell.South)
 			classes += " bottom ";
-		if (cell.West === this.WallCell.East)
+		if (!cell.West)
 			classes += " left ";
-		if (cell.Up !== this.WallCell.Down)
+		if (!cell.Up)
 			classes += " up ";
-		if (cell.Down !== this.WallCell.Up)
+		if (!cell.Down)
 			classes += " down ";
 		if (this.MazeGrid[cell.Z][cell.Y][cell.X] == this.EndCell)
 			classes += " end ";
-
 		return classes;
 	}
 

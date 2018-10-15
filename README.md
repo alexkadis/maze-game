@@ -115,8 +115,10 @@ Up and Down aren't used for display in my maze.
 ### Re-design in canvas?
 Might want to go to using canvas and making it look *good*.
 
+## Check out Localstorage to hold proceedural mazes?
 
 ## Credits
 This project would not be possible without [Jamis Buck](https://github.com/jamis) and his posts on [Maze Generation: Growing Tree algorithm](http://weblog.jamisbuck.org/2011/1/27/maze-generation-growing-tree-algorithm) and [Minecraft Maze Generator](http://jamisbuck.org/mazes/minecraft.html). My algorithmic and display code borrows heavily from his, and lessons learned in his blog posts.
 
 The icons are from [icons8](https://icons8.com/), go check them out.
+

@@ -1,25 +1,23 @@
 class Cell {
-	public North: Cell | null;
-	public East: Cell | null;
-	public South: Cell | null;
-	public West: Cell | null;
-	public Up: Cell | null;
-	public Down: Cell | null;
+	public North: boolean;
+	public East: boolean;
+	public South: boolean;
+	public West: boolean;
+	public Up: boolean;
+	public Down: boolean;
 	public Z: number;
 	public Y: number;
 	public X: number;
-	public isWall: boolean;
 
-	constructor () {
-		this.North = null;
-		this.East = null;
-		this.South = null;
-		this.West = null;
-		this.Up = null;
-		this.Down = null;
-		this.Z = -1;
-		this.Y = -1;
-		this.X = -1;
-		this.isWall = false;
+	constructor (z: number, y: number, x: number) {
+		this.North = false;
+		this.East = false;
+		this.South = false;
+		this.West = false;
+		this.Up = false;
+		this.Down = false;
+		this.Z = z;
+		this.Y = y;
+		this.X = x;
 	}
 }

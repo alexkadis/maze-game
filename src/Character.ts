@@ -1,4 +1,3 @@
-
 /*
 Figure out a way to have a "character" that can move North, South, East, West
 	- The character starts at the starting point
@@ -9,17 +8,18 @@ class Character {
 	public Color: string;
 	public Name: string;
 
-	// location
 	public CurrentLocation: Cell;
 
-	public North: string;
-	public East: string;
-	public South: string;
-	public West: string;
-	public Up: string;
-	public Down: string;
+	public readonly North: string = "North";
+	public readonly East: string = "East";
+	public readonly South: string = "South";
+	public readonly West: string = "West";
+	public readonly Up: string = "Up";
+	public readonly Down: string = "Down";
 
 	private GridLayers: number;
+	private GridWidth: number;
+	private GridHeight: number;
 	private MazeGrid: Cell[][][];
 	public EndCell: Cell;
 
@@ -32,15 +32,10 @@ class Character {
 		this.Name = name;
 		this.CurrentLocation = startingLocation;
 
-		this.North	= "North";
-		this.East	= "East";
-		this.South	= "South";
-		this.West	= "West";
-		this.Up		= "Up";
-		this.Down	= "Down";
-
 		this.MazeGrid = mazeGrid;
 		this.GridLayers = this.MazeGrid.length;
+		this.GridWidth = this.MazeGrid[0].length;
+		this.GridHeight = this.MazeGrid[0][0].length;
 		this.EndCell = endCell;
 
 		this.CharacterIcon = "😀";
@@ -53,23 +48,22 @@ class Character {
 		
 		$(`.y${this.CurrentLocation.Y}x${this.CurrentLocation.X}`).text("");
 		$(`.y${this.CurrentLocation.Y}x${this.CurrentLocation.X}`).removeClass(this.Name);
-		// console.log(`OLD Location: Z:${this.CurrentLocation.Z} y:${this.CurrentLocation.Y} x:${this.CurrentLocation.X}`);
 		switch (direction) {
 			case this.North:
-				if (this.CurrentLocation.North != null)
-					this.CurrentLocation = this.CurrentLocation.North;
+				if (this.CurrentLocation.North && this.CurrentLocation.Y > 0)
+					this.CurrentLocation = this.MazeGrid[this.CurrentLocation.Z][this.CurrentLocation.Y - 1][this.CurrentLocation.X];
 				break;
 			case this.East:
-				if (this.CurrentLocation.East != null)
-					this.CurrentLocation = this.CurrentLocation.East;
+				if (this.CurrentLocation.East && this.CurrentLocation.X < this.GridWidth - 1)
+					this.CurrentLocation = this.MazeGrid[this.CurrentLocation.Z][this.CurrentLocation.Y][this.CurrentLocation.X + 1];
 				break;
 			case this.South:
-				if (this.CurrentLocation.South != null)
-					this.CurrentLocation = this.CurrentLocation.South;
+				if (this.CurrentLocation.South && this.CurrentLocation.Y < this.GridHeight - 1)
+					this.CurrentLocation = this.MazeGrid[this.CurrentLocation.Z][this.CurrentLocation.Y + 1][this.CurrentLocation.X];
 				break;
 			case this.West:
-				if (this.CurrentLocation.West != null)
-					this.CurrentLocation = this.CurrentLocation.West;
+				if (this.CurrentLocation.West && this.CurrentLocation.X > 0)
+					this.CurrentLocation = this.MazeGrid[this.CurrentLocation.Z][this.CurrentLocation.Y][this.CurrentLocation.X - 1];
 				break;
 			case this.Up:
 				if (this.CurrentLocation.Z === this.GridLayers - 1)

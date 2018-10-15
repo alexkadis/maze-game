@@ -1,3 +1,7 @@
+// import { Maze } from '../src/Maze';
+// import { MazeView } from '../src/MazeView';
+// import { Character } from '../src/Character';
+
 var currentLayer: number;
 var GridLayers: number;
 var GridHeight: number;
@@ -13,13 +17,13 @@ function main() {
 	let myMaze = new Maze(GridLayers, GridHeight, GridWidth);
 	myMaze.fillMaze();
 	
-	let mazeViewer = new MazeView(myMaze.MazeGrid,myMaze.WallCell, myMaze.EndCell);
+	let mazeViewer = new MazeView(myMaze.MazeGrid, myMaze.EndCell);
 	mazeViewer.displayMaze();
 	
 	showLayerHideOthers(currentLayer);
 
-
 	MyCharacter = new Character("pinkdude", "pink", myMaze.MazeGrid[0][0][0], myMaze.MazeGrid, myMaze.EndCell);
+
 }
 
 function showLayerHideOthers(layerChoice: number) {
@@ -37,19 +41,15 @@ function showLayerHideOthers(layerChoice: number) {
 
 function goNorth() {
 	MyCharacter.move(MyCharacter.North);
-	// console.log(MyCharacter.CurrentLocation);
 }
 function goEast() {
 	MyCharacter.move(MyCharacter.East);
-	// console.log(MyCharacter.CurrentLocation);
 }
 function goSouth() {
 	MyCharacter.move(MyCharacter.South);
-	// console.log(MyCharacter.CurrentLocation);
 }
 function goWest() {
 	MyCharacter.move(MyCharacter.West);
-	// console.log(MyCharacter.CurrentLocation);
 }
 
 function goUp() {
@@ -60,7 +60,6 @@ function goUp() {
 	}
 	showLayerHideOthers(currentLayer);
 	MyCharacter.move(MyCharacter.Up);
-	// console.log(MyCharacter.CurrentLocation);
 }
 
 function goDown() {
@@ -71,6 +70,5 @@ function goDown() {
 	}
 	showLayerHideOthers(currentLayer);
 	MyCharacter.move(MyCharacter.Down);
-	// console.log(MyCharacter.CurrentLocation);
 }
 
