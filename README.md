@@ -18,9 +18,11 @@ My grid:
 
 Each cell is an object from the `Cell` class.
 
-Cells have cardinal directions (`North`, `South`, `East`, `West`, `Up` a layer, `Down` a layer) that can point to other cells on the grid or to `null`. A `null` direction indicates the presence of a wall.
+Cells have cardinal directions (`North`, `South`, `East`, `West`, `Up` a layer, `Down` a layer). Those directions can be `true` or `false`.
+- `true`: indicates a path that direction
+- `false`: indicates a wall that direction
 
-For details on each class see the [build/maze.d.ts](https://github.com/alexkadis/maze-game/blob/master/build/Maze.d.ts) file.
+For details on each class see the [build/maze.d.ts](https://github.com/alexkadis/maze-game/blob/master/build/maze.d.ts) file.
 
 ### 2. Create a temporary cell stack to hold the cells as you create them
 As a cell is created, it's added to the stack, before the end of this process, it'll be removed.
@@ -38,39 +40,39 @@ If you can't go that way, (the cell is already full) choose a different directio
 ### 5. Once you find a direction you can go:
 - Add it to the stack of cells.
 - Add the cell to the grid.
-- Set the current cell's direction to the next cell's location and visa versa
+- Set the current cell's direction to true and the next cell's reverse direction to true
 
 e.g.: 
 ```
 Cell#1
-location:	 grid[0]0][0] // grid[z][y][x]
-North:	null
-South:	null
-East:	null
-West:	null
-Up:	null
-Down:	null
+location:	grid[0]0][0] -> grid[z][y][x]
+North:	false
+South:	false
+East:	false
+West:	false
+Up:	false
+Down:	false
 
-// direction chosen: South //
-// Every null will become a wall if it doesn't eventually point at a cell
+// direction chosen: South
+// Every false will become a wall if it doesn't eventually point at a cell
 
 Cell#1:
 location:	 grid[0]0][0]
-North:	null
-South:	Cell#2 @ grid[0]1][0]
-East:	null
-West:	null
-Up:	null
-Down:	null
+North:	false
+South:	true
+East:	false
+West:	false
+Up:	false
+Down:	false
 
 Cell#2:
 location:	 grid[0]1][0]
-North:	Cell#1 @ grid[0]0][0]
-South:	null
-East:	null
-West:	null
-Up:	null
-Down:	null
+North:	true
+South:	false
+East:	false
+West:	false
+Up:	false
+Down:	false
 ```
 
 
@@ -94,12 +96,12 @@ In CSS parlance: top border, east border, south border, west border
 
 ```
 location:	grid[0]0][0]
-North:	null	= border top
-South:	Cell#2	= transparent border
-East:	null	= border right
-West:	null	= border bottom
-Up:	null
-Down:	null
+North:	false	= border top
+South:	true	= transparent border
+East:	false	= border right
+West:	false	= border bottom
+Up:	false
+Down:	false
 ```
 
 Up and Down aren't used for display in my maze.
@@ -109,7 +111,7 @@ Up and Down aren't used for display in my maze.
 1. https://journal.artfuldev.com/write-tests-for-typescript-projects-with-mocha-and-chai-in-typescript-86e053bdb2b6
 2. https://medium.com/@FizzyInTheHall/run-typescript-mocha-tests-in-visual-studio-code-58e62a173575
 3. https://journal.artfuldev.com/unit-testing-node-applications-with-typescript-using-mocha-and-chai-384ef05f32b2
-3. https://medium.com/@RupaniChirag/writing-unit-tests-in-typescript-d4719b8a0a40
+4. https://medium.com/@RupaniChirag/writing-unit-tests-in-typescript-d4719b8a0a40
 
 
 ### Re-design in canvas?
