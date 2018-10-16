@@ -8,6 +8,7 @@ class MazeView {
 		this.GridWidth = mazegrid[0][0].length;
 		this.EndCell = endCell;
 	}
+	
 	public displayMaze() {
 		
 		$(`.new-button`).hide();

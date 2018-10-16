@@ -169,7 +169,7 @@ class Maze {
 		return false;
 	}
 
-	protected directionModifier (cell: Cell, direction: string) {
+	public directionModifier (cell: Cell, direction: string) {
 		switch (direction) {
 			case this.North:
 				return new Cell(cell.Z, cell.Y - 1, cell.X);

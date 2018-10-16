@@ -13,12 +13,6 @@ var Cell = /** @class */ (function () {
     }
     return Cell;
 }());
-/*
-Figure out a way to have a "character" that can move North, South, East, West
-    - The character starts at the starting point
-    - Character ends at the ending point
-    - Character can't move past a wall
-*/
 var Character = /** @class */ (function () {
     function Character(name, color, startingLocation, mazeGrid, endCell) {
         this.endCell = endCell;
@@ -327,9 +321,6 @@ var MazeView = /** @class */ (function () {
     };
     return MazeView;
 }());
-// import { Maze } from '../src/Maze';
-// import { MazeView } from '../src/MazeView';
-// import { Character } from '../src/Character';
 var currentLayer;
 var GridLayers;
 var GridHeight;

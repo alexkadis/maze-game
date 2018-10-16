@@ -1,7 +1,3 @@
-// import { Maze } from '../src/Maze';
-// import { MazeView } from '../src/MazeView';
-// import { Character } from '../src/Character';
-
 var currentLayer: number;
 var GridLayers: number;
 var GridHeight: number;

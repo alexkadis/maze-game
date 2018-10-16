@@ -1,9 +1,3 @@
-/*
-Figure out a way to have a "character" that can move North, South, East, West
-	- The character starts at the starting point
-	- Character ends at the ending point
-	- Character can't move past a wall
-*/
 class Character {
 	public Color: string;
 	public Name: string;
@@ -96,4 +90,4 @@ class Character {
 		// console.log(`New Location: Z:${this.CurrentLocation.Z} y:${this.CurrentLocation.Y} x:${this.CurrentLocation.X}`);
 		$(`.y${this.CurrentLocation.Y}x${this.CurrentLocation.X}`).addClass(this.Name);
 	}
-}
+}	
