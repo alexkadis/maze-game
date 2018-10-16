@@ -57,7 +57,7 @@ Down:	false
 // Every false will become a wall if it doesn't eventually point at a cell
 
 Cell#1:
-location:	 grid[0]0][0]
+location:	 grid[0][0][0]
 North:	false
 South:	true
 East:	false
@@ -66,7 +66,7 @@ Up:	false
 Down:	false
 
 Cell#2:
-location:	 grid[0]1][0]
+location:	 grid[0][1][0]
 North:	true
 South:	false
 East:	false
@@ -97,7 +97,7 @@ In CSS parlance: top border, east border, south border, west border
 ```
 location:	grid[0]0][0]
 North:	false	= border top
-South:	true	= transparent border
+South:	true	= transparent border (a path)
 East:	false	= border right
 West:	false	= border bottom
 Up:	false
