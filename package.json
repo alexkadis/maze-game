@@ -1,19 +1,18 @@
 {
-	"name": "maze-of-seasons",
-	"description": "Navigatable randomly generated multi-level maze.",
-	"repository": {
-		"type": "git",
-		"url": "https://github.com/alexkadis/maze-game"
-	},
-	"author": "Alex Kadis",
-	"license": "0",
-	"scripts": {
-		"test": "mocha --require ts-node/register test/**/*.ts"
-	},
-	"dependencies": {},
-	"devDependencies": {
-		"@types/jquery": "^3.3.19",
-		"mocha-typescript": "^1.1.17",
-		"typescript": "^3.1.3"
-	}
+  "name": "maze-of-seasons",
+  "description": "Navigatable randomly generated multi-level maze.",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/alexkadis/maze-game"
+  },
+  "author": "Alex Kadis",
+  "license": "0",
+  "scripts": {
+    "test": "mocha --require ts-node/register test/**/*.ts"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "@types/jquery": "^3.3.19",
+    "typescript": "^3.1.3"
+  }
 }
