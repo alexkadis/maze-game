@@ -39,10 +39,10 @@ export class Character {
 	public readonly Up: string = "Up";
 	public readonly Down: string = "Down";
 
-	private GridLayers: number;
-	private GridWidth: number;
-	private GridHeight: number;
-	private MazeGrid: Cell[][][];
+	 public  GridLayers: number;
+	 public  GridWidth: number;
+	 public  GridHeight: number;
+	 public  MazeGrid: Cell[][][];
 
 	constructor (name: string, color: string, startingLocation: Cell, mazeGrid: Cell[][][], public endCell: Cell) {
 
@@ -124,10 +124,10 @@ export class Maze {
 	public readonly Up: string = "Up";
 	public readonly Down: string = "Down";
 
-	private CellsList: Cell[];
-	private GridLayers: number;
-	private GridWidth: number;
-	private GridHeight: number;
+	 public  CellsList: Cell[];
+	 public  GridLayers: number;
+	 public  GridWidth: number;
+	 public  GridHeight: number;
 
 	constructor (public gridLayers: number, public gridWidth: number, public gridHeight: number) {
 		this.GridLayers	= gridLayers;
@@ -148,19 +148,19 @@ export class Maze {
 		// this.fillMazeProcedural();
 	}
 
-	protected fillMazeProcedural () {
+	 public  fillMazeProcedural () {
 		// let pro : string = "";
 
 		// this.MazeGrid = $.parseJSON(atob(pro));
 
 	}
 
-	protected encodeMaze () {
+	 public  encodeMaze () {
 		// console.log(btoa(JSON.stringify(this.MazeGrid)));
 		console.log((JSON.stringify(this.MazeGrid)));
 	}
 
-	protected fillMazeRandom () {
+	 public  fillMazeRandom () {
 		// initialize the cellsList and add the first cell to the list
 		this.CellsList.push(new Cell(
 			0,
@@ -195,10 +195,12 @@ export class Maze {
 			if (index !== -1)
 				this.CellsList.splice(index, 1);
 		}
-		this.EndCell = this.MazeGrid[0][this.getRandomIntInclusive (1, this.gridHeight - 1)][this.getRandomIntInclusive (1, this.gridWidth - 1)];
+		this.EndCell = this.MazeGrid[0]
+							[this.getRandomIntInclusive (1, this.gridHeight - 1)]
+							[this.getRandomIntInclusive (1, this.gridWidth - 1)];
 		this.encodeMaze();
 	}
-	protected generateGrid () {
+	 public  generateGrid () {
 		const tempGrid: any[] = new Array(this.GridLayers);
 		for (let i = 0; i < this.GridLayers; i++) {
 			tempGrid[i] = new Array(this.GridHeight);
@@ -210,7 +212,7 @@ export class Maze {
 		return tempGrid;
 	}
 
-	protected getReverseDirection (currentCell: Cell, nextCell: Cell, direction: string) {
+	 public  getReverseDirection (currentCell: Cell, nextCell: Cell, direction: string) {
 		switch (direction) {
 			case this.North:
 				currentCell.North = true;
@@ -240,14 +242,14 @@ export class Maze {
 		return { current: currentCell, next: nextCell };
 	}
 
-	protected getRandomIntInclusive (min: number, max: number) {
+	 public  getRandomIntInclusive (min: number, max: number) {
 		min = Math.ceil(min);
 		max = Math.floor(max);
 		return Math.floor(Math.random() * (max - min + 1)) + min;
 		// The maximum is inclusive and the minimum is inclusive
 	}
 
-	protected getRandomDirections () {
+	 public  getRandomDirections () {
 		return this.shuffle([
 			this.North,
 			this.South,
@@ -262,7 +264,7 @@ export class Maze {
 	 * Shuffles array in place.
 	 * @param {Array} array items An array containing the items.
 	 */
-	protected shuffle (array: any) {
+	 public  shuffle (array: any) {
 		let j;
 		let x;
 		let i;
@@ -275,7 +277,7 @@ export class Maze {
 		return array;
 	}
 
-	protected isEmptyCell (z: number, y: number, x: number) {
+	 public  isEmptyCell (z: number, y: number, x: number) {
 		if (z >= 0 && z < this.GridLayers
 			&& 	y >= 0 && y < this.GridHeight
 			&&  x >= 0 && x < this.GridWidth
@@ -284,7 +286,7 @@ export class Maze {
 		return false;
 	}
 
-	private directionModifier (cell: Cell, direction: string) {
+	 public  directionModifier (cell: Cell, direction: string) {
 		switch (direction) {
 			case this.North:
 				return new Cell(cell.Z, cell.Y - 1, cell.X);
@@ -313,30 +315,33 @@ export class Maze {
 
 export class MazeView {
 	public MazeGrid: Cell[][][];
-	private GridWidth: number;
 	public EndCell: Cell;
+	 public  GridWidth: number;
 
-	constructor(public mazegrid : Cell[][][],  public endCell : Cell) {
+	constructor (public mazegrid: Cell[][][],  public endCell: Cell) {
 		this.MazeGrid = mazegrid;
 		this.GridWidth = mazegrid[0][0].length;
 		this.EndCell = endCell;
 	}
-	
-	public displayMaze() {
-		
+
+	public displayMaze () {
 		$(`.new-button`).hide();
 		$(`.desc`).show();
 		$(`.gameButtons`).show();
 		$(`.gameButtons`).show();
 		$(`.MazeHeader`).show();
-		
+
 		let html: string = "";
 
 		for (let layer = 0; layer < this.MazeGrid.length; layer++) {
 			const layerName: string = this.getNameFromLayer(layer);
 
 			html += `<div id="layer${layer}" class="${layerName}">`;
-			html += `<h3 class="${layerName} mazeHeader"><button onclick="goDown()" class="down-button">&nbsp;</button> <span class="layer-name">${layerName}</span> <button onclick="goUp()" class="up-button">&nbsp;</button></h3>`;
+			html += `<h3 class="${layerName} mazeHeader">`
+				 +  `<button onclick="goDown()" class="down-button">&nbsp;</button>`
+				 +	`<span class="layer-name">${layerName}</span>`
+				 +	`<button onclick="goUp()" class="up-button">&nbsp;</button>`
+				 +	`</h3>`;
 			html += `<table id="layer${layer}-table class="${layerName}">`;
 
 			for (let row = 0; row < this.MazeGrid[layer].length; row++) {
@@ -356,8 +361,8 @@ export class MazeView {
 
 		console.log(this.MazeGrid[0]);
 	}
-	
-	private getClassesFromCell (cell: Cell) {
+
+	 public  getClassesFromCell (cell: Cell) {
 		let classes: string = "";
 
 		if (!cell.North)
@@ -372,12 +377,12 @@ export class MazeView {
 			classes += " up ";
 		if (!cell.Down)
 			classes += " down ";
-		if (this.MazeGrid[cell.Z][cell.Y][cell.X] == this.EndCell)
+		if (this.MazeGrid[cell.Z][cell.Y][cell.X] === this.EndCell)
 			classes += " end ";
 		return classes;
 	}
 
-	private getNameFromLayer (layer: number) {
+	 public  getNameFromLayer (layer: number) {
 		switch (layer) {
 			case 0:
 				return "winter";
@@ -393,73 +398,69 @@ export class MazeView {
 	}
 }
 
-var currentLayer: number;
-var GridLayers: number;
-var GridHeight: number;
-var GridWidth: number;
-var MyCharacter: Character;
+let currentLayer: number;
+let GridLayers: number;
+let GridHeight: number;
+let GridWidth: number;
+let MyCharacter: Character;
 
-function main() {
+function main () {
 	currentLayer = 0;
 	GridLayers = 4;
 	GridHeight = 8;
 	GridWidth = 8;
 
-	let myMaze = new Maze(GridLayers, GridHeight, GridWidth);
+	const myMaze = new Maze(GridLayers, GridHeight, GridWidth);
 	myMaze.fillMaze();
-	
-	let mazeViewer = new MazeView(myMaze.MazeGrid, myMaze.EndCell);
+
+	const mazeViewer = new MazeView(myMaze.MazeGrid, myMaze.EndCell);
 	mazeViewer.displayMaze();
-	
+
 	showLayerHideOthers(currentLayer);
 
 	MyCharacter = new Character("pinkdude", "pink", myMaze.MazeGrid[0][0][0], myMaze.MazeGrid, myMaze.EndCell);
 
 }
 
-function showLayerHideOthers(layerChoice: number) {
+function showLayerHideOthers (layerChoice: number) {
 	if (GridLayers > 1) {
 		for (let layer = 0; layer < GridLayers; layer++) {
-			let layerId: string = `#layer${layer}`;
-			if (layer === layerChoice) {
+			const layerId: string = `#layer${layer}`;
+			if (layer === layerChoice)
 				$(layerId).show();
-			} else {
+			else
 				$(layerId).hide();
-			}
 		}
 	}
 }
 
-function goNorth() {
+function goNorth () {
 	MyCharacter.move(MyCharacter.North);
 }
-function goEast() {
+function goEast () {
 	MyCharacter.move(MyCharacter.East);
 }
-function goSouth() {
+function goSouth () {
 	MyCharacter.move(MyCharacter.South);
 }
-function goWest() {
+function goWest () {
 	MyCharacter.move(MyCharacter.West);
 }
 
-function goUp() {
-	if (currentLayer < GridLayers - 1) {
+function goUp () {
+	if (currentLayer < GridLayers - 1)
 		currentLayer++;
-	} else {
+	else
 		currentLayer = 0;
-	}
-	showLayerHideOthers(currentLayer);
+	showLayerHideOthers (currentLayer);
 	MyCharacter.move(MyCharacter.Up);
 }
 
-function goDown() {
-	if (currentLayer === 0) {
+function goDown () {
+	if (currentLayer === 0)
 		currentLayer = GridLayers - 1;
-	} else {
+	else
 		currentLayer--;
-	}
-	showLayerHideOthers(currentLayer);
+	showLayerHideOthers (currentLayer);
 	MyCharacter.move(MyCharacter.Down);
 }
-

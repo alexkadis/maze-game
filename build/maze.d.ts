@@ -65,7 +65,7 @@ declare class Maze {
      */
     protected shuffle(array: any): any;
     protected isEmptyCell(z: number, y: number, x: number): boolean;
-    protected directionModifier(cell: Cell, direction: string): Cell;
+    private directionModifier;
 }
 declare class MazeView {
     mazegrid: Cell[][][];
