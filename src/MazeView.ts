@@ -1,29 +1,32 @@
 class MazeView {
 	public MazeGrid: Cell[][][];
-	private GridWidth: number;
 	public EndCell: Cell;
+	private GridWidth: number;
 
-	constructor(public mazegrid : Cell[][][],  public endCell : Cell) {
+	constructor (public mazegrid: Cell[][][],  public endCell: Cell) {
 		this.MazeGrid = mazegrid;
 		this.GridWidth = mazegrid[0][0].length;
 		this.EndCell = endCell;
 	}
-	
-	public displayMaze() {
-		
+
+	public displayMaze () {
 		$(`.new-button`).hide();
 		$(`.desc`).show();
 		$(`.gameButtons`).show();
 		$(`.gameButtons`).show();
 		$(`.MazeHeader`).show();
-		
+
 		let html: string = "";
 
 		for (let layer = 0; layer < this.MazeGrid.length; layer++) {
 			const layerName: string = this.getNameFromLayer(layer);
 
 			html += `<div id="layer${layer}" class="${layerName}">`;
-			html += `<h3 class="${layerName} mazeHeader"><button onclick="goDown()" class="down-button">&nbsp;</button> <span class="layer-name">${layerName}</span> <button onclick="goUp()" class="up-button">&nbsp;</button></h3>`;
+			html += `<h3 class="${layerName} mazeHeader">`
+				 +  `<button onclick="goDown()" class="down-button">&nbsp;</button>`
+				 +	`<span class="layer-name">${layerName}</span>`
+				 +	`<button onclick="goUp()" class="up-button">&nbsp;</button>`
+				 +	`</h3>`;
 			html += `<table id="layer${layer}-table class="${layerName}">`;
 
 			for (let row = 0; row < this.MazeGrid[layer].length; row++) {
@@ -43,7 +46,7 @@ class MazeView {
 
 		console.log(this.MazeGrid[0]);
 	}
-	
+
 	private getClassesFromCell (cell: Cell) {
 		let classes: string = "";
 
@@ -59,7 +62,7 @@ class MazeView {
 			classes += " up ";
 		if (!cell.Down)
 			classes += " down ";
-		if (this.MazeGrid[cell.Z][cell.Y][cell.X] == this.EndCell)
+		if (this.MazeGrid[cell.Z][cell.Y][cell.X] === this.EndCell)
 			classes += " end ";
 		return classes;
 	}

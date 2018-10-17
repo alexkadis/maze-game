@@ -3,6 +3,9 @@ class Character {
 	public Name: string;
 
 	public CurrentLocation: Cell;
+	public EndCell: Cell;
+	public CharacterIcon: string;
+	public EndIcon: string;
 
 	public readonly North: string = "North";
 	public readonly East: string = "East";
@@ -15,12 +18,8 @@ class Character {
 	private GridWidth: number;
 	private GridHeight: number;
 	private MazeGrid: Cell[][][];
-	public EndCell: Cell;
 
-	public CharacterIcon: string;
-	public EndIcon: string;
-
-	constructor (name: string, color: string, startingLocation: Cell, mazeGrid: Cell[][][], public endCell : Cell) {
+	constructor (name: string, color: string, startingLocation: Cell, mazeGrid: Cell[][][], public endCell: Cell) {
 
 		this.Color = color;
 		this.Name = name;
@@ -39,7 +38,6 @@ class Character {
 	}
 
 	public move (direction: string) {
-		
 		$(`.y${this.CurrentLocation.Y}x${this.CurrentLocation.X}`).text("");
 		$(`.y${this.CurrentLocation.Y}x${this.CurrentLocation.X}`).removeClass(this.Name);
 		switch (direction) {
@@ -75,7 +73,7 @@ class Character {
 				// console.log(`Invalid attempt to move from ${this.CurrentLocation} ${direction}`);
 				break;
 		}
-		if (this.MazeGrid[this.CurrentLocation.Z][this.CurrentLocation.Y][this.CurrentLocation.X] == this.EndCell) {
+		if (this.MazeGrid[this.CurrentLocation.Z][this.CurrentLocation.Y][this.CurrentLocation.X] === this.EndCell) {
 			this.CharacterIcon = "😎";
 			this.EndIcon = "🎉";
 			$(`.y${this.CurrentLocation.Y}x${this.CurrentLocation.X}`).addClass("game-won");
@@ -86,8 +84,6 @@ class Character {
 		}
 		$(`.winter.y${this.EndCell.Y}x${this.EndCell.X}`).text(this.EndIcon);
 		$(`.y${this.CurrentLocation.Y}x${this.CurrentLocation.X}`).text(this.CharacterIcon);
-		
-		// console.log(`New Location: Z:${this.CurrentLocation.Z} y:${this.CurrentLocation.Y} x:${this.CurrentLocation.X}`);
 		$(`.y${this.CurrentLocation.Y}x${this.CurrentLocation.X}`).addClass(this.Name);
 	}
-}	
+}

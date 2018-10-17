@@ -5,6 +5,7 @@ class Cell {
 	public West: boolean;
 	public Up: boolean;
 	public Down: boolean;
+
 	public Z: number;
 	public Y: number;
 	public X: number;

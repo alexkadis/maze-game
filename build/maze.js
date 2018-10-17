@@ -70,7 +70,7 @@ var Character = /** @class */ (function () {
                 // console.log(`Invalid attempt to move from ${this.CurrentLocation} ${direction}`);
                 break;
         }
-        if (this.MazeGrid[this.CurrentLocation.Z][this.CurrentLocation.Y][this.CurrentLocation.X] == this.EndCell) {
+        if (this.MazeGrid[this.CurrentLocation.Z][this.CurrentLocation.Y][this.CurrentLocation.X] === this.EndCell) {
             this.CharacterIcon = "😎";
             this.EndIcon = "🎉";
             $(".y" + this.CurrentLocation.Y + "x" + this.CurrentLocation.X).addClass("game-won");
@@ -81,7 +81,6 @@ var Character = /** @class */ (function () {
         }
         $(".winter.y" + this.EndCell.Y + "x" + this.EndCell.X).text(this.EndIcon);
         $(".y" + this.CurrentLocation.Y + "x" + this.CurrentLocation.X).text(this.CharacterIcon);
-        // console.log(`New Location: Z:${this.CurrentLocation.Z} y:${this.CurrentLocation.Y} x:${this.CurrentLocation.X}`);
         $(".y" + this.CurrentLocation.Y + "x" + this.CurrentLocation.X).addClass(this.Name);
     };
     return Character;
@@ -270,7 +269,11 @@ var MazeView = /** @class */ (function () {
         for (var layer = 0; layer < this.MazeGrid.length; layer++) {
             var layerName = this.getNameFromLayer(layer);
             html += "<div id=\"layer" + layer + "\" class=\"" + layerName + "\">";
-            html += "<h3 class=\"" + layerName + " mazeHeader\"><button onclick=\"goDown()\" class=\"down-button\">&nbsp;</button> <span class=\"layer-name\">" + layerName + "</span> <button onclick=\"goUp()\" class=\"up-button\">&nbsp;</button></h3>";
+            html += "<h3 class=\"" + layerName + " mazeHeader\">"
+                + "<button onclick=\"goDown()\" class=\"down-button\">&nbsp;</button>"
+                + ("<span class=\"layer-name\">" + layerName + "</span>")
+                + "<button onclick=\"goUp()\" class=\"up-button\">&nbsp;</button>"
+                + "</h3>";
             html += "<table id=\"layer" + layer + "-table class=\"" + layerName + "\">";
             for (var row = 0; row < this.MazeGrid[layer].length; row++) {
                 html += "<tr class='r'>";
@@ -301,7 +304,7 @@ var MazeView = /** @class */ (function () {
             classes += " up ";
         if (!cell.Down)
             classes += " down ";
-        if (this.MazeGrid[cell.Z][cell.Y][cell.X] == this.EndCell)
+        if (this.MazeGrid[cell.Z][cell.Y][cell.X] === this.EndCell)
             classes += " end ";
         return classes;
     };
@@ -342,12 +345,10 @@ function showLayerHideOthers(layerChoice) {
     if (GridLayers > 1) {
         for (var layer = 0; layer < GridLayers; layer++) {
             var layerId = "#layer" + layer;
-            if (layer === layerChoice) {
+            if (layer === layerChoice)
                 $(layerId).show();
-            }
-            else {
+            else
                 $(layerId).hide();
-            }
         }
     }
 }
@@ -364,22 +365,18 @@ function goWest() {
     MyCharacter.move(MyCharacter.West);
 }
 function goUp() {
-    if (currentLayer < GridLayers - 1) {
+    if (currentLayer < GridLayers - 1)
         currentLayer++;
-    }
-    else {
+    else
         currentLayer = 0;
-    }
     showLayerHideOthers(currentLayer);
     MyCharacter.move(MyCharacter.Up);
 }
 function goDown() {
-    if (currentLayer === 0) {
+    if (currentLayer === 0)
         currentLayer = GridLayers - 1;
-    }
-    else {
+    else
         currentLayer--;
-    }
     showLayerHideOthers(currentLayer);
     MyCharacter.move(MyCharacter.Down);
 }

@@ -1,11 +1,6 @@
 class Maze {
 	public MazeGrid: Cell[][][];
 	public EndCell: Cell;
-	
-	private CellsList: Cell[];
-	private GridLayers: number;
-	private GridWidth: number;
-	private GridHeight: number;
 
 	public readonly North: string = "North";
 	public readonly East: string = "East";
@@ -13,6 +8,11 @@ class Maze {
 	public readonly West: string = "West";
 	public readonly Up: string = "Up";
 	public readonly Down: string = "Down";
+
+	private CellsList: Cell[];
+	private GridLayers: number;
+	private GridWidth: number;
+	private GridHeight: number;
 
 	constructor (public gridLayers: number, public gridWidth: number, public gridHeight: number) {
 		this.GridLayers	= gridLayers;
@@ -24,33 +24,33 @@ class Maze {
 
 		// create the cells list
 		this.CellsList = [new Cell(-1, -1, -1)];
-		
+
 		this.EndCell = new Cell(-1, -1, -1);
 	}
-	
+
 	public fillMaze () {
 		this.fillMazeRandom();
 		// this.fillMazeProcedural();
 	}
 
-	protected fillMazeProcedural() {
+	protected fillMazeProcedural () {
 		// let pro : string = "";
 
 		// this.MazeGrid = $.parseJSON(atob(pro));
 
 	}
 
-	protected encodeMaze() {
+	protected encodeMaze () {
 		// console.log(btoa(JSON.stringify(this.MazeGrid)));
 		console.log((JSON.stringify(this.MazeGrid)));
 	}
 
-	protected fillMazeRandom() {
+	protected fillMazeRandom () {
 		// initialize the cellsList and add the first cell to the list
 		this.CellsList.push(new Cell(
 			0,
-			this.getRandomIntInclusive(0, this.gridHeight - 1),
-			this.getRandomIntInclusive(0, this.gridWidth - 1),
+			this.getRandomIntInclusive (0, this.gridHeight - 1),
+			this.getRandomIntInclusive (0, this.gridWidth - 1),
 		));
 
 		let index: number = -1;
@@ -61,14 +61,14 @@ class Maze {
 
 			const currentCell: Cell = this.CellsList[index];
 
-			const directions: string[] = this.getRandomDirections();
+			const directions: string[] = this.getRandomDirections ();
 
 			for (let i = 0; i < directions.length; i++) {
-				const nextCell: Cell = this.directionModifier(this.CellsList[index], directions[i]);
+				const nextCell: Cell = this.directionModifier (this.CellsList[index], directions[i]);
 				if (this.isEmptyCell(nextCell.Z, nextCell.Y, nextCell.X)) {
 
 					// we found a workable direction
-					const result: any = this.getReverseDirection(currentCell, nextCell, directions[i]);
+					const result: any = this.getReverseDirection (currentCell, nextCell, directions[i]);
 					this.MazeGrid[currentCell.Z][currentCell.Y][currentCell.X] = result.current;
 					this.MazeGrid[nextCell.Z][nextCell.Y][nextCell.X] = result.next;
 
@@ -80,7 +80,9 @@ class Maze {
 			if (index !== -1)
 				this.CellsList.splice(index, 1);
 		}
-		this.EndCell = this.MazeGrid[0][this.getRandomIntInclusive(1, this.gridHeight - 1)][this.getRandomIntInclusive(1, this.gridWidth - 1)];
+		this.EndCell = this.MazeGrid[0]
+							[this.getRandomIntInclusive (1, this.gridHeight - 1)]
+							[this.getRandomIntInclusive (1, this.gridWidth - 1)];
 		this.encodeMaze();
 	}
 	protected generateGrid () {
@@ -147,7 +149,7 @@ class Maze {
 	 * Shuffles array in place.
 	 * @param {Array} array items An array containing the items.
 	 */
-	protected shuffle(array: any) {
+	protected shuffle (array: any) {
 		let j;
 		let x;
 		let i;
@@ -169,7 +171,7 @@ class Maze {
 		return false;
 	}
 
-	public directionModifier (cell: Cell, direction: string) {
+	protected directionModifier (cell: Cell, direction: string) {
 		switch (direction) {
 			case this.North:
 				return new Cell(cell.Z, cell.Y - 1, cell.X);

@@ -15,6 +15,9 @@ declare class Character {
     Color: string;
     Name: string;
     CurrentLocation: Cell;
+    EndCell: Cell;
+    CharacterIcon: string;
+    EndIcon: string;
     readonly North: string;
     readonly East: string;
     readonly South: string;
@@ -25,9 +28,6 @@ declare class Character {
     private GridWidth;
     private GridHeight;
     private MazeGrid;
-    EndCell: Cell;
-    CharacterIcon: string;
-    EndIcon: string;
     constructor(name: string, color: string, startingLocation: Cell, mazeGrid: Cell[][][], endCell: Cell);
     move(direction: string): void;
 }
@@ -37,16 +37,16 @@ declare class Maze {
     gridHeight: number;
     MazeGrid: Cell[][][];
     EndCell: Cell;
-    private CellsList;
-    private GridLayers;
-    private GridWidth;
-    private GridHeight;
     readonly North: string;
     readonly East: string;
     readonly South: string;
     readonly West: string;
     readonly Up: string;
     readonly Down: string;
+    private CellsList;
+    private GridLayers;
+    private GridWidth;
+    private GridHeight;
     constructor(gridLayers: number, gridWidth: number, gridHeight: number);
     fillMaze(): void;
     protected fillMazeProcedural(): void;
@@ -65,24 +65,24 @@ declare class Maze {
      */
     protected shuffle(array: any): any;
     protected isEmptyCell(z: number, y: number, x: number): boolean;
-    directionModifier(cell: Cell, direction: string): Cell;
+    protected directionModifier(cell: Cell, direction: string): Cell;
 }
 declare class MazeView {
     mazegrid: Cell[][][];
     endCell: Cell;
     MazeGrid: Cell[][][];
-    private GridWidth;
     EndCell: Cell;
+    private GridWidth;
     constructor(mazegrid: Cell[][][], endCell: Cell);
     displayMaze(): void;
     private getClassesFromCell;
     private getNameFromLayer;
 }
-declare var currentLayer: number;
-declare var GridLayers: number;
-declare var GridHeight: number;
-declare var GridWidth: number;
-declare var MyCharacter: Character;
+declare let currentLayer: number;
+declare let GridLayers: number;
+declare let GridHeight: number;
+declare let GridWidth: number;
+declare let MyCharacter: Character;
 declare function main(): void;
 declare function showLayerHideOthers(layerChoice: number): void;
 declare function goNorth(): void;
