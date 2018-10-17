@@ -1,2 +1,3 @@
 build/* linguist-vendored=false
 node_modules/* linguist-vendored=false
+node_modules/* linguist-generted=false
