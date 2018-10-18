@@ -1,6 +1,7 @@
 class Maze {
 	public MazeGrid: Cell[][][];
 	public EndCell: Cell;
+	public Maze: any;
 
 	public readonly North: string = "North";
 	public readonly East: string = "East";
@@ -25,7 +26,11 @@ class Maze {
 		// create the cells list
 		this.CellsList = [new Cell(-1, -1, -1)];
 
-		this.EndCell = new Cell(-1, -1, -1);
+
+		this.EndCell = this.MazeGrid[0]
+									[this.getRandomIntInclusive (1, this.gridHeight - 1)]
+									[this.getRandomIntInclusive (1, this.gridWidth - 1)];
+		this.encodeMaze();
 	}
 
 	public fillMaze () {
@@ -68,7 +73,7 @@ class Maze {
 				if (this.isEmptyCell(nextCell.Z, nextCell.Y, nextCell.X)) {
 
 					// we found a workable direction
-					const result: any = this.getReverseDirection (currentCell, nextCell, directions[i]);
+					const result: any = this.carvePathBetweenCells (currentCell, nextCell, directions[i]);
 					this.MazeGrid[currentCell.Z][currentCell.Y][currentCell.X] = result.current;
 					this.MazeGrid[nextCell.Z][nextCell.Y][nextCell.X] = result.next;
 
@@ -80,10 +85,6 @@ class Maze {
 			if (index !== -1)
 				this.CellsList.splice(index, 1);
 		}
-		this.EndCell = this.MazeGrid[0]
-							[this.getRandomIntInclusive (1, this.gridHeight - 1)]
-							[this.getRandomIntInclusive (1, this.gridWidth - 1)];
-		this.encodeMaze();
 	}
 	protected generateGrid () {
 		const tempGrid: any[] = new Array(this.GridLayers);
@@ -97,7 +98,7 @@ class Maze {
 		return tempGrid;
 	}
 
-	protected getReverseDirection (currentCell: Cell, nextCell: Cell, direction: string) {
+	protected carvePathBetweenCells (currentCell: Cell, nextCell: Cell, direction: string) {
 		switch (direction) {
 			case this.North:
 				currentCell.North = true;
