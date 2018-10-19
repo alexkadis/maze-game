@@ -191,7 +191,7 @@ i.controls-description::after {
 }
 
 i.end-description::after {
-	content: "🏁";
+	content: "\01F3C1";
 	font-size: 12px;
 	width: 8px;
 	height: 8px;

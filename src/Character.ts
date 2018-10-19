@@ -31,8 +31,8 @@ class Character {
 		this.GridHeight = this.MazeGrid[0][0].length;
 		this.EndCell = endCell;
 
-		this.CharacterIcon = "😀";
-		this.EndIcon = "🏁";
+		this.CharacterIcon = String.fromCharCode(0xD83D, 0xDE00); // 😀"
+		this.EndIcon = String.fromCharCode(0xD83C, 0xDFC1);  // "🏁"; 
 
 		this.move("");
 	}
@@ -74,8 +74,8 @@ class Character {
 				break;
 		}
 		if (this.MazeGrid[this.CurrentLocation.Z][this.CurrentLocation.Y][this.CurrentLocation.X] === this.EndCell) {
-			this.CharacterIcon = "😎";
-			this.EndIcon = "🎉";
+			this.CharacterIcon = String.fromCharCode(0xD83D, 0xDE0E); // "😎";
+			this.EndIcon = String.fromCharCode(0xD83C, 0xDF89); //"🎉";
 			$(`.y${this.CurrentLocation.Y}x${this.CurrentLocation.X}`).addClass("game-won");
 			$(`.new-button`).show();
 			$(`.desc`).hide();

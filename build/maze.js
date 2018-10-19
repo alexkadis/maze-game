@@ -30,8 +30,8 @@ var Character = /** @class */ (function () {
         this.GridWidth = this.MazeGrid[0].length;
         this.GridHeight = this.MazeGrid[0][0].length;
         this.EndCell = endCell;
-        this.CharacterIcon = "😀";
-        this.EndIcon = "🏁";
+        this.CharacterIcon = String.fromCharCode(0xD83D, 0xDE00); // 😀"
+        this.EndIcon = String.fromCharCode(0xD83C, 0xDFC1); // "🏁"; 
         this.move("");
     }
     Character.prototype.move = function (direction) {
@@ -71,8 +71,8 @@ var Character = /** @class */ (function () {
                 break;
         }
         if (this.MazeGrid[this.CurrentLocation.Z][this.CurrentLocation.Y][this.CurrentLocation.X] === this.EndCell) {
-            this.CharacterIcon = "😎";
-            this.EndIcon = "🎉";
+            this.CharacterIcon = String.fromCharCode(0xD83D, 0xDE0E); // "😎";
+            this.EndIcon = String.fromCharCode(0xD83C, 0xDF89); //"🎉";
             $(".y" + this.CurrentLocation.Y + "x" + this.CurrentLocation.X).addClass("game-won");
             $(".new-button").show();
             $(".desc").hide();
