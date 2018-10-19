@@ -305,10 +305,8 @@ dd.kb-down {
 dl.keyboard-shortcuts {
 	display: grid;
 	grid-template-areas: 
-	". kbd-down . kbd-up ."
-	". kbt-down . kbt-up ."
-	". . kbd-north . ."
-	". . kbt-north . ."
+	". kbd-down kbd-north kbd-up ."
+	". kbt-down kbt-north kbt-up ."
 	". kbd-west kbd-south kbd-east ."
 	". kbt-west kbt-south kbt-east .";
 	grid-template-columns: 2.5fr 0.5fr 0.5fr 0.5fr 2.5fr;

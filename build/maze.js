@@ -362,14 +362,13 @@ https: //stackoverflow.com/questions/1402698/binding-arrow-keys-in-js-jquery
         case 40: // down
             goSouth();
             break;
-        case 49: // 1
+        case 81: // 1
             goDown();
             break;
-        case 50: // 1
+        case 69: // 1
             goUp();
             break;
-        case 191:
-        case 16:
+        case 72:
             showHelp();
             break;
         default: return; // exit this handler for other keys
