@@ -53,7 +53,7 @@ declare class Maze {
     protected encodeMaze(): void;
     protected fillMazeRandom(): void;
     protected generateGrid(): any[];
-    protected getReverseDirection(currentCell: Cell, nextCell: Cell, direction: string): {
+    protected carvePathBetweenCells(currentCell: Cell, nextCell: Cell, direction: string): {
         current: Cell;
         next: Cell;
     };
@@ -84,6 +84,7 @@ declare let GridHeight: number;
 declare let GridWidth: number;
 declare let MyCharacter: Character;
 declare function main(): void;
+declare function showHelp(): void;
 declare function showLayerHideOthers(layerChoice: number): void;
 declare function goNorth(): void;
 declare function goEast(): void;

@@ -1,7 +1,7 @@
 /* http://meyerweb.com/eric/tools/css/reset/ 
-   v2.0 | 20110126
-   License: none (public domain)
-*/
+ * v2.0 | 20110126
+ * License: none (public domain)
+ */
 
 html, body, div, span, applet, object, iframe,
 h1, h2, h3, h4, h5, h6, p, blockquote, pre,
@@ -47,7 +47,9 @@ table {
 	border-spacing: 0;
 }
 
-/* My work: */
+/* 
+ * My work: 
+ */
 
 :root {
 	--winter-light: #9ecfec;
@@ -64,7 +66,9 @@ table {
 }
 
 
-/** Basic styling */
+/*
+ * Basic styling 
+ */
 body { 
 	font-family: Helvetica, sans-serif;
 	font-size: 1em;
@@ -116,9 +120,14 @@ h1 {
 	display: none;
 }
 
-p {
+p, h4 {
 	width: 300px;
 	margin: 10px auto;
+}
+
+h4.shortcuts {
+	text-align: center;
+	font-weight: bold;
 }
 
 i.season-description::before {
@@ -170,7 +179,6 @@ button {
 	background-color: transparent;
 }
 
-
 .gameButtons {
 	grid-area: gameButtons;
 	display: grid;
@@ -221,6 +229,81 @@ button {
 	margin: 0 auto 0 0;
 }
 
+dt.kb-north {
+	grid-area: kbt-north;
+}
+dd.kb-north {
+	grid-area: kbd-north;
+}
+
+dt.kb-west {
+	grid-area: kbt-west;
+}
+dd.kb-west {
+	grid-area: kbd-west;
+}
+
+dt.kb-south {
+	grid-area: kbt-south;
+}
+dd.kb-south {
+	grid-area: kbd-south;
+}
+
+dt.kb-east {
+	grid-area: kbt-east;
+}
+dd.kb-east {
+	grid-area: kbd-east;
+}
+
+dt.kb-up {
+	grid-area: kbt-up;
+}
+dd.kb-up {
+	grid-area: kbd-up;
+}
+
+dt.kb-down {
+	grid-area: kbt-down;
+}
+dd.kb-down {
+	grid-area: kbd-down;
+}
+
+
+dl.keyboard-shortcuts {
+	display: grid;
+	grid-template-areas: 
+	". kbd-down . kbd-up ."
+	". kbt-down . kbt-up ."
+	". . kbd-north . ."
+	". . kbt-north . ."
+	". kbd-west kbd-south kbd-east ."
+	". kbt-west kbt-south kbt-east .";
+	grid-template-columns: 2.5fr 0.5fr 0.5fr 0.5fr 2.5fr;
+	/* grid-template-rows: 10px 10px 10px 10px 10px 10px; */
+	grid-gap: 5px;
+	text-align: center;
+	font-size: 80%;
+	font-family: 'Courier New', Courier, monospace;
+}
+
+dl.keyboard-shortcuts dt {
+	padding: 10px;
+	border: 1px solid black;
+	font-weight: bold;
+}
+dl.keyboard-shortcuts dd {
+	font-weight: bold;
+	text-transform: capitalize;
+	margin-top: 10px;
+}
+dl.keyboard-shortcuts dd::after {
+	content: ':';
+}
+
+
 #maze-game {
 	grid-area: blockMaze;
 	display: grid;
@@ -265,8 +348,8 @@ button {
 
 
 .blockMaze table {
-	border-spacing: 1px;
-	border-collapse: separate;
+	/* border-spacing: 1px; */
+	/* border-collapse: separate; */
 	margin: 20px auto;
 	/* display: flex; */
 	align-items: center;
@@ -277,7 +360,7 @@ button {
 	display: inline-block;
 	width: 25px;
 	height: 25px;
-	border-style: groove;
+	/* border-style: groove; */
 	border: 1px solid #fff;
 	text-align: center;
 	vertical-align: middle;
@@ -306,7 +389,7 @@ button {
 }
 .blockMaze .cell.winter {
 	background-color: var(--winter-light);
-	border: 4px solid transparent;
+	border: 0px solid transparent;
 }
 .blockMaze .top.winter  {
 	border-top: 4px solid var(--winter-dark);
@@ -327,7 +410,7 @@ button {
 }
 .blockMaze .cell.spring {
 	background-color: var(--spring-light);
-	border: 4px solid transparent;
+	border: 0px solid transparent;
 }
 .blockMaze .top.spring  {
 	border-top: 4px solid var(--spring-dark);
@@ -349,7 +432,7 @@ button {
 }
 .blockMaze .cell.summer {
 	background-color: var(--summer-light);
-	border: 4px solid transparent;
+	border: 0px solid transparent;
 }
 .blockMaze .top.summer  {
 	border-top: 4px solid var(--summer-dark);
@@ -370,7 +453,7 @@ button {
 }
 .blockMaze .cell.fall {
 	background-color: var(--fall-light);
-	border: 4px solid transparent;
+	border: 0px solid transparent;
 }
 .blockMaze .top.fall  {
 	border-top: 4px solid var(--fall-dark);
@@ -383,32 +466,4 @@ button {
 }
 .blockMaze .left.fall { 
 	border-left: 4px solid var(--fall-dark);
-}
-
-.end {
-	/* background-color: #9c5d5d !important; */
-}
-.end.game-won {
-	/* background-color: #358d32 !important; */
-}
-
-/* ////// */
-
-
-.blockMaze .rotate90 {
-	-ms-transform: rotate(90deg); /* IE 9 */
-    -webkit-transform: rotate(90deg); /* Safari */
-	transform: rotate(90deg);
-}
-
-.blockMaze .rotate180 {
-	-ms-transform: rotate(180deg); /* IE 9 */
-    -webkit-transform: rotate(180deg); /* Safari */
-	transform: rotate(180deg);
-}
-
-.blockMaze .rotate270 {
-	-ms-transform: rotate(270deg); /* IE 9 */
-    -webkit-transform: rotate(270deg); /* Safari */
-	transform: rotate(270deg);
 }

@@ -43,8 +43,6 @@ class MazeView {
 			html += "</div>";
 		}
 		$("#maze-game").html(html);
-
-		console.log(this.MazeGrid[0]);
 	}
 
 	private getClassesFromCell (cell: Cell) {

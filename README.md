@@ -91,7 +91,7 @@ See links in [Credits](#credits) to Jamis Buck's work for more details.
 ## Display
 ### 1. Loop through the multi-layer array (the grid)
 `// grid[z][y][x] = grid[layer][row][column]`
-### 2. If a direction is null, set that border wall
+### 2. If a direction is false, set that border wall
 In CSS parlance: top border, east border, south border, west border
 
 ```

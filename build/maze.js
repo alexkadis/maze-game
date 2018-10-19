@@ -90,6 +90,7 @@ var Maze = /** @class */ (function () {
         this.gridLayers = gridLayers;
         this.gridWidth = gridWidth;
         this.gridHeight = gridHeight;
+        // public Maze: any;
         this.North = "North";
         this.East = "East";
         this.South = "South";
@@ -104,6 +105,9 @@ var Maze = /** @class */ (function () {
         // create the cells list
         this.CellsList = [new Cell(-1, -1, -1)];
         this.EndCell = new Cell(-1, -1, -1);
+        this.fillMaze();
+        this.EndCell = this.MazeGrid[0][this.getRandomIntInclusive(1, this.gridHeight - 1)][this.getRandomIntInclusive(1, this.gridWidth - 1)];
+        this.encodeMaze();
     }
     Maze.prototype.fillMaze = function () {
         this.fillMazeRandom();
@@ -115,7 +119,7 @@ var Maze = /** @class */ (function () {
     };
     Maze.prototype.encodeMaze = function () {
         // console.log(btoa(JSON.stringify(this.MazeGrid)));
-        console.log((JSON.stringify(this.MazeGrid)));
+        // console.log((JSON.stringify(this.MazeGrid)));
     };
     Maze.prototype.fillMazeRandom = function () {
         // initialize the cellsList and add the first cell to the list
@@ -130,7 +134,7 @@ var Maze = /** @class */ (function () {
                 var nextCell = this.directionModifier(this.CellsList[index], directions[i]);
                 if (this.isEmptyCell(nextCell.Z, nextCell.Y, nextCell.X)) {
                     // we found a workable direction
-                    var result = this.getReverseDirection(currentCell, nextCell, directions[i]);
+                    var result = this.carvePathBetweenCells(currentCell, nextCell, directions[i]);
                     this.MazeGrid[currentCell.Z][currentCell.Y][currentCell.X] = result.current;
                     this.MazeGrid[nextCell.Z][nextCell.Y][nextCell.X] = result.next;
                     this.CellsList.push(nextCell);
@@ -141,8 +145,6 @@ var Maze = /** @class */ (function () {
             if (index !== -1)
                 this.CellsList.splice(index, 1);
         }
-        this.EndCell = this.MazeGrid[0][this.getRandomIntInclusive(1, this.gridHeight - 1)][this.getRandomIntInclusive(1, this.gridWidth - 1)];
-        this.encodeMaze();
     };
     Maze.prototype.generateGrid = function () {
         var tempGrid = new Array(this.GridLayers);
@@ -155,7 +157,7 @@ var Maze = /** @class */ (function () {
         }
         return tempGrid;
     };
-    Maze.prototype.getReverseDirection = function (currentCell, nextCell, direction) {
+    Maze.prototype.carvePathBetweenCells = function (currentCell, nextCell, direction) {
         switch (direction) {
             case this.North:
                 currentCell.North = true;
@@ -288,7 +290,6 @@ var MazeView = /** @class */ (function () {
             html += "</div>";
         }
         $("#maze-game").html(html);
-        console.log(this.MazeGrid[0]);
     };
     MazeView.prototype.getClassesFromCell = function (cell) {
         var classes = "";
@@ -335,11 +336,47 @@ function main() {
     GridHeight = 8;
     GridWidth = 8;
     var myMaze = new Maze(GridLayers, GridHeight, GridWidth);
-    myMaze.fillMaze();
     var mazeViewer = new MazeView(myMaze.MazeGrid, myMaze.EndCell);
     mazeViewer.displayMaze();
+    console.table(myMaze.MazeGrid[0][0]);
     showLayerHideOthers(currentLayer);
     MyCharacter = new Character("pinkdude", "pink", myMaze.MazeGrid[0][0][0], myMaze.MazeGrid, myMaze.EndCell);
+}
+https: //stackoverflow.com/questions/1402698/binding-arrow-keys-in-js-jquery
+ document.addEventListener('keydown', function (e) {
+    e = e || window.event;
+    switch (e.which || e.keyCode) {
+        case 65: // a
+        case 37: // left
+            goWest();
+            break;
+        case 87: // w
+        case 38: // up
+            goNorth();
+            break;
+        case 68: // d
+        case 39: // right
+            goEast();
+            break;
+        case 83: // s
+        case 40: // down
+            goSouth();
+            break;
+        case 49: // 1
+            goDown();
+            break;
+        case 50: // 1
+            goUp();
+            break;
+        case 191:
+        case 16:
+            showHelp();
+            break;
+        default: return; // exit this handler for other keys
+    }
+    e.preventDefault(); // prevent the default action (scroll / move caret)
+});
+function showHelp() {
 }
 function showLayerHideOthers(layerChoice) {
     if (GridLayers > 1) {

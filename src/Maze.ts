@@ -1,7 +1,7 @@
 class Maze {
 	public MazeGrid: Cell[][][];
 	public EndCell: Cell;
-	public Maze: any;
+	// public Maze: any;
 
 	public readonly North: string = "North";
 	public readonly East: string = "East";
@@ -26,10 +26,14 @@ class Maze {
 		// create the cells list
 		this.CellsList = [new Cell(-1, -1, -1)];
 
+		this.EndCell = new Cell(-1, -1, -1);
+		
+		this.fillMaze();
 
 		this.EndCell = this.MazeGrid[0]
-									[this.getRandomIntInclusive (1, this.gridHeight - 1)]
-									[this.getRandomIntInclusive (1, this.gridWidth - 1)];
+		[this.getRandomIntInclusive(1, this.gridHeight - 1)]
+		[this.getRandomIntInclusive(1, this.gridWidth - 1)];
+
 		this.encodeMaze();
 	}
 
@@ -47,7 +51,7 @@ class Maze {
 
 	protected encodeMaze () {
 		// console.log(btoa(JSON.stringify(this.MazeGrid)));
-		console.log((JSON.stringify(this.MazeGrid)));
+		// console.log((JSON.stringify(this.MazeGrid)));
 	}
 
 	protected fillMazeRandom () {

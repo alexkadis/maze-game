@@ -11,15 +11,53 @@ function main () {
 	GridWidth = 8;
 
 	const myMaze = new Maze(GridLayers, GridHeight, GridWidth);
-	myMaze.fillMaze();
 
 	const mazeViewer = new MazeView(myMaze.MazeGrid, myMaze.EndCell);
 	mazeViewer.displayMaze();
+	console.table(myMaze.MazeGrid[0][0]);
 
 	showLayerHideOthers(currentLayer);
 
 	MyCharacter = new Character("pinkdude", "pink", myMaze.MazeGrid[0][0][0], myMaze.MazeGrid, myMaze.EndCell);
 
+}
+https://stackoverflow.com/questions/1402698/binding-arrow-keys-in-js-jquery
+document.addEventListener('keydown', function (e) {
+	e = e || window.event;
+	switch (e.which || e.keyCode) {
+		case 65: // a
+		case 37: // left
+			goWest();
+			break;
+		case 87: // w
+		case 38: // up
+			goNorth();
+			break;
+		case 68: // d
+		case 39: // right
+			goEast();
+			break;
+		case 83: // s
+		case 40: // down
+			goSouth();
+			break;
+		case 49: // 1
+			goDown()
+			break;
+		case 50: // 1
+			goUp()
+			break;
+		case 191:
+		case 16:
+			showHelp();
+			break;
+		default: return; // exit this handler for other keys
+	}
+	e.preventDefault(); // prevent the default action (scroll / move caret)
+});
+
+function showHelp() {
+	
 }
 
 function showLayerHideOthers (layerChoice: number) {
