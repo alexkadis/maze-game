@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
     <meta charset="utf-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -14,7 +14,7 @@
 		<main class="gameDescription">
 			<p class="desc">Use the <i class="controls-description">controls</i> to navigate through a randomly generated multi-level maze towards the finish <i class="end-description">line.</i></p>
 			<p class="desc">When you get stuck, <i class="season-description">change</i> the season.</p>
-			<h4 class="shortcuts">Keyboard shortcuts:</h4>
+			<h2 class="shortcuts">Keyboard shortcuts:</h2>
 				<dl class="keyboard-shortcuts">
 					<dt class="kb-north">w</dt>
 					<dd class="kb-north">north</dd>
@@ -32,10 +32,10 @@
 			<p class="new-button">You won! Play again? <button onclick="main();" title="New Maze">&nbsp;</button></p>
 		</main>
 		<nav class="gameButtons">
-			<button onclick="goNorth()" class="north-button" title="North">&nbsp;</button>
-			<button onclick="goWest()" class="west-button" title="West">&nbsp;</button>
-			<button onclick="goEast()" class="east-button" title="East">&nbsp;</button>
-			<button onclick="goSouth()" class="south-button" title="South">&nbsp;</button>
+			<button onclick="goNorth()" class="north-button" title="North" aria-label="Move North">&nbsp;</button>
+			<button onclick="goWest()" class="west-button" title="West" aria-label="Move West"></button>&nbsp;</button>
+			<button onclick="goEast()" class="east-button" title="East" aria-label="Move East"></button>&nbsp;</button>
+			<button onclick="goSouth()" class="south-button" title="South" aria-label="Move South"></button>&nbsp;</button>
 		</nav>
 		<div id="maze-game" class="blockMaze" style="line-height: 0;">
 			Loading...
@@ -43,7 +43,7 @@
 		
 		<div class="footer">
 			<!-- <p class="new-button">Generate a new game: <button onclick="main();" title="New Maze">&nbsp;</button></p> -->
-			<p>This game was created in TypeScript with a bit of jQuery mixed in. The source and credits are on the <a href="https://github.com/alexkadis/maze-game" title="project&rsquo;s GitHub page">project&rsquo;s GitHub page</a>.</p>
+			<p>This game was created in TypeScript with a bit of jQuery mixed in. The source and credits are on the <a href="https://github.com/alexkadis/maze-game" title="Maze of Seasons on GitHub">project&rsquo;s GitHub page</a>.</p>
 		</div>
 		
 

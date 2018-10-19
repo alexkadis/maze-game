@@ -150,12 +150,12 @@ h1 {
 	display: none;
 }
 
-p, h4 {
+p, h2 {
 	width: 300px;
 	margin: 10px auto;
 }
 
-h4.shortcuts {
+h2.shortcuts {
 	text-align: center;
 	font-weight: bold;
 }
