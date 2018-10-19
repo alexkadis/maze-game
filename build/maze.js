@@ -272,9 +272,9 @@ var MazeView = /** @class */ (function () {
             var layerName = this.getNameFromLayer(layer);
             html += "<div id=\"layer" + layer + "\" class=\"" + layerName + "\">";
             html += "<h3 class=\"" + layerName + " mazeHeader\">"
-                + "<button onclick=\"goDown()\" class=\"down-button\">&nbsp;</button>"
+                + "<button onclick=\"goDown()\" class=\"down-button\" aria-label=\"Move Back\">&nbsp;</button>"
                 + ("<span class=\"layer-name\">" + layerName + "</span>")
-                + "<button onclick=\"goUp()\" class=\"up-button\">&nbsp;</button>"
+                + "<button onclick=\"goUp()\" class=\"up-button\" aria-label=\"Move Forward\">&nbsp;</button>"
                 + "</h3>";
             html += "<table id=\"layer" + layer + "-table class=\"" + layerName + "\">";
             for (var row = 0; row < this.MazeGrid[layer].length; row++) {
