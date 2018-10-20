@@ -5,53 +5,57 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <title>Maze of Seasons</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=0">
-	<link rel="stylesheet" type="text/css" media="screen" href="main.css" />
+	<link rel="stylesheet" type="text/css" media="screen" href="css/base.css" />
 	<link rel="shortcut icon" type="image/png" href="img/favicon.png"/>
 </head>
 <body onload="main();">
 	<article>
-		<h1 id="header">Maze of Seasons</h1>
-		<main class="gameDescription">
+		<header>
+			<h1 id="header">Maze of Seasons</h1>
+		</header>
+		<section id="game-description">
 			<p class="desc">Use the <i class="controls-description">controls</i> to navigate through a randomly generated multi-level maze towards the finish <i class="end-description">line.</i></p>
 			<p class="desc">When you get stuck, <i class="season-description">change</i> the season.</p>
-			<h2 class="shortcuts">Keyboard shortcuts:</h2>
-				<dl class="keyboard-shortcuts">
-					<dt class="kb-north">w</dt>
-					<dd class="kb-north">north</dd>
-					<dt class="kb-west">a</dt>
-					<dd class="kb-west">west</dd>
-					<dt class="kb-south">s</dt>
-					<dd class="kb-south">south</dd>
-					<dt class="kb-east">d</dt>
-					<dd class="kb-east">east</dd>
-					<dt class="kb-down">q</dt>
-					<dd class="kb-down">back</dd>
-					<dt class="kb-up">e</dt>
-					<dd class="kb-up">forward</dd>
-				</dl>
-			<p class="new-button">You won! Play again? <button onclick="main();" title="New Maze" aria-label="Generate New Maze">&nbsp;</button></p>
-		</main>
-		<nav class="gameButtons">
+		</section>
+		<section id="shortcuts">
+			<h2>Keyboard shortcuts</h2>
+			<dl class="keyboard-shortcuts">
+				<dt class="kb-north">w</dt>
+				<dd class="kb-north">north</dd>
+				<dt class="kb-west">a</dt>
+				<dd class="kb-west">west</dd>
+				<dt class="kb-south">s</dt>
+				<dd class="kb-south">south</dd>
+				<dt class="kb-east">d</dt>
+				<dd class="kb-east">east</dd>
+				<dt class="kb-down">q</dt>
+				<dd class="kb-down">back</dd>
+				<dt class="kb-up">e</dt>
+				<dd class="kb-up">forward</dd>
+			</dl>
+		</section>
+		<section id="play-again">
+			<h2 class="new-button">You won! Play again? </h2>
+			<button onclick="main();" title="New Maze" aria-label="Generate New Maze">&nbsp;</button>
+		</section>
+		<nav class="game-buttons">
 			<button onclick="goNorth()" class="north-button" title="North" aria-label="Move North">&nbsp;</button>
 			<button onclick="goWest()" class="west-button" title="West" aria-label="Move West"></button>&nbsp;</button>
 			<button onclick="goEast()" class="east-button" title="East" aria-label="Move East"></button>&nbsp;</button>
 			<button onclick="goSouth()" class="south-button" title="South" aria-label="Move South"></button>&nbsp;</button>
 		</nav>
-		<div id="maze-game" class="blockMaze" style="line-height: 0;">
-			Loading...
-		</div>
-		
-		<div class="footer">
-			<!-- <p class="new-button">Generate a new game: <button onclick="main();" title="New Maze">&nbsp;</button></p> -->
-			<p>This game was created in TypeScript with a bit of jQuery mixed in. The source and credits are on the <a href="https://github.com/alexkadis/maze-game" title="Maze of Seasons on GitHub">project&rsquo;s GitHub page</a>.</p>
-		</div>
-		
-
-	</article>
+		<main id="maze-game" class="blockMaze" style="line-height: 0;">
+			<p>Loading...</p>
+		</main>
+	</main>
+	<footer class="footer">
+		<!-- <p class="new-button">Generate a new game: <button onclick="main();" title="New Maze">&nbsp;</button></p> -->
+		<p>This game was created in TypeScript with a bit of jQuery mixed in. The source and credits are on the <a href="https://github.com/alexkadis/maze-game" title="Maze of Seasons on GitHub">project&rsquo;s GitHub page</a>.</p>
+	</footer>
+</article>
 	<script
 	src="https://code.jquery.com/jquery-3.3.1.min.js"
 	integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
 	crossorigin="anonymous"></script>
 	<script src="maze.js"></script>
-	  
 </body>

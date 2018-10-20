@@ -22,12 +22,12 @@ class MazeView {
 			const layerName: string = this.getNameFromLayer(layer);
 
 			html += `<div id="layer${layer}" class="${layerName}">`;
-			html += `<h3 class="${layerName} mazeHeader">`
+			html += `<h3 class="${layerName} maze-header">`
 				+  `<button onclick="goDown()" class="down-button" aria-label="Move Back">&nbsp;</button>`
-				 +	`<span class="layer-name">${layerName}</span>`
+				 +	`<span class="${layerName} layer-name">${layerName}</span>`
 				+	`<button onclick="goUp()" class="up-button" aria-label="Move Forward">&nbsp;</button>`
 				 +	`</h3>`;
-			html += `<table id="layer${layer}-table class="${layerName}">`;
+			html += `<table id="layer${layer}-table" class="maze-table ${layerName}">`;
 
 			for (let row = 0; row < this.MazeGrid[layer].length; row++) {
 				html += "<tr class='r'>";

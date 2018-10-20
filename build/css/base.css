@@ -1,0 +1,519 @@
+@charset "UTF-8";
+/* http://meyerweb.com/eric/tools/css/reset/ 
+ * v2.0 | 20110126
+ * License: none (public domain)
+ */
+html, body, div, span, applet, object, iframe,
+h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+a, abbr, acronym, address, big, cite, code,
+del, dfn, em, img, ins, kbd, q, s, samp,
+small, strike, strong, sub, sup, tt, var,
+b, u, i, center,
+dl, dt, dd, ol, ul, li,
+fieldset, form, label, legend,
+table, caption, tbody, tfoot, thead, tr, th, td,
+article, aside, canvas, details, embed,
+figure, figcaption, footer, header, hgroup,
+menu, nav, output, ruby, section, summary,
+time, mark, audio, video {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  font-size: 100%;
+  font: inherit;
+  vertical-align: baseline;
+}
+
+/* HTML5 display-role reset for older browsers */
+article, aside, details, figcaption, figure,
+footer, header, hgroup, menu, nav, section {
+  display: block;
+}
+
+body {
+  line-height: 1;
+}
+
+ol, ul {
+  list-style: none;
+}
+
+blockquote, q {
+  quotes: none;
+}
+
+blockquote:before, blockquote:after,
+q:before, q:after {
+  content: "";
+  content: none;
+}
+
+table {
+  border-collapse: collapse;
+  border-spacing: 0;
+}
+
+:root {
+  /* --winter-light: #9ecfec; */
+  --winter-light: rgba(157, 206, 235, .5);
+  --winter-dark: #4698be;
+  /* --spring-light: #a8dba6; */
+  --spring-light: rgba(168, 219, 166, .5);
+  --spring-dark: #60c75c;
+  /* --summer-light: #f1ecbc; */
+  --summer-light: rgba(241, 236, 188, .5);
+  /* --summer-dark: #fad51f; */
+  --summer-dark: #d8b60e;
+  /* --fall-light: #f1d7ab; */
+  --fall-light: rgba(241, 215, 171, .5);
+  --fall-dark: #F0B659;
+}
+
+/* winter */
+.winter,
+table.maze-table .winter {
+  color: var(--winter-dark);
+}
+
+table.maze-table .cell.winter {
+  background-color: var(--winter-light);
+  border: 0px solid transparent;
+}
+
+table.maze-table .top.winter {
+  border-top: 4px solid var(--winter-dark);
+}
+
+table.maze-table .right.winter {
+  border-right: 4px solid var(--winter-dark);
+}
+
+table.maze-table .bottom.winter {
+  border-bottom: 4px solid var(--winter-dark);
+}
+
+table.maze-table .left.winter {
+  border-left: 4px solid var(--winter-dark);
+}
+
+/* spring */
+.spring,
+table.maze-table .spring {
+  color: var(--spring-dark);
+}
+
+table.maze-table .cell.spring {
+  background-color: var(--spring-light);
+  border: 0px solid transparent;
+}
+
+table.maze-table .top.spring {
+  border-top: 4px solid var(--spring-dark);
+}
+
+table.maze-table .right.spring {
+  border-right: 4px solid var(--spring-dark);
+}
+
+table.maze-table .bottom.spring {
+  border-bottom: 4px solid var(--spring-dark);
+}
+
+table.maze-table .left.spring {
+  border-left: 4px solid var(--spring-dark);
+}
+
+/* summer */
+.summer,
+table.maze-table .summer {
+  color: var(--summer-dark);
+}
+
+table.maze-table .cell.summer {
+  background-color: var(--summer-light);
+  border: 0px solid transparent;
+}
+
+table.maze-table .top.summer {
+  border-top: 4px solid var(--summer-dark);
+}
+
+table.maze-table .right.summer {
+  border-right: 4px solid var(--summer-dark);
+}
+
+table.maze-table .bottom.summer {
+  border-bottom: 4px solid var(--summer-dark);
+}
+
+table.maze-table .left.summer {
+  border-left: 4px solid var(--summer-dark);
+}
+
+/* fall */
+.fall,
+table.maze-table .fall {
+  color: var(--fall-dark);
+}
+
+table.maze-table .cell.fall {
+  background-color: var(--fall-light);
+  border: 0px solid transparent;
+}
+
+table.maze-table .top.fall {
+  border-top: 4px solid var(--fall-dark);
+}
+
+table.maze-table .right.fall {
+  border-right: 4px solid var(--fall-dark);
+}
+
+table.maze-table .bottom.fall {
+  border-bottom: 4px solid var(--fall-dark);
+}
+
+table.maze-table .left.fall {
+  border-left: 4px solid var(--fall-dark);
+}
+
+button {
+  /* outline: 1px solid red; */
+  cursor: pointer;
+  /* margin: 0.25em; */
+  padding: 3px;
+  margin: 0;
+  line-height: 0;
+  text-align: center;
+  border: none;
+  background-color: transparent;
+}
+
+.north-button {
+  background-image: url(../img/north.png);
+  grid-area: north;
+  margin: auto;
+}
+
+.south-button {
+  background-image: url(../img/south.png);
+  grid-area: south;
+  margin: auto;
+}
+
+.east-button {
+  background-image: url(../img/east.png);
+  grid-area: east;
+  margin: auto;
+}
+
+.west-button {
+  background-image: url(../img/west.png);
+  grid-area: west;
+  margin: auto;
+}
+
+.up-button {
+  background-image: url(../img/up.png);
+  grid-area: up;
+  margin: auto;
+}
+
+.down-button {
+  background-image: url(../img/down.png);
+  grid-area: down;
+  margin: auto;
+}
+
+.game-buttons {
+  grid-area: game-buttons;
+  display: grid;
+  grid-template-areas: ". . north . ." ". west . east ." ". . south . .";
+  align-content: center;
+  grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+  grid-template-rows: 40px 40px 40px;
+  align-items: start;
+}
+
+.game-buttons button,
+.maze-header button {
+  background-size: 40px 40px;
+  background-repeat: no-repeat;
+  width: 40px;
+  height: 40px;
+}
+
+.new-button button {
+  background-image: url(./img/new.png);
+  background-size: 40px 40px;
+  background-repeat: no-repeat;
+  width: 40px;
+  height: 40px;
+  margin: 0px auto;
+}
+
+dt.kb-north {
+  grid-area: kbt-north;
+}
+
+dd.kb-north {
+  grid-area: kbd-north;
+}
+
+dt.kb-south {
+  grid-area: kbt-south;
+}
+
+dd.kb-south {
+  grid-area: kbd-south;
+}
+
+dt.kb-east {
+  grid-area: kbt-east;
+}
+
+dd.kb-east {
+  grid-area: kbd-east;
+}
+
+dt.kb-west {
+  grid-area: kbt-west;
+}
+
+dd.kb-west {
+  grid-area: kbd-west;
+}
+
+dt.kb-up {
+  grid-area: kbt-up;
+}
+
+dd.kb-up {
+  grid-area: kbd-up;
+}
+
+dt.kb-down {
+  grid-area: kbt-down;
+}
+
+dd.kb-down {
+  grid-area: kbd-down;
+}
+
+dl.keyboard-shortcuts {
+  display: grid;
+  grid-area: keyboard-shortcuts;
+  grid-template-areas: ". kbd-down kbd-north kbd-up ." ". kbt-down kbt-north kbt-up ." ". kbd-west kbd-south kbd-east ." ". kbt-west kbt-south kbt-east .";
+  grid-template-columns: 1fr 0.5fr 0.5fr 0.5fr 1fr;
+  grid-gap: 5px;
+  text-align: center;
+  margin: auto;
+  font-size: 80%;
+  font-family: "Courier New", Courier, monospace;
+}
+
+dl.keyboard-shortcuts dt {
+  padding: 5px;
+  border: 1px solid black;
+  font-weight: bold;
+  background-color: rgba(233, 232, 232, 0.9);
+}
+
+dl.keyboard-shortcuts dd {
+  font-weight: bold;
+  text-transform: capitalize;
+  margin-top: 10px;
+}
+
+dl.keyboard-shortcuts dd::after {
+  content: ":";
+}
+
+/*
+ * Basic styling 
+ */
+body {
+  font-family: Helvetica, sans-serif;
+  font-size: 1em;
+  line-height: 1.375;
+  font-weight: 300;
+  color: #111;
+  background: #F5F5F5 url("https://alexkadis.com/inc/img/grey/subtle-grey-fixed-crushed.png") top center repeat;
+  -webkit-text-size-adjust: 100%;
+  touch-action: manipulation;
+}
+
+header {
+  grid-area: header;
+  font-size: 40px;
+  /* 2x body copy size = 32px */
+  line-height: 1.25;
+  /* 45px / 36px */
+  text-align: center;
+  font-weight: bold;
+  margin: 10px auto;
+}
+
+table.maze-table {
+  grid-area: maze-table;
+}
+
+#shortcuts h2 {
+  text-align: center;
+  font-weight: bold;
+}
+
+#shortcuts {
+  grid-area: shortcuts;
+}
+
+footer {
+  grid-area: footer;
+  display: grid;
+}
+
+@media (min-width: 600px) {
+  p, h2 {
+    font-size: 20px;
+    margin: 10px auto;
+    width: 90%;
+  }
+
+  article {
+    /* margin: 0px auto; */
+    /* box-align: center; */
+    width: 90%;
+    margin: 0px auto;
+    display: grid;
+    grid-template-areas: "header 			header					maze-game " "game-description	game-description		maze-game" "game-buttons		shortcuts				maze-game" "play-again 		play-again				maze-game" "footer				footer					maze-game";
+  }
+
+  table.maze-table {
+    width: 43vw;
+    height: 43vw;
+  }
+
+  table.maze-table td {
+    font-size: 2vw;
+    display: inline-block;
+    width: 4vw;
+    height: 4vw;
+    border: 1px solid #fff;
+    text-align: center;
+    vertical-align: middle;
+    display: table-cell;
+  }
+}
+@media (max-width: 599px) {
+  p, h2 {
+    font-size: 5vw;
+    margin: 10px auto;
+    width: 90%;
+  }
+
+  article {
+    /* margin: 0px auto; */
+    /* box-align: center; */
+    width: 90%;
+    margin: 0px auto;
+    display: grid;
+    grid-template-areas: "header" "game-description" "game-buttons" "play-again" "maze-game" "footer";
+  }
+
+  #shortcuts {
+    display: none;
+  }
+
+  table.maze-table {
+    width: 90vw;
+    height: 90vw;
+    margin: 0px auto;
+  }
+
+  table.maze-table td {
+    font-size: 4vw;
+    display: inline-block;
+    width: 8vw;
+    height: 8vw;
+    border: 1px solid #fff;
+    text-align: center;
+    vertical-align: middle;
+    display: table-cell;
+  }
+}
+section#game-description {
+  grid-area: game-description;
+  line-height: 1.25;
+}
+
+section#play-again {
+  grid-area: play-again;
+  /* line-height: 1.25; */
+  /* margin: 0 0 20px 0; */
+  text-align: center;
+  font-weight: bold;
+  font-size: 15px;
+}
+
+#maze-game {
+  grid-area: maze-game;
+  text-align: center;
+}
+
+.maze-header {
+  grid-area: maze-header;
+  display: grid;
+  grid-template-areas: ". . down season up . .";
+  margin: 10px 0;
+}
+
+.layer-name {
+  grid-area: season;
+  text-align: center;
+  font-size: 40px;
+  /* 1.375x body copy size = 22px */
+  line-height: 1.13636364;
+  /* 25px / 22px */
+  text-transform: capitalize;
+  font-weight: bold;
+}
+
+i.season-description::before {
+  background: url("../img/down.png");
+  background-size: 12px 12px;
+  display: inline-block;
+  content: "";
+  width: 12px;
+  height: 12px;
+  margin: 0 3px 0 0;
+}
+
+i.season-description::after {
+  background: url("../img/up.png");
+  background-size: 12px 12px;
+  display: inline-block;
+  content: "";
+  width: 12px;
+  height: 12px;
+  margin: 0 0 0 3px;
+}
+
+i.controls-description::after {
+  background: url("../img/controls.png");
+  background-size: 14px 14px;
+  display: inline-block;
+  content: "";
+  width: 14px;
+  height: 14px;
+  margin: 0 0 0 3px;
+}
+
+i.end-description::after {
+  content: "🏁";
+  font-size: 12px;
+  width: 8px;
+  height: 8px;
+  margin: 0 0 0 3px;
+}
+
+/*# sourceMappingURL=base.css.map */

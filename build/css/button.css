@@ -1,0 +1,143 @@
+button {
+  /* outline: 1px solid red; */
+  cursor: pointer;
+  /* margin: 0.25em; */
+  padding: 3px;
+  margin: 0;
+  line-height: 0;
+  text-align: center;
+  border: none;
+  background-color: transparent;
+}
+
+.north-button {
+  background-image: url("./img/north.png");
+  grid-area: north;
+  margin: 0 auto 0 0;
+}
+
+.south-button {
+  background-image: url("./img/south.png");
+  grid-area: south;
+  margin: 0 auto 0 0;
+}
+
+.east-button {
+  background-image: url("./img/east.png");
+  grid-area: east;
+  margin: 0 auto 0 0;
+}
+
+.west-button {
+  background-image: url("./img/west.png");
+  grid-area: west;
+  margin: 0 auto 0 0;
+}
+
+.up-button {
+  background-image: url("./img/up.png");
+  grid-area: up;
+  margin: 0 auto 0 0;
+}
+
+.down-button {
+  background-image: url("./img/down.png");
+  grid-area: down;
+  margin: 0 auto 0 0;
+}
+
+.gameButtons {
+  grid-area: gameButtons;
+  display: grid;
+  grid-template-areas: ". . north . ." ". west . east ." ". . south . .";
+  align-content: center;
+  grid-template-columns: 1fr 40px 40px 40px 1fr;
+  grid-template-rows: 40px 40px 40px;
+}
+
+.gameButtons button,
+.mazeHeader button {
+  background-size: 40px 40px;
+  background-repeat: no-repeat;
+  width: 40px;
+  height: 40px;
+}
+
+dt.kb-north {
+  grid-area: kbt-north;
+}
+
+dd.kb-north {
+  grid-area: kbd-north;
+}
+
+dt.kb-south {
+  grid-area: kbt-south;
+}
+
+dd.kb-south {
+  grid-area: kbd-south;
+}
+
+dt.kb-east {
+  grid-area: kbt-east;
+}
+
+dd.kb-east {
+  grid-area: kbd-east;
+}
+
+dt.kb-west {
+  grid-area: kbt-west;
+}
+
+dd.kb-west {
+  grid-area: kbd-west;
+}
+
+dt.kb-up {
+  grid-area: kbt-up;
+}
+
+dd.kb-up {
+  grid-area: kbd-up;
+}
+
+dt.kb-down {
+  grid-area: kbt-down;
+}
+
+dd.kb-down {
+  grid-area: kbd-down;
+}
+
+dl.keyboard-shortcuts {
+  display: grid;
+  grid-area: keyboard-shortcuts;
+  grid-template-areas: ". kbd-down kbd-north kbd-up ." ". kbt-down kbt-north kbt-up ." ". kbd-west kbd-south kbd-east ." ". kbt-west kbt-south kbt-east .";
+  grid-template-columns: 2.5fr 0.5fr 0.5fr 0.5fr 2.5fr;
+  /* grid-template-rows: 10px 10px 10px 10px 10px 10px; */
+  grid-gap: 5px;
+  text-align: center;
+  font-size: 80%;
+  font-family: "Courier New", Courier, monospace;
+}
+
+dl.keyboard-shortcuts dt {
+  padding: 10px;
+  border: 1px solid black;
+  font-weight: bold;
+  background-color: rgba(233, 232, 232, 0.9);
+}
+
+dl.keyboard-shortcuts dd {
+  font-weight: bold;
+  text-transform: capitalize;
+  margin-top: 10px;
+}
+
+dl.keyboard-shortcuts dd::after {
+  content: ":";
+}
+
+/*# sourceMappingURL=button.css.map */
