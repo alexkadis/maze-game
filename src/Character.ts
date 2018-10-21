@@ -77,10 +77,10 @@ class Character {
 			this.CharacterIcon = String.fromCharCode(0xD83D, 0xDE0E); // "😎";
 			this.EndIcon = String.fromCharCode(0xD83C, 0xDF89); //"🎉";
 			$(`.y${this.CurrentLocation.Y}x${this.CurrentLocation.X}`).addClass("game-won");
-			$(`.new-button`).show();
-			$(`.desc`).hide();
-			$(`.gameButtons`).hide();
-			$(`.mazeHeader`).hide();
+			$(`#play-again`).show();
+			// $(`.desc`).hide();
+			// $(`.gameButtons`).hide();
+			// $(`.mazeHeader`).hide();
 		}
 		$(`.winter.y${this.EndCell.Y}x${this.EndCell.X}`).text(this.EndIcon);
 		$(`.y${this.CurrentLocation.Y}x${this.CurrentLocation.X}`).text(this.CharacterIcon);

@@ -24,12 +24,14 @@ button {
 	grid-area: game-buttons;
 	display: grid;
 	grid-template-areas:
+	  " . . . . ."
 	  ". . north . ."
 	  ". west . east ."
-	  ". . south . .";
+	  ". . south . ."
+	  " . . . . .";
 	align-content: center;
-	grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
-	grid-template-rows: 40px 40px 40px;
+	grid-template-columns: 1fr 50px 50px 50px 1fr;
+	grid-template-rows: 1fr 50px 50px 50px 1fr;
 	align-items: start;
 }
 
@@ -43,8 +45,11 @@ button {
 }
 
 
-.new-button button {
-	background-image: url(./img/new.png);
+#play-again {
+	display: none;
+}
+#play-again button {
+	background-image: url(../img/new.png);
 	background-size: 40px 40px;
 	background-repeat: no-repeat;
 	width: 40px;

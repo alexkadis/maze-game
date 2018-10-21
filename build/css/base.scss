@@ -16,6 +16,7 @@
 	background: #F5F5F5 url("https://alexkadis.com/inc/img/grey/subtle-grey-fixed-crushed.png") top center repeat;
 	-webkit-text-size-adjust: 100%;
 	touch-action: manipulation;
+	border-top: 5px solid var(--accent);
 }
 
 header {
@@ -46,7 +47,11 @@ footer {
 	display: grid;
 }
 
-
+a {
+	color: var(--accent);
+	text-decoration: none;
+	font-weight: bold;
+}
 
 @media (min-width:600px) {
 	p, h2 {
@@ -60,7 +65,7 @@ footer {
 		/* margin: 0px auto; */
 		/* box-align: center; */
 		width: 90%;
-		margin: 0px auto;
+		margin: 20px auto;
 		display: grid;
 		grid-template-areas: 
 				"header 			header					maze-game "

@@ -103,9 +103,9 @@ export class Character {
 			this.EndIcon = "🎉";
 			$(`.y${this.CurrentLocation.Y}x${this.CurrentLocation.X}`).addClass("game-won");
 			$(`.new-button`).show();
-			$(`.desc`).hide();
-			$(`.gameButtons`).hide();
-			$(`.mazeHeader`).hide();
+			// $(`.desc`).hide();
+			// $(`.gameButtons`).hide();
+			// $(`.mazeHeader`).hide();
 		}
 		$(`.winter.y${this.EndCell.Y}x${this.EndCell.X}`).text(this.EndIcon);
 		$(`.y${this.CurrentLocation.Y}x${this.CurrentLocation.X}`).text(this.CharacterIcon);
@@ -325,11 +325,11 @@ export class MazeView {
 	}
 
 	public displayMaze () {
-		$(`.new-button`).hide();
-		$(`.desc`).show();
-		$(`.gameButtons`).show();
-		$(`.gameButtons`).show();
-		$(`.MazeHeader`).show();
+		$(`#play-again`).hide();
+		// $(`.desc`).show();
+		// $(`.gameButtons`).show();
+		// $(`.gameButtons`).show();
+		// $(`.MazeHeader`).show();
 
 		let html: string = "";
 
