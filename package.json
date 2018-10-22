@@ -8,7 +8,11 @@
   "author": "Alex Kadis",
   "license": "UNLICENSED",
   "scripts": {
-    "test": "mocha --require ts-node/register test/**/*.ts"
+    "test": "mocha --require ts-node/register test/**/*.ts",
+	"build-scss": "sass ./src/scss/base.scss ./build/css/base.css",
+	"build-project": "tsc --build && npm run build-scss",
+	"watch-scss":  "sass ./src/scss/base.scss ./build/css/base.css --watch"
+
   },
   "dependencies": {},
   "devDependencies": {
@@ -20,6 +24,7 @@
     "chai": "^4.2.0",
     "concat": "github:alexkadis/concat-export-public",
     "mocha": "^5.2.0",
+    "node-sass": "^4.9.4",
     "ts-node": "^7.0.1",
     "tslint": "^5.11.0",
     "typescript": "^3.1.3"

@@ -1,0 +1,28 @@
+:root {
+	/* --winter-light: #9ecfec; */
+	--winter-light: rgba(157, 206, 235, .5);
+	--winter-dark: #4698be;
+
+	/* --spring-light: #a8dba6; */
+	--spring-light: rgba(168, 219, 166, .5);
+	--spring-dark: #60c75c;
+
+	/* --summer-light: #f1ecbc; */
+	--summer-light: rgba(241, 236, 188, .5);
+	/* --summer-dark: #fad51f; */
+	--summer-dark: #d8b60e;
+
+	/* --fall-light: #f1d7ab; */
+	--fall-light: rgba(241, 215, 171, .5);
+	--fall-dark: #F0B659;
+
+	--accent: #6B3C98;
+}
+
+
+// Directions:
+$cardinal_directions: north, south, east, west;
+$layers: up, down;
+$directions: north, south, east, west, up, down;
+$seasons: winter, spring, summer, fall;
+$border-directions: top, right, bottom, left;

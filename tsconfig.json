@@ -57,10 +57,10 @@
 	  // "emitDecoratorMetadata": true,         /* Enables experimental support for emitting type metadata for decorators. */
 	},
 	"files": [
-		"./src/Cell.ts",
-		"./src/Character.ts",
-		"./src/Maze.ts",
-		"./src/MazeView.ts",
-		"./src/main.ts"
+		"./src/ts/Cell.ts",
+		"./src/ts/Character.ts",
+		"./src/ts/Maze.ts",
+		"./src/ts/MazeView.ts",
+		"./src/ts/main.ts"
 	]
   }
