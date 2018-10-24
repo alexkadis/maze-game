@@ -1,4 +1,4 @@
-declare class Cell {
+interface ICell {
     North: boolean;
     East: boolean;
     South: boolean;
@@ -8,7 +8,21 @@ declare class Cell {
     Z: number;
     Y: number;
     X: number;
+    [direction: string]: any;
+}
+declare class Cell implements ICell {
+    North: boolean;
+    East: boolean;
+    South: boolean;
+    West: boolean;
+    Up: boolean;
+    Down: boolean;
+    Z: number;
+    Y: number;
+    X: number;
+    [direction: string]: any;
     constructor(z: number, y: number, x: number);
+    get(input: string): void;
 }
 declare class Character {
     endCell: Cell;
@@ -43,6 +57,9 @@ declare class Maze {
     readonly West: string;
     readonly Up: string;
     readonly Down: string;
+    readonly Directions: string[];
+    readonly Back: string;
+    MazePath: string;
     private CellsList;
     private GridLayers;
     private GridWidth;
@@ -50,7 +67,9 @@ declare class Maze {
     constructor(gridLayers: number, gridWidth: number, gridHeight: number);
     fillMaze(): void;
     protected fillMazeProcedural(): void;
-    protected encodeMaze(): void;
+    protected encodeMaze(direction: string): void;
+    groupBy(objectArray: any, property: any): any;
+    protected simplifyMazeGrid(key: any, value: any): any;
     protected fillMazeRandom(): void;
     protected generateGrid(): any[];
     protected carvePathBetweenCells(currentCell: Cell, nextCell: Cell, direction: string): {

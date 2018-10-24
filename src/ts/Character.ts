@@ -3,7 +3,7 @@ class Character {
 	public Name: string;
 
 	public CurrentLocation: Cell;
-	public EndCell: Cell;
+	public EndLocation: any;
 	public CharacterIcon: string;
 	public EndIcon: string;
 
@@ -19,7 +19,7 @@ class Character {
 	private GridHeight: number;
 	private MazeGrid: Cell[][][];
 
-	constructor (name: string, color: string, startingLocation: Cell, mazeGrid: Cell[][][], public endCell: Cell) {
+	constructor (name: string, color: string, startingLocation: Cell, mazeGrid: Cell[][][], public endLocation: any) {
 
 		this.Color = color;
 		this.Name = name;
@@ -29,7 +29,7 @@ class Character {
 		this.GridLayers = this.MazeGrid.length;
 		this.GridWidth = this.MazeGrid[0].length;
 		this.GridHeight = this.MazeGrid[0][0].length;
-		this.EndCell = endCell;
+		this.EndLocation = endLocation;
 
 		this.CharacterIcon = String.fromCharCode(0xD83D, 0xDE00); // 😀"
 		this.EndIcon = String.fromCharCode(0xD83C, 0xDFC1);  // "🏁"; 
@@ -73,17 +73,20 @@ class Character {
 				// console.log(`Invalid attempt to move from ${this.CurrentLocation} ${direction}`);
 				break;
 		}
-		if (this.MazeGrid[this.CurrentLocation.Z][this.CurrentLocation.Y][this.CurrentLocation.X] === this.EndCell) {
-			this.CharacterIcon = String.fromCharCode(0xD83D, 0xDE0E); // "😎";
-			this.EndIcon = String.fromCharCode(0xD83C, 0xDF89); //"🎉";
-			$(`.y${this.CurrentLocation.Y}x${this.CurrentLocation.X}`).addClass("game-won");
-			$(`#play-again`).show();
-			// $(`.desc`).hide();
-			// $(`.gameButtons`).hide();
-			// $(`.mazeHeader`).hide();
-		}
-		$(`.winter.y${this.EndCell.Y}x${this.EndCell.X}`).text(this.EndIcon);
-		$(`.y${this.CurrentLocation.Y}x${this.CurrentLocation.X}`).text(this.CharacterIcon);
-		$(`.y${this.CurrentLocation.Y}x${this.CurrentLocation.X}`).addClass(this.Name);
+		// if (this.EndLocation !== undefined && typeof this.EndLocation !== undefined &&  this.EndLocation !== null) {
+			if (this.MazeGrid[this.CurrentLocation.Z][this.CurrentLocation.Y][this.CurrentLocation.X] === this.MazeGrid[this.EndLocation.Z][this.EndLocation.Y][this.EndLocation.X]) {
+				this.CharacterIcon = String.fromCharCode(0xD83D, 0xDE0E); // "😎";
+				this.EndIcon = String.fromCharCode(0xD83C, 0xDF89); //"🎉";
+				$(`.y${this.CurrentLocation.Y}x${this.CurrentLocation.X}`).addClass("game-won");
+				$(`#play-again`).show();
+				// $(`.desc`).hide();
+				// $(`.gameButtons`).hide();
+				// $(`.mazeHeader`).hide();
+			}
+			
+			$(`.winter.y${this.EndLocation.Y}x${this.EndLocation.X}`).text(this.EndIcon);
+			$(`.y${this.CurrentLocation.Y}x${this.CurrentLocation.X}`).text(this.CharacterIcon);
+			$(`.y${this.CurrentLocation.Y}x${this.CurrentLocation.X}`).addClass(this.Name);
+		// }
 	}
 }

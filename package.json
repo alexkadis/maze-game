@@ -10,9 +10,10 @@
   "scripts": {
     "test": "mocha --require ts-node/register test/**/*.ts",
 	"build-scss": "sass ./src/scss/base.scss ./build/css/base.css",
-	"build-project": "tsc --build && npm run build-scss",
-	"watch-scss":  "sass ./src/scss/base.scss ./build/css/base.css --watch"
-
+	"build-ts": "tsc --build",
+	"build-ugly": "uglifyjs ./build/js/maze.js --output ./build/js/maze.min.js",
+    "build-project": "npm run build-ts && npm run build-ugly && npm run build-scss",
+    "watch-scss": "sass ./src/scss/base.scss ./build/css/base.css --watch"
   },
   "dependencies": {},
   "devDependencies": {
@@ -25,8 +26,11 @@
     "concat": "github:alexkadis/concat-export-public",
     "mocha": "^5.2.0",
     "node-sass": "^4.9.4",
+    "ts-loader": "^5.2.2",
     "ts-node": "^7.0.1",
     "tslint": "^5.11.0",
-    "typescript": "^3.1.3"
+    "typescript": "^3.1.3",
+	"uglify-es": "^3.3.9",
+	"uglify-js": "^3.4.9"
   }
 }

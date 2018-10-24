@@ -12,16 +12,18 @@ function main () {
 
 	const myMaze = new Maze(GridLayers, GridHeight, GridWidth);
 
-	const mazeViewer = new MazeView(myMaze.MazeGrid, myMaze.EndCell);
+	const mazeViewer = new MazeView(myMaze.MazeGrid, myMaze.EndLocation);
 	mazeViewer.displayMaze();
-	console.table(myMaze.MazeGrid[0][0]);
+	console.log(myMaze.MazePath);
+	console.log(myMaze.MazePathCompressed);
+	// console.table(myMaze.MazeGrid[0][0]);
 
 	showLayerHideOthers(currentLayer);
 
-	MyCharacter = new Character("pinkdude", "pink", myMaze.MazeGrid[0][0][0], myMaze.MazeGrid, myMaze.EndCell);
+	MyCharacter = new Character("happyemoji", "happy", myMaze.MazeGrid[0][0][0], myMaze.MazeGrid, myMaze.EndLocation);
 
 }
-https://stackoverflow.com/questions/1402698/binding-arrow-keys-in-js-jquery
+// https://stackoverflow.com/questions/1402698/binding-arrow-keys-in-js-jquery
 document.addEventListener('keydown', function (e) {
 	e = e || window.event;
 	switch (e.which || e.keyCode) {

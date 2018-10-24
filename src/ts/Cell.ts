@@ -1,4 +1,20 @@
-class Cell {
+interface ICell {
+	North: boolean;
+	East: boolean;
+	South: boolean;
+	West: boolean;
+	Up: boolean;
+	Down: boolean;
+
+	Z: number;
+	Y: number;
+	X: number;
+
+	[direction: string]: any;
+}
+
+
+class Cell implements ICell {
 	public North: boolean;
 	public East: boolean;
 	public South: boolean;
@@ -9,6 +25,9 @@ class Cell {
 	public Z: number;
 	public Y: number;
 	public X: number;
+
+	[direction: string]: any;
+	
 
 	constructor (z: number, y: number, x: number) {
 		this.North = false;
@@ -21,4 +40,31 @@ class Cell {
 		this.Y = y;
 		this.X = x;
 	}
+
+	get (input: string) { }
+
+	// toJSON(key: any) {
+	// 	let returnProperty: string[];
+	// 	if(this.North) {
+	// 		returnProperty["North"] = true;
+	// 	}
+	// 	if(this.South) {
+	// 		returnProperty["South"] = true;
+	// 	}
+	// 	if(this.East) {
+	// 		returnProperty["East"] = true;
+	// 	}
+	// 	if(this.West) {
+	// 		returnProperty["West"] = true;
+	// 	}
+	// 	if(this.Up) {
+	// 		returnProperty["Up"] = true;
+	// 	}
+	// 	if(this.Down) {
+	// 		returnProperty["Down"] = true;
+	// 	}
+	// 	returnProperty["Z"] = this.Z;
+	// 	returnProperty["Y"] = this.Y;
+	// 	returnProperty["X"] = this.X;
+	// }
 }
