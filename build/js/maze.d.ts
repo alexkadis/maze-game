@@ -70,12 +70,15 @@ declare class Maze {
     readonly Back: string;
     MazePath: string;
     MazePathCompressed: string;
+    private PathTemplate;
+    private NextActionInTemplate;
     private CellsList;
     private GridLayers;
     private GridWidth;
     private GridHeight;
     constructor(gridLayers: number, gridWidth: number, gridHeight: number, mazePathCompressed?: string | undefined);
-    protected getEndLocation(str: string): void;
+    protected getEndLocationFromTemplate(str: string): void;
+    protected getNextActionFromTemplate(): string;
     protected fillMazeProcedural(): void;
     protected encodeMaze(direction: string): void;
     protected fillMazeRandom(): void;

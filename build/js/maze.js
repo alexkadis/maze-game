@@ -579,6 +579,8 @@ var Maze = /** @class */ (function () {
             this.Down,
         ];
         this.Back = "B";
+        this.PathTemplate = [];
+        this.NextActionInTemplate = "";
         this.GridLayers = gridLayers;
         this.GridWidth = gridWidth;
         this.GridHeight = gridHeight;
@@ -588,11 +590,11 @@ var Maze = /** @class */ (function () {
         this.CellsList = [new Cell(0, 0, 0)];
         if (mazePathCompressed !== undefined && typeof mazePathCompressed !== undefined && mazePathCompressed !== "") {
             // it's procedural
-            this.fillMazeProcedural();
             this.MazePathCompressed = mazePathCompressed;
             var uncompressed = LZString.decompressFromEncodedURIComponent(mazePathCompressed);
             if (uncompressed !== undefined && uncompressed !== null) {
                 this.MazePath = uncompressed;
+                this.fillMazeProcedural();
             }
             else {
                 this.MazePath = "";
@@ -609,100 +611,62 @@ var Maze = /** @class */ (function () {
             this.MazePath += "|" + JSON.stringify(this.EndLocation);
             this.MazePathCompressed = LZString.compressToEncodedURIComponent(this.MazePath);
         }
+        console.log(this.MazeGrid);
     }
-    Maze.prototype.getEndLocation = function (str) {
-        console.log(JSON.parse(str.split('|')[1]));
+    Maze.prototype.getEndLocationFromTemplate = function (str) {
+        var arr = str.split('|');
+        var end = JSON.parse(arr[1]);
+        this.EndLocation = end;
+        this.PathTemplate = arr[0].split('');
+    };
+    Maze.prototype.getNextActionFromTemplate = function () {
+        var next = this.PathTemplate.shift();
+        console.log("next: " + next);
+        if (typeof next !== undefined && next !== undefined)
+            return this.NextActionInTemplate = next;
+        return this.NextActionInTemplate = "";
     };
     Maze.prototype.fillMazeProcedural = function () {
         // let pro : string = "";
-        // OoVQoiDKkskCIDllWMZ6zzNEiR7ZI4H4SxpyXHzDzZZhZ1qSiTngTR3S1x4w+dNjzgkibACEpoGYhlT+kjkJwkmCaFnxQ8kpBLT1mUkjGS6oUhYrizJwKZEWu373ALjM4Jy7MNWeARvCEkIIWMbND0lbXBYMwUmWgYDGCd3LOybBXg3Lhyi10QwYvLFFwrqmtqaqrrGpuKAbSF4AC4AbwAiAC0ejoAGABoegE1BgHYxgA1BgFYAXwBdIA
         var decompressed = LZString.decompressFromEncodedURIComponent(this.MazePathCompressed);
         if (decompressed !== undefined && typeof decompressed !== undefined && decompressed !== null) {
             this.MazePath = decompressed;
         }
-        this.getEndLocation(this.MazePath);
-        // let templateList = 
-        // let index: number = -1;
-        // while (this.CellsList.length > 0) {
-        // 	// index is the newest
-        // 	index = this.CellsList.length - 1;
-        // 	const currentCell: Cell = this.CellsList[index];
-        // 	const directions: string[] = this.getRandomDirections ();
-        // 	for (let i = 0; i < directions.length; i++) {
-        // 		const nextCell: Cell = this.directionModifier (this.CellsList[index], directions[i]);
-        // 		if (this.isEmptyCell(nextCell.Z, nextCell.Y, nextCell.X)) {
-        // 			// we found a workable direction
-        // 			const result: any = this.carvePathBetweenCells (currentCell, nextCell, directions[i]);
-        // 			this.MazeGrid[currentCell.Z][currentCell.Y][currentCell.X] = result.current;
-        // 			this.MazeGrid[nextCell.Z][nextCell.Y][nextCell.X] = result.next;
-        // 			this.CellsList.push(nextCell);
-        // 			this.encodeMaze(directions[i]);
-        // 			index = -1;
-        // 			break;
-        // 		}
-        // 	}
-        // 	if (index !== -1) {
-        // 		this.CellsList.splice(index, 1);
-        // 		this.encodeMaze(this.Back);
-        // 	}
-        // }
+        this.getEndLocationFromTemplate(this.MazePath);
+        var index = -1;
+        while (this.CellsList.length > 0) {
+            // index is the newest
+            index = this.CellsList.length - 1;
+            var currentCell = this.CellsList[index];
+            if (this.getNextActionFromTemplate() == this.Back) {
+                this.CellsList.splice(index, 1);
+                console.log("if");
+            }
+            else if (this.NextActionInTemplate === "") {
+                console.log("elseif");
+                break;
+            }
+            else {
+                var nextCell = this.directionModifier(this.CellsList[index], this.NextActionInTemplate);
+                var result = this.carvePathBetweenCells(currentCell, nextCell, this.NextActionInTemplate);
+                console.log("----");
+                console.log(currentCell);
+                console.log(nextCell);
+                console.log("----");
+                this.MazeGrid[currentCell.Z][currentCell.Y][currentCell.X] = result.current;
+                this.MazeGrid[nextCell.Z][nextCell.Y][nextCell.X] = result.next;
+                this.CellsList.push(nextCell);
+                index = -1;
+            }
+            if (index !== -1) {
+                this.CellsList.splice(index, 1);
+            }
+        }
     };
     Maze.prototype.encodeMaze = function (direction) {
         this.MazePath += direction;
-        // console.log(this.groupBy(this.MazeGrid[0][1], this.North));
-        // console.log(this.MazeGrid.reduce(function(allCells, currentCell){
-        // 	if(typeof currentCell === 'object' && currentCell instanceof Cell)
-        // 		console.log("IS CELL");
-        // 	else
-        // 		console.log("no");
-        // 	return allCells;
-        // }))
-        //JSON.stringify(this.MazeGrid); //, this.simplifyMazeGrid);
-        // console.log(JSON.stringify(this.MazeGrid, this.simplifyMazeGrid));
-        // console.log((JSON.stringify(this.MazeGrid)));
     };
-    // groupBy(objectArray: any, property: any) {
-    // 	return objectArray.reduce(function (acc: any, obj: any) {
-    // 		var key = obj[property];
-    // 		if (!acc[key]) {
-    // 			acc[key] = [];
-    // 		}
-    // 		// if (!acc[key] || acc[key] == false) {
-    // 		// 	acc[key] = [];
-    // 		// } else {
-    // 		// 	acc[key].push(obj);
-    // 		// }
-    // 		acc[key].push(obj);
-    // 		return acc;
-    // 	}, {});
-    // }
-    // protected simplifyMazeGrid (key: any, value: any) {
-    // 	// Filtering out properties
-    // 	if (typeof value === 'string') {
-    // 		return undefined;
-    // 	} else if(value !== undefined && typeof value === 'object' && value instanceof Cell) {
-    // 		let newCell: string[]; 
-    // 		console.log(this.Directions);
-    // 		// this.Directions.forEach(function(direction) {
-    // 			// console.log(value[direction]);
-    // 		// });
-    // 	}
-    // 	return value;
-    // 	// for (let z: number = 0; z < this.MazeGrid.length; z++) {
-    // 	// 	for (let y: number = 0; y < this.MazeGrid[0].length; y++) {
-    // 	// 		for (let x: number = 0; x < this.MazeGrid[0][0].length; x++) {
-    // 	// 			const currentCell = this.MazeGrid[z][y][x];
-    // 	// 		}
-    // 	// 	}
-    // 	// }
-    // }
     Maze.prototype.fillMazeRandom = function () {
-        // Add the first cell to the list
-        // this.CellsList.push(new Cell(
-        // 	0,
-        // 	this.getRandomIntInclusive (0, this.gridHeight - 1),
-        // 	this.getRandomIntInclusive (0, this.gridWidth - 1),
-        // ));
         var index = -1;
         while (this.CellsList.length > 0) {
             // index is the newest
@@ -910,6 +874,9 @@ function main() {
     GridLayers = 4;
     GridHeight = 8;
     GridWidth = 8;
+    var exampleMaze = "CIUQqiqmYMq3A6rErgDkTzIm7EHpwjoYbIyJE6y4pH7aqalG4EKqzAJwxIpaVKLXSkSfLPWDA6qCJHy5MM2Sj4AhAhmqRYGg4mAGwYrMx2ZeBAiZjdeRZlUjaZW-QakR4MhsYMDXz8tUw11SltA6I1ZGJjEeJB4+PgU9IzMrUJkrLzMqMCxCm47Lwz0fKro0FoDfGrGpuaqgB8AbwAiAC1OgC4ABgAaToBNfoA2EYANfoB2AF8gA";
+    var uncompressed = 'DEUEDEDEUUSSUSWSEEEDNESSUWUUNWWWNUSENDNDNWSUUWNUUWSWUSENUNWSSUEENENDNUWUWWSUEESDSUUSUUUSWSESWWNDEDSWNNDENUSUESSENDDWUSEEUEEDNWWUNEDDDWSEUSUBWWDNNUUEDSBBBWDBBUNNESEENDNNNESUUWWWWBBUUUSDSUUNUEENWNEDWWDDDBWSBBBESSUESSDDNUNDBBBBBSSDDDNBWUNBSEUUUWWWBBBBBBBBBDWBBBBBBBBBBWBBBBBBEBBBBBBBBBBBBSSBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBWWWNEBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBWWBBBBBNNWSUSDBBUUBBEBBBBBBBBBNBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBDESWBBNWBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB|{"Z":0,"Y":6,"X":7}';
+    // const myMaze = new Maze(GridLayers, GridHeight, GridWidth, exampleMaze);
     var myMaze = new Maze(GridLayers, GridHeight, GridWidth);
     var mazeViewer = new MazeView(myMaze.MazeGrid, myMaze.EndLocation);
     mazeViewer.displayMaze();
