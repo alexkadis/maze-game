@@ -1,11 +1,19 @@
 # Maze of Seasons
 Navigate through a randomly generated multi-level maze towards your goal (the checkered flag). When you hit a wall, change the season.
 
+## Gameplay
+Here's what it's like to play the game (fast-forwarded quite a bit):
+
+![GIF showing gameplay](./maze-gameplay.gif)
+
+On desktop there's some keyboard shortcuts (hidden by CSS until the screen is large enough)... alo, keypress events are *so cool*.
+
 ## The code
-I wrote almost everything in TypeScript - it's easier for debugging than JavaScript, and static types are wonderful.
+I wrote almost everything in TypeScript - it's easier for debugging than JavaScript, and static types are wonderful. 
 
-There's a bit of jQuery in the display and character classes; I could have just used DOM directly, but I wanted some practice with jQuery.
+There's a bit of jQuery in the display and character classes; I could have just used DOM directly, but I wanted some practice with jQuery. Since I've gotten that practice, I'll probably convert the jQuery stuff into vanilla javascript.
 
+This was my first time using CSS Grids to handle the layout (definitely using them again).
 
 ## Growing Tree Algorithm
 I needed a bit of mental gymnastics to get my head around the growing tree algorithm. It's a method of creating a maze out of a grid. Here's the steps.
@@ -116,4 +124,3 @@ Might want to go to using canvas and making it look *good*.
 This project would not be possible without [Jamis Buck](https://github.com/jamis) and his posts on [Maze Generation: Growing Tree algorithm](http://weblog.jamisbuck.org/2011/1/27/maze-generation-growing-tree-algorithm) and [Minecraft Maze Generator](http://jamisbuck.org/mazes/minecraft.html). My algorithmic and display code borrows heavily from his, and lessons learned in his blog posts.
 
 The icons are from [Vecteezy](https://www.vecteezy.com/), go check them out.
-

@@ -52,6 +52,7 @@ declare class Character {
     private MazeGrid;
     constructor(name: string, color: string, startingLocation: Cell, mazeGrid: Cell[][][], endLocation: any);
     move(direction: string): void;
+    solveMaze(): void;
 }
 declare class Maze {
     gridLayers: number;

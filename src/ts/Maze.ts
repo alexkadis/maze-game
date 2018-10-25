@@ -70,6 +70,7 @@ class Maze {
 		}
 		console.log(this.MazeGrid);
 	}
+	
 	protected getEndLocationFromTemplate(str: string) {
 		let arr = str.split('|');
 		let end = JSON.parse(arr[1]);
@@ -102,19 +103,16 @@ class Maze {
 
 			const currentCell: Cell = this.CellsList[index];
 
-			if (this.getNextActionFromTemplate() == this.Back) {
+			this.getNextActionFromTemplate();
+
+			if (this.NextActionInTemplate == this.Back) {
 				this.CellsList.splice(index, 1);
-				console.log("if");
 			} else if (this.NextActionInTemplate === "") {
-				console.log("elseif");
 				break;
 			} else {
 				const nextCell: Cell = this.directionModifier (this.CellsList[index], this.NextActionInTemplate);
 				const result: any = this.carvePathBetweenCells (currentCell, nextCell, this.NextActionInTemplate);
-				console.log("----");
-				console.log(currentCell);
-				console.log(nextCell);
-				console.log("----");
+
 				this.MazeGrid[currentCell.Z][currentCell.Y][currentCell.X] = result.current;
 				this.MazeGrid[nextCell.Z][nextCell.Y][nextCell.X] = result.next;
 				this.CellsList.push(nextCell);
@@ -130,9 +128,6 @@ class Maze {
 	protected encodeMaze (direction: string) {
 		this.MazePath += direction;
 	}
-
-
-
 
 	protected fillMazeRandom () {
 		let index: number = -1;

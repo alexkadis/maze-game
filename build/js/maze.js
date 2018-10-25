@@ -542,6 +542,7 @@ var Character = /** @class */ (function () {
         }
         // if (this.EndLocation !== undefined && typeof this.EndLocation !== undefined &&  this.EndLocation !== null) {
         if (this.MazeGrid[this.CurrentLocation.Z][this.CurrentLocation.Y][this.CurrentLocation.X] === this.MazeGrid[this.EndLocation.Z][this.EndLocation.Y][this.EndLocation.X]) {
+            // SOLVED THE MAZE!
             this.CharacterIcon = String.fromCharCode(0xD83D, 0xDE0E); // "😎";
             this.EndIcon = String.fromCharCode(0xD83C, 0xDF89); //"🎉";
             $(".y" + this.CurrentLocation.Y + "x" + this.CurrentLocation.X).addClass("game-won");
@@ -554,6 +555,9 @@ var Character = /** @class */ (function () {
         $(".y" + this.CurrentLocation.Y + "x" + this.CurrentLocation.X).text(this.CharacterIcon);
         $(".y" + this.CurrentLocation.Y + "x" + this.CurrentLocation.X).addClass(this.Name);
         // }
+    };
+    // Solves the maze and sees how many moves it takes to do so
+    Character.prototype.solveMaze = function () {
     };
     return Character;
 }());
@@ -638,21 +642,16 @@ var Maze = /** @class */ (function () {
             // index is the newest
             index = this.CellsList.length - 1;
             var currentCell = this.CellsList[index];
-            if (this.getNextActionFromTemplate() == this.Back) {
+            this.getNextActionFromTemplate();
+            if (this.NextActionInTemplate == this.Back) {
                 this.CellsList.splice(index, 1);
-                console.log("if");
             }
             else if (this.NextActionInTemplate === "") {
-                console.log("elseif");
                 break;
             }
             else {
                 var nextCell = this.directionModifier(this.CellsList[index], this.NextActionInTemplate);
                 var result = this.carvePathBetweenCells(currentCell, nextCell, this.NextActionInTemplate);
-                console.log("----");
-                console.log(currentCell);
-                console.log(nextCell);
-                console.log("----");
                 this.MazeGrid[currentCell.Z][currentCell.Y][currentCell.X] = result.current;
                 this.MazeGrid[nextCell.Z][nextCell.Y][nextCell.X] = result.next;
                 this.CellsList.push(nextCell);

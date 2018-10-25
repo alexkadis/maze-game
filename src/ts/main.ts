@@ -23,6 +23,8 @@ function main () {
 	showLayerHideOthers(currentLayer);
 
 	MyCharacter = new Character("happyemoji", "happy", myMaze.MazeGrid[0][0][0], myMaze.MazeGrid, myMaze.EndLocation);
+	
+
 
 }
 // https://stackoverflow.com/questions/1402698/binding-arrow-keys-in-js-jquery

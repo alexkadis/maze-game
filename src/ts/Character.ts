@@ -75,6 +75,7 @@ class Character {
 		}
 		// if (this.EndLocation !== undefined && typeof this.EndLocation !== undefined &&  this.EndLocation !== null) {
 			if (this.MazeGrid[this.CurrentLocation.Z][this.CurrentLocation.Y][this.CurrentLocation.X] === this.MazeGrid[this.EndLocation.Z][this.EndLocation.Y][this.EndLocation.X]) {
+				// SOLVED THE MAZE!
 				this.CharacterIcon = String.fromCharCode(0xD83D, 0xDE0E); // "😎";
 				this.EndIcon = String.fromCharCode(0xD83C, 0xDF89); //"🎉";
 				$(`.y${this.CurrentLocation.Y}x${this.CurrentLocation.X}`).addClass("game-won");
@@ -89,4 +90,10 @@ class Character {
 			$(`.y${this.CurrentLocation.Y}x${this.CurrentLocation.X}`).addClass(this.Name);
 		// }
 	}
+
+	// Solves the maze and sees how many moves it takes to do so
+	public solveMaze() {
+		
+	}
+	
 }
