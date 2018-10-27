@@ -3,6 +3,7 @@ let GridLayers: number;
 let GridHeight: number;
 let GridWidth: number;
 let MyCharacter: Character;
+let MyCharacterView: ICharacterView;
 
 function main () {
 	currentLayer = 0;
@@ -22,10 +23,25 @@ function main () {
 
 	showLayerHideOthers(currentLayer);
 
-	MyCharacter = new Character("happyemoji", "happy", myMaze.MazeGrid[0][0][0], myMaze.MazeGrid, myMaze.EndLocation);
+	MyCharacter = new Character("happyemoji", myMaze.MazeGrid[0][0][0], myMaze.MazeGrid, myMaze.EndLocation);
 	
+	MyCharacterView = new HTMLCharacterView(
+		MyCharacter.Name,
+		String.fromCharCode(0xD83D, 0xDE00), // 😀
+		String.fromCharCode(0xD83D, 0xDE0E), // 😎
+		String.fromCharCode(0xD83C, 0xDFC1),  // 🏁
+		String.fromCharCode(0xD83C, 0xDF89) //🎉
+		);
 
+	if (MyCharacterView.IsMazeSolved) {
+		// SOLVED THE MAZE!
+		
+		
+	} else {
 
+	}
+		
+		 
 }
 // https://stackoverflow.com/questions/1402698/binding-arrow-keys-in-js-jquery
 document.addEventListener('keydown', function (e) {
@@ -53,17 +69,10 @@ document.addEventListener('keydown', function (e) {
 		case 69: // 1
 			goUp()
 			break;
-		case 72:
-			showHelp();
-			break;
 		default: return; // exit this handler for other keys
 	}
 	e.preventDefault(); // prevent the default action (scroll / move caret)
 });
-
-function showHelp() {
-	
-}
 
 function showLayerHideOthers (layerChoice: number) {
 	if (GridLayers > 1) {
@@ -79,13 +88,17 @@ function showLayerHideOthers (layerChoice: number) {
 
 function goNorth () {
 	MyCharacter.move(MyCharacter.North);
+	
 }
+
 function goEast () {
 	MyCharacter.move(MyCharacter.East);
 }
+
 function goSouth () {
 	MyCharacter.move(MyCharacter.South);
 }
+
 function goWest () {
 	MyCharacter.move(MyCharacter.West);
 }

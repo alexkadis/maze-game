@@ -6,7 +6,7 @@ Here's what it's like to play the game (fast-forwarded quite a bit):
 
 ![GIF showing gameplay](./maze-gameplay.gif)
 
-On desktop there's some keyboard shortcuts (hidden by CSS until the screen is large enough)... alo, keypress events are *so cool*.
+On desktop there's some keyboard shortcuts (hidden by CSS until the screen is large enough)... also, keypress events are *so cool*.
 
 ## The code
 I wrote almost everything in TypeScript - it's easier for debugging than JavaScript, and static types are wonderful. 
@@ -118,7 +118,7 @@ Up and Down aren't used for display in my maze.
 ### Re-design in canvas?
 Might want to go to using canvas and making it look *good*.
 
-## Check out Localstorage to hold proceedural mazes?
+## Check out Localstorage to hold procedural mazes?
 
 ## Credits
 This project would not be possible without [Jamis Buck](https://github.com/jamis) and his posts on [Maze Generation: Growing Tree algorithm](http://weblog.jamisbuck.org/2011/1/27/maze-generation-growing-tree-algorithm) and [Minecraft Maze Generator](http://jamisbuck.org/mazes/minecraft.html). My algorithmic and display code borrows heavily from his, and lessons learned in his blog posts.

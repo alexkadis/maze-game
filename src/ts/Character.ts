@@ -1,11 +1,8 @@
 class Character {
-	public Color: string;
 	public Name: string;
 
 	public CurrentLocation: Cell;
 	public EndLocation: any;
-	public CharacterIcon: string;
-	public EndIcon: string;
 
 	public readonly North: string = "North";
 	public readonly East: string = "East";
@@ -19,9 +16,8 @@ class Character {
 	private GridHeight: number;
 	private MazeGrid: Cell[][][];
 
-	constructor (name: string, color: string, startingLocation: Cell, mazeGrid: Cell[][][], public endLocation: any) {
+	constructor (name: string, startingLocation: Cell, mazeGrid: Cell[][][], public endLocation: any) {
 
-		this.Color = color;
 		this.Name = name;
 		this.CurrentLocation = startingLocation;
 
@@ -30,9 +26,6 @@ class Character {
 		this.GridWidth = this.MazeGrid[0].length;
 		this.GridHeight = this.MazeGrid[0][0].length;
 		this.EndLocation = endLocation;
-
-		this.CharacterIcon = String.fromCharCode(0xD83D, 0xDE00); // 😀"
-		this.EndIcon = String.fromCharCode(0xD83C, 0xDFC1);  // "🏁"; 
 
 		this.move("");
 	}
