@@ -24,7 +24,7 @@ function main () {
 	showLayerHideOthers(currentLayer);
 
 	MyCharacter = new Character("happyemoji", myMaze.MazeGrid[0][0][0], myMaze.MazeGrid, myMaze.EndLocation);
-	
+
 	MyCharacterView = new HTMLCharacterView(
 		MyCharacter.Name,
 		String.fromCharCode(0xD83D, 0xDE00), // 😀

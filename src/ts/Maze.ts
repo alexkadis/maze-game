@@ -21,7 +21,6 @@ class Maze {
 	];
 	public readonly Back: string = "B";
 
-
 	public MazePath: string;
 	public MazePathCompressed: string;
 	private PathTemplate: string[] = [];
@@ -32,7 +31,11 @@ class Maze {
 	private GridWidth: number;
 	private GridHeight: number;
 
-	constructor (public gridLayers: number, public gridWidth: number, public gridHeight: number, public mazePathCompressed?: string) {
+	constructor (
+		public gridLayers: number,
+		public gridWidth: number,
+		public gridHeight: number,
+		public mazePathCompressed?: string) {
 		this.GridLayers	= gridLayers;
 		this.GridWidth	= gridWidth;
 		this.GridHeight	= gridHeight;
@@ -43,12 +46,10 @@ class Maze {
 		// create the cells list
 		this.CellsList = [new Cell(0, 0, 0)];
 
-
 		if (mazePathCompressed !== undefined && typeof mazePathCompressed !== undefined &&  mazePathCompressed !== "") {
 			// it's procedural
-			
 			this.MazePathCompressed = mazePathCompressed;
-			let uncompressed =  LZString.decompressFromEncodedURIComponent(mazePathCompressed);
+			const uncompressed =  LZString.decompressFromEncodedURIComponent(mazePathCompressed);
 			if (uncompressed !== undefined && uncompressed !== null) {
 				this.MazePath = uncompressed;
 				this.fillMazeProcedural();
@@ -59,28 +60,27 @@ class Maze {
 			// It's random
 			this.MazePath = "";
 			this.fillMazeRandom();
-			
-			this.EndLocation = 
-				{Z: 0,
-				Y: this.getRandomIntInclusive(1, this.gridHeight - 1), 
+			// tslint:disable:object-literal-sort-keys
+			this.EndLocation = {
+				Z: 0,
+				Y: this.getRandomIntInclusive(1, this.gridHeight - 1),
 				X: this.getRandomIntInclusive(1, this.gridWidth - 1)};
 			this.MazePath += "|" + JSON.stringify(this.EndLocation);
 
 			this.MazePathCompressed = LZString.compressToEncodedURIComponent(this.MazePath);
 		}
-		console.log(this.MazeGrid);
+		// console.log (this.MazeGrid);
 	}
-	
-	protected getEndLocationFromTemplate(str: string) {
+
+	protected getEndLocationFromTemplate (str: string) {
 		let arr = str.split('|');
 		let end = JSON.parse(arr[1]);
 		this.EndLocation = end;
 		this.PathTemplate = arr[0].split('');
 	}
 
-	protected getNextActionFromTemplate() {
-		let next = this.PathTemplate.shift();
-		console.log("next: " + next);
+	protected getNextActionFromTemplate () {
+		const next = this.PathTemplate.shift();
 		if (typeof next !== undefined && next !== undefined)
 			return this.NextActionInTemplate = next;
 		return this.NextActionInTemplate = "";
@@ -89,7 +89,7 @@ class Maze {
 	protected fillMazeProcedural () {
 		// let pro : string = "";
 
-		let decompressed = LZString.decompressFromEncodedURIComponent(this.MazePathCompressed);
+		const decompressed = LZString.decompressFromEncodedURIComponent(this.MazePathCompressed);
 		if (decompressed !== undefined && typeof decompressed !== undefined &&  decompressed !== null) {
 			this.MazePath = decompressed;
 		}
@@ -105,7 +105,7 @@ class Maze {
 
 			this.getNextActionFromTemplate();
 
-			if (this.NextActionInTemplate == this.Back) {
+			if (this.NextActionInTemplate === this.Back) {
 				this.CellsList.splice(index, 1);
 			} else if (this.NextActionInTemplate === "") {
 				break;

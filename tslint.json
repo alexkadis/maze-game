@@ -1,23 +1,31 @@
 {
-    "defaultSeverity": "error",
-    "extends": [
-        "tslint:recommended"
-    ],
-    "jsRules": {},
-    "rules": {
-        "indent": [
-            true, 
-            "tabs", 
-            4
-        ],
-        "curly": [
-            true,
-            "as-needed"
-        ],
-        "space-before-function-paren": [
-            true,
-            "always"
+	"defaultSeverity": "error",
+	"extends": [
+		"tslint:recommended"
+	],
+	"jsRules": {},
+	"rules": {
+        "prefer-for-of": false,
+		"indent": [
+			true, 
+			"tabs", 
+			4
+		],
+		"curly": [
+			false,
+			"as-needed"
+		],
+		"space-before-function-paren": [
+			true,
+			"always"
+		]
+    },
+    "linterOptions": {
+        "exclude": [
+            "build/*",
+            "test/*",
+            "src/ts/lz-string.ts"
         ]
     },
-    "rulesDirectory": []
+	"rulesDirectory": []
 }
