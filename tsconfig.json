@@ -17,6 +17,7 @@
 		"./src/ts/CharacterView.ts",
 		"./src/ts/Maze.ts",
 		"./src/ts/MazeView.ts",
-		"./src/ts/main.ts"
+		"./src/ts/main.ts",
+		"./src/ts/MazeNavigator.ts"
 	]
   }
