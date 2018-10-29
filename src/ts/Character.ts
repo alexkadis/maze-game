@@ -1,3 +1,4 @@
+// tslint:disable:object-literal-sort-keys
 class Character {
 	public Name: string;
 
@@ -15,6 +16,7 @@ class Character {
 	private GridWidth: number;
 	private GridHeight: number;
 	private MazeGrid: Cell[][][];
+	private IsMazeSolved: boolean;
 
 	constructor (name: string, startingLocation: Cell, mazeGrid: Cell[][][], public endLocation: any) {
 
@@ -26,13 +28,11 @@ class Character {
 		this.GridWidth = this.MazeGrid[0].length;
 		this.GridHeight = this.MazeGrid[0][0].length;
 		this.EndLocation = endLocation;
+		this.IsMazeSolved = false;
 
-		this.move("");
 	}
 
-	public move (direction: string) {
-		$(`.y${this.CurrentLocation.Y}x${this.CurrentLocation.X}`).text("");
-		$(`.y${this.CurrentLocation.Y}x${this.CurrentLocation.X}`).removeClass(this.Name);
+	public move (direction?: string) {
 		switch (direction) {
 			case this.North:
 				if (this.CurrentLocation.North && this.CurrentLocation.Y > 0)
@@ -62,31 +62,27 @@ class Character {
 				else
 					this.CurrentLocation = this.MazeGrid[this.CurrentLocation.Z - 1][this.CurrentLocation.Y][this.CurrentLocation.X];
 				break;
-			default:
-				// console.log(`Invalid attempt to move from ${this.CurrentLocation} ${direction}`);
-				break;
 		}
-		// if (this.EndLocation !== undefined && typeof this.EndLocation !== undefined &&  this.EndLocation !== null) {
-			if (this.MazeGrid[this.CurrentLocation.Z][this.CurrentLocation.Y][this.CurrentLocation.X] === this.MazeGrid[this.EndLocation.Z][this.EndLocation.Y][this.EndLocation.X]) {
-				// SOLVED THE MAZE!
-				this.CharacterIcon = String.fromCharCode(0xD83D, 0xDE0E); // "😎";
-				this.EndIcon = String.fromCharCode(0xD83C, 0xDF89); //"🎉";
-				$(`.y${this.CurrentLocation.Y}x${this.CurrentLocation.X}`).addClass("game-won");
-				$(`#play-again`).show();
-				// $(`.desc`).hide();
-				// $(`.gameButtons`).hide();
-				// $(`.mazeHeader`).hide();
-			}
-			
-			$(`.winter.y${this.EndLocation.Y}x${this.EndLocation.X}`).text(this.EndIcon);
-			$(`.y${this.CurrentLocation.Y}x${this.CurrentLocation.X}`).text(this.CharacterIcon);
-			$(`.y${this.CurrentLocation.Y}x${this.CurrentLocation.X}`).addClass(this.Name);
-		// }
-	}
 
-	// Solves the maze and sees how many moves it takes to do so
-	public solveMaze() {
-		
+		if (this.MazeGrid[this.CurrentLocation.Z][this.CurrentLocation.Y][this.CurrentLocation.X] ===
+				this.MazeGrid[this.EndLocation.Z][this.EndLocation.Y][this.EndLocation.X]) {
+				// SOLVED THE MAZE!
+				this.IsMazeSolved = true;
+		}
+
+		return {
+			Character: {
+				Z: this.CurrentLocation.Z,
+				Y: this.CurrentLocation.Y,
+				X: this.CurrentLocation.X,
+			},
+			End: {
+				Z: this.EndLocation.Z,
+				Y: this.EndLocation.Y,
+				X: this.EndLocation.X,
+			},
+			IsMazeSolved: this.IsMazeSolved,
+		};
+
 	}
-	
 }

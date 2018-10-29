@@ -10,7 +10,12 @@
 			true, 
 			"tabs", 
 			4
-		],
+        ],
+        "only-arrow-functions": [
+            false,
+            "allow-declarations",
+            "allow-named-functions"
+        ],
 		"curly": [
 			false,
 			"as-needed"

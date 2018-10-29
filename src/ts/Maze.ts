@@ -73,10 +73,10 @@ class Maze {
 	}
 
 	protected getEndLocationFromTemplate (str: string) {
-		let arr = str.split('|');
-		let end = JSON.parse(arr[1]);
+		const arr = str.split("|");
+		const end = JSON.parse(arr[1]);
 		this.EndLocation = end;
-		this.PathTemplate = arr[0].split('');
+		this.PathTemplate = arr[0].split("");
 	}
 
 	protected getNextActionFromTemplate () {

@@ -10,15 +10,28 @@ function main () {
 	GridLayers = 4;
 	GridHeight = 8;
 	GridWidth = 8;
-	let exampleMaze: string = "CIUQqiqmYMq3A6rErgDkTzIm7EHpwjoYbIyJE6y4pH7aqalG4EKqzAJwxIpaVKLXSkSfLPWDA6qCJHy5MM2Sj4AhAhmqRYGg4mAGwYrMx2ZeBAiZjdeRZlUjaZW-QakR4MhsYMDXz8tUw11SltA6I1ZGJjEeJB4+PgU9IzMrUJkrLzMqMCxCm47Lwz0fKro0FoDfGrGpuaqgB8AbwAiAC1OgC4ABgAaToBNfoA2EYANfoB2AF8gA";
-	let uncompressed = 'DEUEDEDEUUSSUSWSEEEDNESSUWUUNWWWNUSENDNDNWSUUWNUUWSWUSENUNWSSUEENENDNUWUWWSUEESDSUUSUUUSWSESWWNDEDSWNNDENUSUESSENDDWUSEEUEEDNWWUNEDDDWSEUSUBWWDNNUUEDSBBBWDBBUNNESEENDNNNESUUWWWWBBUUUSDSUUNUEENWNEDWWDDDBWSBBBESSUESSDDNUNDBBBBBSSDDDNBWUNBSEUUUWWWBBBBBBBBBDWBBBBBBBBBBWBBBBBBEBBBBBBBBBBBBSSBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBWWWNEBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBWWBBBBBNNWSUSDBBUUBBEBBBBBBBBBNBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBDESWBBNWBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB|{"Z":0,"Y":6,"X":7}';
+
+	// const exampleMaze: string = "CIUQqiqmYMq3A6rErgDkTzIm7EHpwjoYbIyJE6y4pH7aqalG4EKqzAJwxIpa"
+	// + "VKLXSkSfLPWDA6qCJHy5MM2Sj4AhAhmqRYGg4mAGwYrMx2ZeBAiZjdeRZlUjaZW-QakR4MhsYMDXz8tUw11S"
+	// + "ltA6I1ZGJjEeJB4+PgU9IzMrUJkrLzMqMCxCm47Lwz0fKro0FoDfGrGpuaqgB8AbwAiAC1OgC4ABgAaToBNfoA2EYANfoB2AF8gA";
+
+	// const uncompressed = "DEUEDEDEUUSSUSWSEEEDNESSUWUUNWWWNUSENDNDNWSUUWNUUWSWUSENUNWSSUEENENDNUWUWWSUEESDSUUSUUUSWSE"
+	// + "SWWNDEDSWNNDENUSUESSENDDWUSEEUEEDNWWUNEDDDWSEUSUBWWDNNUUEDSBBBWDBBUNNESEENDNNNESUUWWWWBBUUUSDSUUNUEENWNEDWWD"
+	// + "DDBWSBBBESSUESSDDNUNDBBBBBSSDDDNBWUNBSEUUUWWWBBBBBBBBBDWBBBBBBBBBBWBBBBBBEBBBBBBBBBBBBSSBBBBBBBBBBBBBBBBBBBB"
+	// + "BBBBBBBBBBBBBBBWWWNEBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBWWBBBBBNNWSUSDBBUUBBEBBBBBBBBBNBBBBBBBBBBBBBBBBBBBBBBB"
+	// + "BBBBBBBBDESWBBNWBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB|"
+	// + "{\"Z\":0,\"Y\":6,\"X\":7}";
+
 	// const myMaze = new Maze(GridLayers, GridHeight, GridWidth, exampleMaze);
+
 	const myMaze = new Maze(GridLayers, GridHeight, GridWidth);
 
 	const mazeViewer = new MazeView(myMaze.MazeGrid, myMaze.EndLocation);
 	mazeViewer.displayMaze();
-	console.log(myMaze.MazePath);
-	console.log(myMaze.MazePathCompressed);
+
+	// console.log(myMaze.MazePath);
+	// console.log(myMaze.MazePathCompressed);
+
 	// console.table(myMaze.MazeGrid[0][0]);
 
 	showLayerHideOthers(currentLayer);
@@ -27,24 +40,15 @@ function main () {
 
 	MyCharacterView = new HTMLCharacterView(
 		MyCharacter.Name,
-		String.fromCharCode(0xD83D, 0xDE00), // 😀
-		String.fromCharCode(0xD83D, 0xDE0E), // 😎
+		String.fromCharCode(0xD83D, 0xDE00),  // 😀
+		String.fromCharCode(0xD83D, 0xDE0E),  // 😎
 		String.fromCharCode(0xD83C, 0xDFC1),  // 🏁
-		String.fromCharCode(0xD83C, 0xDF89) //🎉
-		);
+		String.fromCharCode(0xD83C, 0xDF89)); // 🎉
 
-	if (MyCharacterView.IsMazeSolved) {
-		// SOLVED THE MAZE!
-		
-		
-	} else {
-
-	}
-		
-		 
+	MyCharacterView.move(MyCharacter.move());
 }
 // https://stackoverflow.com/questions/1402698/binding-arrow-keys-in-js-jquery
-document.addEventListener('keydown', function (e) {
+document.addEventListener("keydown", function (e) {
 	e = e || window.event;
 	switch (e.which || e.keyCode) {
 		case 65: // a
@@ -64,14 +68,14 @@ document.addEventListener('keydown', function (e) {
 			goSouth();
 			break;
 		case 81: // 1
-			goDown()
+			goDown();
 			break;
 		case 69: // 1
-			goUp()
+			goUp();
 			break;
 		default: return; // exit this handler for other keys
 	}
-	e.preventDefault(); // prevent the default action (scroll / move caret)
+	e.preventDefault (); // prevent the default action (scroll / move caret)
 });
 
 function showLayerHideOthers (layerChoice: number) {
@@ -87,20 +91,19 @@ function showLayerHideOthers (layerChoice: number) {
 }
 
 function goNorth () {
-	MyCharacter.move(MyCharacter.North);
-	
+	MyCharacterView.move(MyCharacter.move(MyCharacter.North));
 }
 
 function goEast () {
-	MyCharacter.move(MyCharacter.East);
+	MyCharacterView.move(MyCharacter.move(MyCharacter.East));
 }
 
 function goSouth () {
-	MyCharacter.move(MyCharacter.South);
+	MyCharacterView.move(MyCharacter.move(MyCharacter.South));
 }
 
 function goWest () {
-	MyCharacter.move(MyCharacter.West);
+	MyCharacterView.move(MyCharacter.move(MyCharacter.West));
 }
 
 function goUp () {
@@ -109,7 +112,7 @@ function goUp () {
 	else
 		currentLayer = 0;
 	showLayerHideOthers (currentLayer);
-	MyCharacter.move(MyCharacter.Up);
+	MyCharacterView.move(MyCharacter.move(MyCharacter.Up));
 }
 
 function goDown () {
@@ -118,5 +121,5 @@ function goDown () {
 	else
 		currentLayer--;
 	showLayerHideOthers (currentLayer);
-	MyCharacter.move(MyCharacter.Down);
+	MyCharacterView.move(MyCharacter.move(MyCharacter.Down));
 }

@@ -10,11 +10,7 @@ class MazeView {
 	}
 
 	public displayMaze () {
-		$(`#play-again`).hide();
-		// $(`.desc`).show();
-		// $(`.gameButtons`).show();
-		// $(`.gameButtons`).show();
-		// $(`.MazeHeader`).show();
+		// $(`#play-again`).hide();
 
 		let html: string = "";
 
