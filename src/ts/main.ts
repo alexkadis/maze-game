@@ -83,9 +83,9 @@ function showLayerHideOthers (layerChoice: number) {
 		for (let layer = 0; layer < GridLayers; layer++) {
 			const layerId: string = `#layer${layer}`;
 			if (layer === layerChoice)
-				$(layerId).show();
+				(document.body.querySelector(layerId) as HTMLElement).style.display = "block";
 			else
-				$(layerId).hide();
+				(document.body.querySelector(layerId) as HTMLElement).style.display = "none";
 		}
 	}
 }

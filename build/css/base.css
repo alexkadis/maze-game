@@ -59,8 +59,7 @@ table {
   /* --fall-light: #f1d7ab; */
   --fall-light: rgba(241, 215, 171, .5);
   --fall-dark: #F0B659;
-  --accent: #6B3C98; 
-}
+  --accent: #6B3C98; }
 
 /* winter */
 .winter,
@@ -320,62 +319,62 @@ a {
 
 @media (min-width: 600px) {
   p, h2 {
-	font-size: 20px;
-	margin: 10px auto;
-	width: 90%; }
+    font-size: 20px;
+    margin: 10px auto;
+    width: 90%; }
 
   article {
-	/* margin: 0px auto; */
-	/* box-align: center; */
-	width: 90%;
-	margin: 20px auto;
-	display: grid;
-	grid-template-areas: "header 			header					maze-game " "game-description	game-description		maze-game" "game-buttons		shortcuts				maze-game" "footer				footer					maze-game" "play-again 		play-again				maze-game" ".					.						maze-game"; }
+    /* margin: 0px auto; */
+    /* box-align: center; */
+    width: 90%;
+    margin: 20px auto;
+    display: grid;
+    grid-template-areas: "header 			header					maze-game " "game-description	game-description		maze-game" "game-buttons		shortcuts				maze-game" "footer				footer					maze-game" "play-again 		play-again				maze-game" ".					.						maze-game"; }
 
   table.maze-table {
-	width: 43vw;
-	height: 43vw; }
+    width: 43vw;
+    height: 43vw; }
 
   table.maze-table td {
-	font-size: 2vw;
-	display: inline-block;
-	width: 4vw;
-	height: 4vw;
-	border: 1px solid #fff;
-	text-align: center;
-	vertical-align: middle;
-	display: table-cell; } }
+    font-size: 2vw;
+    display: inline-block;
+    width: 4vw;
+    height: 4vw;
+    border: 1px solid #fff;
+    text-align: center;
+    vertical-align: middle;
+    display: table-cell; } }
 @media (max-width: 599px) {
   p, h2 {
-	font-size: 5vw;
-	margin: 10px auto;
-	width: 90%; }
+    font-size: 5vw;
+    margin: 10px auto;
+    width: 90%; }
 
   article {
-	/* margin: 0px auto; */
-	/* box-align: center; */
-	width: 90%;
-	margin: 0px auto;
-	display: grid;
-	grid-template-areas: "header" "game-description" "game-buttons" "play-again" "maze-game" "footer"; }
+    /* margin: 0px auto; */
+    /* box-align: center; */
+    width: 90%;
+    margin: 0px auto;
+    display: grid;
+    grid-template-areas: "header" "game-description" "game-buttons" "play-again" "maze-game" "footer"; }
 
   #shortcuts {
-	display: none; }
+    display: none; }
 
   table.maze-table {
-	width: 90vw;
-	height: 90vw;
-	margin: 0px auto; }
+    width: 90vw;
+    height: 90vw;
+    margin: 0px auto; }
 
   table.maze-table td {
-	font-size: 4vw;
-	display: inline-block;
-	width: 8vw;
-	height: 8vw;
-	border: 1px solid #fff;
-	text-align: center;
-	vertical-align: middle;
-	display: table-cell; } }
+    font-size: 4vw;
+    display: inline-block;
+    width: 8vw;
+    height: 8vw;
+    border: 1px solid #fff;
+    text-align: center;
+    vertical-align: middle;
+    display: table-cell; } }
 section#game-description {
   grid-area: game-description;
   line-height: 1.25; }

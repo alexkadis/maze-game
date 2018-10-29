@@ -38,7 +38,8 @@ class MazeView {
 			html += "</table>";
 			html += "</div>";
 		}
-		$("#maze-game").html(html);
+
+		(document.body.querySelector("#maze-game") as HTMLElement).innerHTML = html;
 	}
 
 	private getClassesFromCell (cell: Cell) {

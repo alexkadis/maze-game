@@ -54,33 +54,61 @@ class HTMLCharacterView implements ICharacterView {
 		}
 	}
 
-	public setEndLocation (locations: any) {
-		this.EndLocation = locations.End;
-		$(`.winter.y${this.EndLocation.Y}x${this.EndLocation.X}`).text(this.CurrentEndIcon);
-	}
-
 	public move (locations: any) {
 
-		// Remove what's currently there
-		$(`.y${this.CharacterLocation.Y}x${this.CharacterLocation.X}`).text("");
-		$(`.y${this.CharacterLocation.Y}x${this.CharacterLocation.X}`).removeClass(this.Name);
+		let selectedCells = document.querySelectorAll(`.y${this.CharacterLocation.Y}x${this.CharacterLocation.X}`);
+
+		for (let i = 0; i < selectedCells.length; i++) {
+			selectedCells[i].innerHTML = "";
+		}
 
 		this.CharacterLocation = locations.Character;
 		this.EndLocation = locations.End;
 		this.IsMazeSolved = locations.IsMazeSolved;
 
+		const playAgain = (document.querySelector("#play-again") as HTMLElement);
 		if (this.IsMazeSolved) {
-			$(`#play-again`).show();
+			playAgain.style.display = "block";
 			this.CurrentCharacterIcon = this.SolvedCharacterIcon;
 			this.CurrentEndIcon = this.SolvedEndIcon;
 		} else {
-			$(`#play-again`).hide();
+			playAgain.style.display = "none";
 			this.CurrentCharacterIcon = this.CharacterIcon;
 			this.CurrentEndIcon = this.EndIcon;
 		}
-		$(`.winter.y${this.EndLocation.Y}x${this.EndLocation.X}`).text(this.CurrentEndIcon);
-		$(`.y${this.CharacterLocation.Y}x${this.CharacterLocation.X}`).text(this.CurrentCharacterIcon);
-		$(`.y${this.CharacterLocation.Y}x${this.CharacterLocation.X}`).addClass(this.Name);
 
+		const end = (document.querySelector(`.winter.y${this.EndLocation.Y}x${this.EndLocation.X}`) as HTMLElement);
+		end.innerHTML = this.CurrentEndIcon;
+
+		selectedCells = document.querySelectorAll(`.y${this.CharacterLocation.Y}x${this.CharacterLocation.X}`);
+
+		for (let i = 0; i < selectedCells.length; i++) {
+			selectedCells[i].innerHTML = this.CurrentCharacterIcon;
+		}
 	}
+	// jQuery version
+	// public move (locations: any) {
+
+	// 	// Remove what's currently there
+	// 	$(`.y${this.CharacterLocation.Y}x${this.CharacterLocation.X}`).text("");
+	// 	$(`.y${this.CharacterLocation.Y}x${this.CharacterLocation.X}`).removeClass(this.Name);
+
+	// 	this.CharacterLocation = locations.Character;
+	// 	this.EndLocation = locations.End;
+	// 	this.IsMazeSolved = locations.IsMazeSolved;
+
+	// 	if (this.IsMazeSolved) {
+	// 		$(`#play-again`).show();
+	// 		this.CurrentCharacterIcon = this.SolvedCharacterIcon;
+	// 		this.CurrentEndIcon = this.SolvedEndIcon;
+	// 	} else {
+	// 		$(`#play-again`).hide();
+	// 		this.CurrentCharacterIcon = this.CharacterIcon;
+	// 		this.CurrentEndIcon = this.EndIcon;
+	// 	}
+	// 	$(`.winter.y${this.EndLocation.Y}x${this.EndLocation.X}`).text(this.CurrentEndIcon);
+	// 	$(`.y${this.CharacterLocation.Y}x${this.CharacterLocation.X}`).text(this.CurrentCharacterIcon);
+	// 	$(`.y${this.CharacterLocation.Y}x${this.CharacterLocation.X}`).addClass(this.Name);
+
+	// }
 }

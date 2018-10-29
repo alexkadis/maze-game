@@ -88,7 +88,6 @@ declare class HTMLCharacterView implements ICharacterView {
     EndLocation: any;
     constructor(name: string, characterIcon: string, solvedCharacterEndIcon: string, mazeEndIcon: string, solvedMazeEndIcon: string);
     setCharacterIcon(): void;
-    setEndLocation(locations: any): void;
     move(locations: any): void;
 }
 declare class Maze {

@@ -577,30 +577,31 @@ var HTMLCharacterView = /** @class */ (function () {
             this.CurrentEndIcon = this.EndIcon;
         }
     };
-    HTMLCharacterView.prototype.setEndLocation = function (locations) {
-        this.EndLocation = locations.End;
-        $(".winter.y" + this.EndLocation.Y + "x" + this.EndLocation.X).text(this.CurrentEndIcon);
-    };
     HTMLCharacterView.prototype.move = function (locations) {
-        // Remove what's currently there
-        $(".y" + this.CharacterLocation.Y + "x" + this.CharacterLocation.X).text("");
-        $(".y" + this.CharacterLocation.Y + "x" + this.CharacterLocation.X).removeClass(this.Name);
+        var selectedCells = document.querySelectorAll(".y" + this.CharacterLocation.Y + "x" + this.CharacterLocation.X);
+        for (var i = 0; i < selectedCells.length; i++) {
+            selectedCells[i].innerHTML = "";
+        }
         this.CharacterLocation = locations.Character;
         this.EndLocation = locations.End;
         this.IsMazeSolved = locations.IsMazeSolved;
+        var playAgain = document.querySelector("#play-again");
         if (this.IsMazeSolved) {
-            $("#play-again").show();
+            playAgain.style.display = "block";
             this.CurrentCharacterIcon = this.SolvedCharacterIcon;
             this.CurrentEndIcon = this.SolvedEndIcon;
         }
         else {
-            $("#play-again").hide();
+            playAgain.style.display = "none";
             this.CurrentCharacterIcon = this.CharacterIcon;
             this.CurrentEndIcon = this.EndIcon;
         }
-        $(".winter.y" + this.EndLocation.Y + "x" + this.EndLocation.X).text(this.CurrentEndIcon);
-        $(".y" + this.CharacterLocation.Y + "x" + this.CharacterLocation.X).text(this.CurrentCharacterIcon);
-        $(".y" + this.CharacterLocation.Y + "x" + this.CharacterLocation.X).addClass(this.Name);
+        var end = document.querySelector(".winter.y" + this.EndLocation.Y + "x" + this.EndLocation.X);
+        end.innerHTML = this.CurrentEndIcon;
+        selectedCells = document.querySelectorAll(".y" + this.CharacterLocation.Y + "x" + this.CharacterLocation.X);
+        for (var i = 0; i < selectedCells.length; i++) {
+            selectedCells[i].innerHTML = this.CurrentCharacterIcon;
+        }
     };
     return HTMLCharacterView;
 }());
@@ -867,7 +868,7 @@ var MazeView = /** @class */ (function () {
             html += "</table>";
             html += "</div>";
         }
-        $("#maze-game").html(html);
+        document.body.querySelector("#maze-game").innerHTML = html;
     };
     MazeView.prototype.getClassesFromCell = function (cell) {
         var classes = "";
@@ -939,7 +940,6 @@ function main() {
     MyCharacterView.move(MyCharacter.move());
 }
 // https://stackoverflow.com/questions/1402698/binding-arrow-keys-in-js-jquery
-// document.addEventListener('keydown', function (e) {
 document.addEventListener("keydown", function (e) {
     e = e || window.event;
     switch (e.which || e.keyCode) {
@@ -974,9 +974,9 @@ function showLayerHideOthers(layerChoice) {
         for (var layer = 0; layer < GridLayers; layer++) {
             var layerId = "#layer" + layer;
             if (layer === layerChoice)
-                $(layerId).show();
+                document.body.querySelector(layerId).style.display = "block";
             else
-                $(layerId).hide();
+                document.body.querySelector(layerId).style.display = "none";
         }
     }
 }
