@@ -115,6 +115,9 @@ Down:	false
 Up and Down aren't used for display in my maze.
 
 ## TO DO
+### Location of "IsMazeSolved"
+Currently the maze is marked as "solved" in Character/ICharacterView, logically it makes more sense to have that in Maze, should I change that?
+
 ### Re-design in canvas?
 Might want to go to using canvas and making it look *good*.
 

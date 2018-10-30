@@ -5,18 +5,12 @@ class Character {
 	public CurrentLocation: Cell;
 	public EndLocation: any;
 
-	public readonly North: string = "North";
-	public readonly East: string = "East";
-	public readonly South: string = "South";
-	public readonly West: string = "West";
-	public readonly Up: string = "Up";
-	public readonly Down: string = "Down";
-
 	private GridLayers: number;
 	private GridWidth: number;
 	private GridHeight: number;
 	private MazeGrid: Cell[][][];
 	private IsMazeSolved: boolean;
+	private Utilities = new Utils();
 
 	constructor (name: string, startingLocation: Cell, mazeGrid: Cell[][][], public endLocation: any) {
 
@@ -34,29 +28,29 @@ class Character {
 
 	public move (direction?: string) {
 		switch (direction) {
-			case this.North:
+			case this.Utilities.North:
 				if (this.CurrentLocation.North && this.CurrentLocation.Y > 0)
 					this.CurrentLocation = this.MazeGrid[this.CurrentLocation.Z][this.CurrentLocation.Y - 1][this.CurrentLocation.X];
 				break;
-			case this.East:
+			case this.Utilities.East:
 				if (this.CurrentLocation.East && this.CurrentLocation.X < this.GridWidth - 1)
 					this.CurrentLocation = this.MazeGrid[this.CurrentLocation.Z][this.CurrentLocation.Y][this.CurrentLocation.X + 1];
 				break;
-			case this.South:
+			case this.Utilities.South:
 				if (this.CurrentLocation.South && this.CurrentLocation.Y < this.GridHeight - 1)
 					this.CurrentLocation = this.MazeGrid[this.CurrentLocation.Z][this.CurrentLocation.Y + 1][this.CurrentLocation.X];
 				break;
-			case this.West:
+			case this.Utilities.West:
 				if (this.CurrentLocation.West && this.CurrentLocation.X > 0)
 					this.CurrentLocation = this.MazeGrid[this.CurrentLocation.Z][this.CurrentLocation.Y][this.CurrentLocation.X - 1];
 				break;
-			case this.Up:
+			case this.Utilities.Up:
 				if (this.CurrentLocation.Z === this.GridLayers - 1)
 					this.CurrentLocation = this.MazeGrid[0][this.CurrentLocation.Y][this.CurrentLocation.X];
 				else
 					this.CurrentLocation = this.MazeGrid[this.CurrentLocation.Z + 1][this.CurrentLocation.Y][this.CurrentLocation.X];
 				break;
-			case this.Down:
+			case this.Utilities.Down:
 				if (this.CurrentLocation.Z === 0)
 					this.CurrentLocation = this.MazeGrid[this.GridLayers - 1][this.CurrentLocation.Y][this.CurrentLocation.X];
 				else

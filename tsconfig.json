@@ -11,6 +11,7 @@
 											   namespace objects for all imports. Implies 'allowSyntheticDefaultImports'. */
 	},
 	"files": [
+		"./src/ts/Utils.ts",
 		"./src/ts/lz-string.ts",
 		"./src/ts/Cell.ts",
 		"./src/ts/Character.ts",

@@ -4,8 +4,10 @@ let GridHeight: number;
 let GridWidth: number;
 let MyCharacter: Character;
 let MyCharacterView: ICharacterView;
+let Utilities: Utils;
 
 function main () {
+	Utilities  = new Utils();
 	currentLayer = 0;
 	GridLayers = 4;
 	GridHeight = 8;
@@ -91,19 +93,19 @@ function showLayerHideOthers (layerChoice: number) {
 }
 
 function goNorth () {
-	MyCharacterView.move(MyCharacter.move(MyCharacter.North));
+	MyCharacterView.move(MyCharacter.move(Utilities.North));
 }
 
 function goEast () {
-	MyCharacterView.move(MyCharacter.move(MyCharacter.East));
+	MyCharacterView.move(MyCharacter.move(Utilities.East));
 }
 
 function goSouth () {
-	MyCharacterView.move(MyCharacter.move(MyCharacter.South));
+	MyCharacterView.move(MyCharacter.move(Utilities.South));
 }
 
 function goWest () {
-	MyCharacterView.move(MyCharacter.move(MyCharacter.West));
+	MyCharacterView.move(MyCharacter.move(Utilities.West));
 }
 
 function goUp () {
@@ -112,7 +114,7 @@ function goUp () {
 	else
 		currentLayer = 0;
 	showLayerHideOthers (currentLayer);
-	MyCharacterView.move(MyCharacter.move(MyCharacter.Up));
+	MyCharacterView.move(MyCharacter.move(Utilities.Up));
 }
 
 function goDown () {
@@ -121,5 +123,5 @@ function goDown () {
 	else
 		currentLayer--;
 	showLayerHideOthers (currentLayer);
-	MyCharacterView.move(MyCharacter.move(MyCharacter.Down));
+	MyCharacterView.move(MyCharacter.move(Utilities.Down));
 }

@@ -17,7 +17,10 @@ class MazeNavigator extends Character {
 		super("navigator", new Cell(0, 0, 0), mazeGrid, endLocation);
 	}
 	public navigator () {
-		super.move ()
+		super.move ();
+		
+		
+
 	}
 
 }

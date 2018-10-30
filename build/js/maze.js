@@ -1,4 +1,68 @@
 "use strict";
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = function (d, b) {
+        extendStatics = Object.setPrototypeOf ||
+            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+            function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+        return extendStatics(d, b);
+    }
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+var Utils = /** @class */ (function () {
+    // public self: Utils;
+    function Utils() {
+        this.Back = "B";
+        this.North = "N";
+        this.East = "E";
+        this.South = "S";
+        this.West = "W";
+        this.Up = "U";
+        this.Down = "D";
+        this.Directions = [
+            this.North,
+            this.South,
+            this.West,
+            this.East,
+            this.Up,
+            this.Down,
+        ];
+        // this.self = new Utils();
+    }
+    Utils.prototype.getRandomIntInclusive = function (min, max) {
+        min = Math.ceil(min);
+        max = Math.floor(max);
+        return Math.floor(Math.random() * (max - min + 1)) + min;
+        // The maximum is inclusive and the minimum is inclusive
+    };
+    Utils.prototype.getRandomDirections = function () {
+        if (this.North === undefined) {
+            console.log("utils not defined...");
+            // this.self = new Utils();
+        }
+        return this.shuffle(this.Directions);
+    };
+    /**
+     * Shuffles array in place.
+     * @param {Array} array items An array containing the items.
+     */
+    Utils.prototype.shuffle = function (array) {
+        var j;
+        var x;
+        var i;
+        for (i = array.length - 1; i > 0; i--) {
+            j = Math.floor(Math.random() * (i + 1));
+            x = array[i];
+            array[i] = array[j];
+            array[j] = x;
+        }
+        return array;
+    };
+    return Utils;
+}());
 // Copyright (c) 2013 Pieroxy <pieroxy@pieroxy.net>
 // This work is free. You can redistribute it and/or modify it
 // under the terms of the WTFPL, Version 2
@@ -486,12 +550,7 @@ var Cell = /** @class */ (function () {
 var Character = /** @class */ (function () {
     function Character(name, startingLocation, mazeGrid, endLocation) {
         this.endLocation = endLocation;
-        this.North = "North";
-        this.East = "East";
-        this.South = "South";
-        this.West = "West";
-        this.Up = "Up";
-        this.Down = "Down";
+        this.Utilities = new Utils();
         this.Name = name;
         this.CurrentLocation = startingLocation;
         this.MazeGrid = mazeGrid;
@@ -503,29 +562,29 @@ var Character = /** @class */ (function () {
     }
     Character.prototype.move = function (direction) {
         switch (direction) {
-            case this.North:
+            case this.Utilities.North:
                 if (this.CurrentLocation.North && this.CurrentLocation.Y > 0)
                     this.CurrentLocation = this.MazeGrid[this.CurrentLocation.Z][this.CurrentLocation.Y - 1][this.CurrentLocation.X];
                 break;
-            case this.East:
+            case this.Utilities.East:
                 if (this.CurrentLocation.East && this.CurrentLocation.X < this.GridWidth - 1)
                     this.CurrentLocation = this.MazeGrid[this.CurrentLocation.Z][this.CurrentLocation.Y][this.CurrentLocation.X + 1];
                 break;
-            case this.South:
+            case this.Utilities.South:
                 if (this.CurrentLocation.South && this.CurrentLocation.Y < this.GridHeight - 1)
                     this.CurrentLocation = this.MazeGrid[this.CurrentLocation.Z][this.CurrentLocation.Y + 1][this.CurrentLocation.X];
                 break;
-            case this.West:
+            case this.Utilities.West:
                 if (this.CurrentLocation.West && this.CurrentLocation.X > 0)
                     this.CurrentLocation = this.MazeGrid[this.CurrentLocation.Z][this.CurrentLocation.Y][this.CurrentLocation.X - 1];
                 break;
-            case this.Up:
+            case this.Utilities.Up:
                 if (this.CurrentLocation.Z === this.GridLayers - 1)
                     this.CurrentLocation = this.MazeGrid[0][this.CurrentLocation.Y][this.CurrentLocation.X];
                 else
                     this.CurrentLocation = this.MazeGrid[this.CurrentLocation.Z + 1][this.CurrentLocation.Y][this.CurrentLocation.X];
                 break;
-            case this.Down:
+            case this.Utilities.Down:
                 if (this.CurrentLocation.Z === 0)
                     this.CurrentLocation = this.MazeGrid[this.GridLayers - 1][this.CurrentLocation.Y][this.CurrentLocation.X];
                 else
@@ -611,29 +670,16 @@ var Maze = /** @class */ (function () {
         this.gridWidth = gridWidth;
         this.gridHeight = gridHeight;
         this.mazePathCompressed = mazePathCompressed;
-        // public Maze: any;
-        this.North = "N";
-        this.East = "E";
-        this.South = "S";
-        this.West = "W";
-        this.Up = "U";
-        this.Down = "D";
-        this.Directions = [
-            this.North,
-            this.South,
-            this.West,
-            this.East,
-            this.Up,
-            this.Down,
-        ];
-        this.Back = "B";
+        this.IsMazeSolved = false;
         this.PathTemplate = [];
         this.NextActionInTemplate = "";
+        this.Utilities = new Utils();
         this.GridLayers = gridLayers;
         this.GridWidth = gridWidth;
         this.GridHeight = gridHeight;
         // generate the grid
         this.MazeGrid = this.generateGrid();
+        console.log(this.MazeGrid);
         // create the cells list
         this.CellsList = [new Cell(0, 0, 0)];
         if (mazePathCompressed !== undefined && typeof mazePathCompressed !== undefined && mazePathCompressed !== "") {
@@ -655,8 +701,8 @@ var Maze = /** @class */ (function () {
             // tslint:disable:object-literal-sort-keys
             this.EndLocation = {
                 Z: 0,
-                Y: this.getRandomIntInclusive(1, this.gridHeight - 1),
-                X: this.getRandomIntInclusive(1, this.gridWidth - 1)
+                Y: this.Utilities.getRandomIntInclusive(1, this.GridHeight - 1),
+                X: this.Utilities.getRandomIntInclusive(1, this.GridWidth - 1)
             };
             this.MazePath += "|" + JSON.stringify(this.EndLocation);
             this.MazePathCompressed = LZString.compressToEncodedURIComponent(this.MazePath);
@@ -688,7 +734,7 @@ var Maze = /** @class */ (function () {
             index = this.CellsList.length - 1;
             var currentCell = this.CellsList[index];
             this.getNextActionFromTemplate();
-            if (this.NextActionInTemplate === this.Back) {
+            if (this.NextActionInTemplate === this.Utilities.Back) {
                 this.CellsList.splice(index, 1);
             }
             else if (this.NextActionInTemplate === "") {
@@ -716,7 +762,7 @@ var Maze = /** @class */ (function () {
             // index is the newest
             index = this.CellsList.length - 1;
             var currentCell = this.CellsList[index];
-            var directions = this.getRandomDirections();
+            var directions = this.Utilities.getRandomDirections();
             for (var i = 0; i < directions.length; i++) {
                 var nextCell = this.directionModifier(this.CellsList[index], directions[i]);
                 if (this.isEmptyCell(nextCell.Z, nextCell.Y, nextCell.X)) {
@@ -732,7 +778,7 @@ var Maze = /** @class */ (function () {
             }
             if (index !== -1) {
                 this.CellsList.splice(index, 1);
-                this.encodeMaze(this.Back);
+                this.encodeMaze(this.Utilities.Back);
             }
         }
     };
@@ -749,57 +795,32 @@ var Maze = /** @class */ (function () {
     };
     Maze.prototype.carvePathBetweenCells = function (currentCell, nextCell, direction) {
         switch (direction) {
-            case this.North:
+            case this.Utilities.North:
                 currentCell.North = true;
                 nextCell.South = true;
                 break;
-            case this.East:
+            case this.Utilities.East:
                 currentCell.East = true;
                 nextCell.West = true;
                 break;
-            case this.South:
+            case this.Utilities.South:
                 currentCell.South = true;
                 nextCell.North = true;
                 break;
-            case this.West:
+            case this.Utilities.West:
                 currentCell.West = true;
                 nextCell.East = true;
                 break;
-            case this.Up:
+            case this.Utilities.Up:
                 currentCell.Up = true;
                 nextCell.Down = true;
                 break;
-            case this.Down:
+            case this.Utilities.Down:
                 currentCell.Down = true;
                 nextCell.Up = true;
                 break;
         }
         return { current: currentCell, next: nextCell };
-    };
-    Maze.prototype.getRandomIntInclusive = function (min, max) {
-        min = Math.ceil(min);
-        max = Math.floor(max);
-        return Math.floor(Math.random() * (max - min + 1)) + min;
-        // The maximum is inclusive and the minimum is inclusive
-    };
-    Maze.prototype.getRandomDirections = function () {
-        return this.shuffle(this.Directions);
-    };
-    /**
-     * Shuffles array in place.
-     * @param {Array} array items An array containing the items.
-     */
-    Maze.prototype.shuffle = function (array) {
-        var j;
-        var x;
-        var i;
-        for (i = array.length - 1; i > 0; i--) {
-            j = Math.floor(Math.random() * (i + 1));
-            x = array[i];
-            array[i] = array[j];
-            array[j] = x;
-        }
-        return array;
     };
     Maze.prototype.isEmptyCell = function (z, y, x) {
         if (z >= 0 && z < this.GridLayers
@@ -811,21 +832,21 @@ var Maze = /** @class */ (function () {
     };
     Maze.prototype.directionModifier = function (cell, direction) {
         switch (direction) {
-            case this.North:
+            case this.Utilities.North:
                 return new Cell(cell.Z, cell.Y - 1, cell.X);
-            case this.East:
+            case this.Utilities.East:
                 return new Cell(cell.Z, cell.Y, cell.X + 1);
-            case this.South:
+            case this.Utilities.South:
                 return new Cell(cell.Z, cell.Y + 1, cell.X);
-            case this.West:
+            case this.Utilities.West:
                 return new Cell(cell.Z, cell.Y, cell.X - 1);
-            case this.Up:
+            case this.Utilities.Up:
                 // if we're at the top layer, loop around
                 if (cell.Z === this.gridLayers - 1)
                     return new Cell(0, cell.Y, cell.X);
                 else
                     return new Cell(cell.Z + 1, cell.Y, cell.X);
-            case this.Down:
+            case this.Utilities.Down:
                 // if we're at the bottom layer, loop around
                 if (cell.Z === 0)
                     return new Cell(this.GridLayers - 1, cell.Y, cell.X);
@@ -910,7 +931,9 @@ var GridHeight;
 var GridWidth;
 var MyCharacter;
 var MyCharacterView;
+var Utilities;
 function main() {
+    Utilities = new Utils();
     currentLayer = 0;
     GridLayers = 4;
     GridHeight = 8;
@@ -981,16 +1004,16 @@ function showLayerHideOthers(layerChoice) {
     }
 }
 function goNorth() {
-    MyCharacterView.move(MyCharacter.move(MyCharacter.North));
+    MyCharacterView.move(MyCharacter.move(Utilities.North));
 }
 function goEast() {
-    MyCharacterView.move(MyCharacter.move(MyCharacter.East));
+    MyCharacterView.move(MyCharacter.move(Utilities.East));
 }
 function goSouth() {
-    MyCharacterView.move(MyCharacter.move(MyCharacter.South));
+    MyCharacterView.move(MyCharacter.move(Utilities.South));
 }
 function goWest() {
-    MyCharacterView.move(MyCharacter.move(MyCharacter.West));
+    MyCharacterView.move(MyCharacter.move(Utilities.West));
 }
 function goUp() {
     if (currentLayer < GridLayers - 1)
@@ -998,7 +1021,7 @@ function goUp() {
     else
         currentLayer = 0;
     showLayerHideOthers(currentLayer);
-    MyCharacterView.move(MyCharacter.move(MyCharacter.Up));
+    MyCharacterView.move(MyCharacter.move(Utilities.Up));
 }
 function goDown() {
     if (currentLayer === 0)
@@ -1006,5 +1029,27 @@ function goDown() {
     else
         currentLayer--;
     showLayerHideOthers(currentLayer);
-    MyCharacterView.move(MyCharacter.move(MyCharacter.Down));
+    MyCharacterView.move(MyCharacter.move(Utilities.Down));
 }
+/*
+    Use the Character class to move completely randomly through the maze
+    from the given starting point to the given ending point.
+
+    It's given a generated maze grid with starting and ending points
+    It will keep going any random direction until it finds the end.
+    Like any other character, it can't move through walls
+    Another posibility - make it a little smarter, have it navigate the way
+    that the maze generating algorithm works: keep moving until you can't,
+    then back up until you get to where you want to go.
+
+*/
+var MazeNavigator = /** @class */ (function (_super) {
+    __extends(MazeNavigator, _super);
+    function MazeNavigator(mazeGrid, endLocation) {
+        return _super.call(this, "navigator", new Cell(0, 0, 0), mazeGrid, endLocation) || this;
+    }
+    MazeNavigator.prototype.navigator = function () {
+        _super.prototype.move.call(this);
+    };
+    return MazeNavigator;
+}(Character));

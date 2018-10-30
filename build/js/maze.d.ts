@@ -1,3 +1,21 @@
+declare class Utils {
+    readonly North: string;
+    readonly East: string;
+    readonly South: string;
+    readonly West: string;
+    readonly Up: string;
+    readonly Down: string;
+    readonly Directions: string[];
+    readonly Back: string;
+    constructor();
+    getRandomIntInclusive(min: number, max: number): number;
+    getRandomDirections(): any;
+    /**
+     * Shuffles array in place.
+     * @param {Array} array items An array containing the items.
+     */
+    private shuffle;
+}
 declare var LZString: {
     compressToEncodedURIComponent: (input: string) => any;
     decompressFromEncodedURIComponent: (input: string) => string | null;
@@ -36,17 +54,12 @@ declare class Character {
     Name: string;
     CurrentLocation: Cell;
     EndLocation: any;
-    readonly North: string;
-    readonly East: string;
-    readonly South: string;
-    readonly West: string;
-    readonly Up: string;
-    readonly Down: string;
     private GridLayers;
     private GridWidth;
     private GridHeight;
     private MazeGrid;
     private IsMazeSolved;
+    private Utilities;
     constructor(name: string, startingLocation: Cell, mazeGrid: Cell[][][], endLocation: any);
     move(direction?: string): {
         Character: {
@@ -95,42 +108,30 @@ declare class Maze {
     gridWidth: number;
     gridHeight: number;
     mazePathCompressed?: string | undefined;
-    MazeGrid: Cell[][][];
+    StartLocation: any;
     EndLocation: any;
-    readonly North: string;
-    readonly East: string;
-    readonly South: string;
-    readonly West: string;
-    readonly Up: string;
-    readonly Down: string;
-    readonly Directions: string[];
-    readonly Back: string;
+    GridLayers: number;
+    GridWidth: number;
+    GridHeight: number;
+    MazeGrid: Cell[][][];
+    private IsMazeSolved;
     MazePath: string;
     MazePathCompressed: string;
     private PathTemplate;
     private NextActionInTemplate;
+    private Utilities;
     private CellsList;
-    private GridLayers;
-    private GridWidth;
-    private GridHeight;
     constructor(gridLayers: number, gridWidth: number, gridHeight: number, mazePathCompressed?: string | undefined);
     protected getEndLocationFromTemplate(str: string): void;
     protected getNextActionFromTemplate(): string;
     protected fillMazeProcedural(): void;
     protected encodeMaze(direction: string): void;
     protected fillMazeRandom(): void;
-    protected generateGrid(): any[];
+    generateGrid(): any[];
     protected carvePathBetweenCells(currentCell: Cell, nextCell: Cell, direction: string): {
         current: Cell;
         next: Cell;
     };
-    protected getRandomIntInclusive(min: number, max: number): number;
-    protected getRandomDirections(): any;
-    /**
-     * Shuffles array in place.
-     * @param {Array} array items An array containing the items.
-     */
-    protected shuffle(array: any): any;
     protected isEmptyCell(z: number, y: number, x: number): boolean;
     private directionModifier;
 }
@@ -151,6 +152,7 @@ declare let GridHeight: number;
 declare let GridWidth: number;
 declare let MyCharacter: Character;
 declare let MyCharacterView: ICharacterView;
+declare let Utilities: Utils;
 declare function main(): void;
 declare function showLayerHideOthers(layerChoice: number): void;
 declare function goNorth(): void;
@@ -159,4 +161,8 @@ declare function goSouth(): void;
 declare function goWest(): void;
 declare function goUp(): void;
 declare function goDown(): void;
+declare class MazeNavigator extends Character {
+    constructor(mazeGrid: Cell[][][], endLocation: any);
+    navigator(): void;
+}
 //# sourceMappingURL=maze.d.ts.map
