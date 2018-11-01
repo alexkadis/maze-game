@@ -114,20 +114,20 @@ declare class Maze {
     GridWidth: number;
     GridHeight: number;
     MazeGrid: Cell[][][];
-    private IsMazeSolved;
     MazePath: string;
     MazePathCompressed: string;
+    private IsMazeSolved;
     private PathTemplate;
     private NextActionInTemplate;
     private Utilities;
     private CellsList;
     constructor(gridLayers: number, gridWidth: number, gridHeight: number, mazePathCompressed?: string | undefined);
+    generateGrid(): any[];
     protected getEndLocationFromTemplate(str: string): void;
     protected getNextActionFromTemplate(): string;
     protected fillMazeProcedural(): void;
     protected encodeMaze(direction: string): void;
     protected fillMazeRandom(): void;
-    generateGrid(): any[];
     protected carvePathBetweenCells(currentCell: Cell, nextCell: Cell, direction: string): {
         current: Cell;
         next: Cell;
@@ -161,7 +161,9 @@ declare function goSouth(): void;
 declare function goWest(): void;
 declare function goUp(): void;
 declare function goDown(): void;
-declare class MazeNavigator extends Character {
+declare class MazeNavigator {
+    private Utilities;
+    private Char;
     constructor(mazeGrid: Cell[][][], endLocation: any);
     navigator(): void;
 }

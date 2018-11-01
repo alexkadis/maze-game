@@ -11,15 +11,18 @@
 
 */
 
-class MazeNavigator extends Character {
+class MazeNavigator {
+
+	private Utilities: Utils;
+	private Char: Character;
 
 	constructor (mazeGrid: Cell[][][], endLocation: any) {
-		super("navigator", new Cell(0, 0, 0), mazeGrid, endLocation);
+		this.Char = new Character("navigator", new Cell(0, 0, 0), mazeGrid, endLocation);
+		this.Utilities = new Utils();
 	}
+
 	public navigator () {
-		super.move ();
-		
-		
+		this.Utilities.getRandomDirections();
 
 	}
 

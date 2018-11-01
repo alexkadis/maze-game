@@ -11,9 +11,9 @@ On desktop there's some keyboard shortcuts (hidden by CSS until the screen is la
 ## The code
 I wrote almost everything in TypeScript - it's easier for debugging than JavaScript, and static types are wonderful. 
 
-There's a bit of jQuery in the display and character classes; I could have just used DOM directly, but I wanted some practice with jQuery. Since I've gotten that practice, I'll probably convert the jQuery stuff into vanilla javascript.
+I initially used jQuery in the View and Character classes because I wanted some practice with the library. Since then I've converted to using vanilla JavaScript.
 
-This was my first time using CSS Grids to handle the layout (definitely using them again).
+This was my first time using CSS Grids to handle the layout. (Definitely using grids again... so much nicer than floats!)
 
 ## Growing Tree Algorithm
 I needed a bit of mental gymnastics to get my head around the growing tree algorithm. It's a method of creating a maze out of a grid. Here's the steps.
@@ -30,7 +30,7 @@ Cells have cardinal directions (`North`, `South`, `East`, `West`, `Up` a layer, 
 - `true`: indicates a path that direction
 - `false`: indicates a wall that direction
 
-For details on each class see the [build/maze.d.ts](https://github.com/alexkadis/maze-game/blob/master/build/maze.d.ts) file.
+For details on each class see the declaration file at: [build/maze.d.ts](https://github.com/alexkadis/maze-game/blob/master/build/maze.d.ts)
 
 ### 2. Create a temporary cell stack to hold the cells as you create them
 As a cell is created, it's added to the stack, before the end of this process, it'll be removed.
@@ -115,6 +115,11 @@ Down:	false
 Up and Down aren't used for display in my maze.
 
 ## TO DO
+### Procedural mazes
+I now have the ability to generate procedural mazes. I'll use that to create different *levels* that users can try. 
+
+Next I'm creating a maze solving class (CharacterNavigator) to determine how difficult a maze is to solve based on how many moves it takes to solve. It's not going to be perfect since there's 
+
 ### Location of "IsMazeSolved"
 Currently the maze is marked as "solved" in Character/ICharacterView, logically it makes more sense to have that in Maze, should I change that?
 

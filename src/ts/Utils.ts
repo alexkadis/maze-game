@@ -28,7 +28,7 @@ class Utils	 {
 		];
 		// this.self = new Utils();
 	}
-	
+
 	public getRandomIntInclusive (min: number, max: number) {
 		min = Math.ceil(min);
 		max = Math.floor(max);
@@ -37,10 +37,6 @@ class Utils	 {
 	}
 
 	public getRandomDirections () {
-		if (this.North === undefined) {
-			console.log("utils not defined...");
-			// this.self = new Utils();
-		}
 		return this.shuffle(this.Directions);
 	}
 
@@ -60,6 +56,4 @@ class Utils	 {
 		}
 		return array;
 	}
-
-
 }

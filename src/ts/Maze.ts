@@ -2,20 +2,20 @@ class Maze {
 	// End location isn't a cell... because it doesn't have walls
 	public StartLocation: any;
 	public EndLocation: any;
-	
+
 	public GridLayers: number;
 	public GridWidth: number;
 	public GridHeight: number;
 	public MazeGrid: Cell[][][];
-	private IsMazeSolved: boolean = false;
-	
+
 	// public Maze: any;
 	public MazePath: string;
 	public MazePathCompressed: string;
+	private IsMazeSolved: boolean = false;
 	private PathTemplate: string[] = [];
 	private NextActionInTemplate: string = "";
 	private Utilities = new Utils();
-	
+
 	private CellsList: Cell[];
 
 	constructor (public gridLayers: number, public gridWidth: number, public gridHeight: number, public mazePathCompressed?: string) {
@@ -25,7 +25,7 @@ class Maze {
 
 		// generate the grid
 		this.MazeGrid = this.generateGrid();
-		console.log (this.MazeGrid);
+
 		// create the cells list
 		this.CellsList = [new Cell(0, 0, 0)];
 
@@ -52,7 +52,18 @@ class Maze {
 
 			this.MazePathCompressed = LZString.compressToEncodedURIComponent(this.MazePath);
 		}
-		// console.log (this.MazeGrid);
+	}
+
+	public generateGrid () {
+		const tempGrid: any[] = new Array(this.GridLayers);
+		for (let i = 0; i < this.GridLayers; i++) {
+			tempGrid[i] = new Array(this.GridHeight);
+			for (let j = 0; j < this.GridHeight; j++) {
+				tempGrid[i][j] = new Array(this.GridWidth);
+				tempGrid[i][j].fill();
+			}
+		}
+		return tempGrid;
 	}
 
 	protected getEndLocationFromTemplate (str: string) {
@@ -143,18 +154,6 @@ class Maze {
 				this.encodeMaze(this.Utilities.Back);
 			}
 		}
-	}
-
-	public generateGrid () {
-		const tempGrid: any[] = new Array(this.GridLayers);
-		for (let i = 0; i < this.GridLayers; i++) {
-			tempGrid[i] = new Array(this.GridHeight);
-			for (let j = 0; j < this.GridHeight; j++) {
-				tempGrid[i][j] = new Array(this.GridWidth);
-				tempGrid[i][j].fill();
-			}
-		}
-		return tempGrid;
 	}
 
 	protected carvePathBetweenCells (currentCell: Cell, nextCell: Cell, direction: string) {

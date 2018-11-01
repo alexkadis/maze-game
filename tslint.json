@@ -5,17 +5,17 @@
 	],
 	"jsRules": {},
 	"rules": {
-        "prefer-for-of": false,
+		"prefer-for-of": false,
 		"indent": [
-			true, 
-			"tabs", 
+			true,
+			"tabs",
 			4
-        ],
-        "only-arrow-functions": [
-            false,
-            "allow-declarations",
-            "allow-named-functions"
-        ],
+		],
+		"only-arrow-functions": [
+			false,
+			"allow-declarations",
+			"allow-named-functions"
+		],
 		"curly": [
 			false,
 			"as-needed"
@@ -23,14 +23,16 @@
 		"space-before-function-paren": [
 			true,
 			"always"
+		],
+		"max-line-length": false,
+		"object-literal-sort-keys": false
+	},
+	"linterOptions": {
+		"exclude": [
+			"build/*",
+			"test/*",
+			"src/ts/lz-string.ts"
 		]
-    },
-    "linterOptions": {
-        "exclude": [
-            "build/*",
-            "test/*",
-            "src/ts/lz-string.ts"
-        ]
-    },
+	},
 	"rulesDirectory": []
 }

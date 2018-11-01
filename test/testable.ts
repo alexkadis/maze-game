@@ -94,9 +94,6 @@ export class Character {
 				else
 					this.CurrentLocation = this.MazeGrid[this.CurrentLocation.Z - 1][this.CurrentLocation.Y][this.CurrentLocation.X];
 				break;
-			default:
-				// console.log(`Invalid attempt to move from ${this.CurrentLocation} ${direction}`);
-				break;
 		}
 		if (this.MazeGrid[this.CurrentLocation.Z][this.CurrentLocation.Y][this.CurrentLocation.X] === this.EndCell) {
 			this.CharacterIcon = "😎";
@@ -156,7 +153,6 @@ export class Maze {
 	}
 
 	 public  encodeMaze () {
-		// console.log(btoa(JSON.stringify(this.MazeGrid)));
 		console.log((JSON.stringify(this.MazeGrid)));
 	}
 
@@ -358,8 +354,6 @@ export class MazeView {
 			html += "</div>";
 		}
 		$("#maze-game").html(html);
-
-		console.log(this.MazeGrid[0]);
 	}
 
 	 public  getClassesFromCell (cell: Cell) {

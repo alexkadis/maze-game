@@ -1,4 +1,3 @@
-// tslint:disable:object-literal-sort-keys
 class Character {
 	public Name: string;
 

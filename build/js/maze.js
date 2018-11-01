@@ -1,17 +1,4 @@
 "use strict";
-var __extends = (this && this.__extends) || (function () {
-    var extendStatics = function (d, b) {
-        extendStatics = Object.setPrototypeOf ||
-            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-            function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
-        return extendStatics(d, b);
-    }
-    return function (d, b) {
-        extendStatics(d, b);
-        function __() { this.constructor = d; }
-        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-    };
-})();
 var Utils = /** @class */ (function () {
     // public self: Utils;
     function Utils() {
@@ -39,10 +26,6 @@ var Utils = /** @class */ (function () {
         // The maximum is inclusive and the minimum is inclusive
     };
     Utils.prototype.getRandomDirections = function () {
-        if (this.North === undefined) {
-            console.log("utils not defined...");
-            // this.self = new Utils();
-        }
         return this.shuffle(this.Directions);
     };
     /**
@@ -546,7 +529,6 @@ var Cell = /** @class */ (function () {
     }
     return Cell;
 }());
-// tslint:disable:object-literal-sort-keys
 var Character = /** @class */ (function () {
     function Character(name, startingLocation, mazeGrid, endLocation) {
         this.endLocation = endLocation;
@@ -679,7 +661,6 @@ var Maze = /** @class */ (function () {
         this.GridHeight = gridHeight;
         // generate the grid
         this.MazeGrid = this.generateGrid();
-        console.log(this.MazeGrid);
         // create the cells list
         this.CellsList = [new Cell(0, 0, 0)];
         if (mazePathCompressed !== undefined && typeof mazePathCompressed !== undefined && mazePathCompressed !== "") {
@@ -707,8 +688,18 @@ var Maze = /** @class */ (function () {
             this.MazePath += "|" + JSON.stringify(this.EndLocation);
             this.MazePathCompressed = LZString.compressToEncodedURIComponent(this.MazePath);
         }
-        // console.log (this.MazeGrid);
     }
+    Maze.prototype.generateGrid = function () {
+        var tempGrid = new Array(this.GridLayers);
+        for (var i = 0; i < this.GridLayers; i++) {
+            tempGrid[i] = new Array(this.GridHeight);
+            for (var j = 0; j < this.GridHeight; j++) {
+                tempGrid[i][j] = new Array(this.GridWidth);
+                tempGrid[i][j].fill();
+            }
+        }
+        return tempGrid;
+    };
     Maze.prototype.getEndLocationFromTemplate = function (str) {
         var arr = str.split("|");
         var end = JSON.parse(arr[1]);
@@ -781,17 +772,6 @@ var Maze = /** @class */ (function () {
                 this.encodeMaze(this.Utilities.Back);
             }
         }
-    };
-    Maze.prototype.generateGrid = function () {
-        var tempGrid = new Array(this.GridLayers);
-        for (var i = 0; i < this.GridLayers; i++) {
-            tempGrid[i] = new Array(this.GridHeight);
-            for (var j = 0; j < this.GridHeight; j++) {
-                tempGrid[i][j] = new Array(this.GridWidth);
-                tempGrid[i][j].fill();
-            }
-        }
-        return tempGrid;
     };
     Maze.prototype.carvePathBetweenCells = function (currentCell, nextCell, direction) {
         switch (direction) {
@@ -1043,13 +1023,14 @@ function goDown() {
     then back up until you get to where you want to go.
 
 */
-var MazeNavigator = /** @class */ (function (_super) {
-    __extends(MazeNavigator, _super);
+var MazeNavigator = /** @class */ (function () {
     function MazeNavigator(mazeGrid, endLocation) {
-        return _super.call(this, "navigator", new Cell(0, 0, 0), mazeGrid, endLocation) || this;
+        this.Char = new Character("navigator", new Cell(0, 0, 0), mazeGrid, endLocation);
+        this.Utilities = new Utils();
     }
     MazeNavigator.prototype.navigator = function () {
-        _super.prototype.move.call(this);
+        // super.move ();
+        this.Utilities.getRandomDirections();
     };
     return MazeNavigator;
-}(Character));
+}());
