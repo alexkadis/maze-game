@@ -22,7 +22,7 @@
 		],
 		"space-before-function-paren": [
 			true,
-			"always"
+			"never"
 		],
 		"max-line-length": false,
 		"object-literal-sort-keys": false

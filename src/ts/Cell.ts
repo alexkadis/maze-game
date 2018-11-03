@@ -27,7 +27,7 @@ class Cell implements ICell {
 
 	[direction: string]: any;
 
-	constructor (z: number, y: number, x: number) {
+	constructor(z: number, y: number, x: number) {
 		this.North = false;
 		this.East = false;
 		this.South = false;

@@ -3,13 +3,13 @@ class MazeView {
 	public EndCell: Cell;
 	private GridWidth: number;
 
-	constructor (public mazegrid: Cell[][][],  public endCell: Cell) {
+	constructor(public mazegrid: Cell[][][],  public endCell: Cell) {
 		this.MazeGrid = mazegrid;
 		this.GridWidth = mazegrid[0][0].length;
 		this.EndCell = endCell;
 	}
 
-	public displayMaze () {
+	public displayMaze() {
 		// $(`#play-again`).hide();
 
 		let html: string = "";
@@ -42,7 +42,7 @@ class MazeView {
 		(document.body.querySelector("#maze-game") as HTMLElement).innerHTML = html;
 	}
 
-	private getClassesFromCell (cell: Cell) {
+	private getClassesFromCell(cell: Cell) {
 		let classes: string = "";
 
 		if (!cell.North)
@@ -62,7 +62,7 @@ class MazeView {
 		return classes;
 	}
 
-	private getNameFromLayer (layer: number) {
+	private getNameFromLayer(layer: number) {
 		switch (layer) {
 			case 0:
 				return "winter";

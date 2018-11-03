@@ -10,7 +10,7 @@ interface ICharacterView {
 	CurrentEndIcon: string;
 	CharacterLocation: any;
 	EndLocation: any;
-	move (newLocations: any): any;
+	move(newLocations: any): any;
 }
 
 class HTMLCharacterView implements ICharacterView {
@@ -25,7 +25,7 @@ class HTMLCharacterView implements ICharacterView {
 	public CharacterLocation: any;
 	public EndLocation: any;
 
-	constructor (
+	constructor(
 		name: string,
 		characterIcon: string,
 		solvedCharacterEndIcon: string,
@@ -43,7 +43,7 @@ class HTMLCharacterView implements ICharacterView {
 		this.EndLocation = { Z: -1, Y: -1, X: -1 };
 	}
 
-	public setCharacterIcon () {
+	public setCharacterIcon() {
 		if (this.IsMazeSolved) {
 			// SOLVED THE MAZE!
 			this.CurrentCharacterIcon = this.SolvedCharacterIcon;
@@ -54,7 +54,7 @@ class HTMLCharacterView implements ICharacterView {
 		}
 	}
 
-	public move (locations: any) {
+	public move(locations: any) {
 
 		let selectedCells = document.querySelectorAll(`.y${this.CharacterLocation.Y}x${this.CharacterLocation.X}`);
 

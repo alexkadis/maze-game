@@ -6,7 +6,7 @@ let MyCharacter: Character;
 let MyCharacterView: ICharacterView;
 let Utilities: Utils;
 
-function main () {
+function main() {
 	Utilities  = new Utils();
 	currentLayer = 0;
 	GridLayers = 4;
@@ -50,7 +50,7 @@ function main () {
 	MyCharacterView.move(MyCharacter.move());
 }
 // https://stackoverflow.com/questions/1402698/binding-arrow-keys-in-js-jquery
-document.addEventListener("keydown", function (e) {
+document.addEventListener("keydown", function(e) {
 	e = e || window.event;
 	switch (e.which || e.keyCode) {
 		case 65: // a
@@ -80,7 +80,7 @@ document.addEventListener("keydown", function (e) {
 	e.preventDefault (); // prevent the default action (scroll / move caret)
 });
 
-function showLayerHideOthers (layerChoice: number) {
+function showLayerHideOthers(layerChoice: number) {
 	if (GridLayers > 1) {
 		for (let layer = 0; layer < GridLayers; layer++) {
 			const layerId: string = `#layer${layer}`;
@@ -92,23 +92,23 @@ function showLayerHideOthers (layerChoice: number) {
 	}
 }
 
-function goNorth () {
+function goNorth() {
 	MyCharacterView.move(MyCharacter.move(Utilities.North));
 }
 
-function goEast () {
+function goEast() {
 	MyCharacterView.move(MyCharacter.move(Utilities.East));
 }
 
-function goSouth () {
+function goSouth() {
 	MyCharacterView.move(MyCharacter.move(Utilities.South));
 }
 
-function goWest () {
+function goWest() {
 	MyCharacterView.move(MyCharacter.move(Utilities.West));
 }
 
-function goUp () {
+function goUp() {
 	if (currentLayer < GridLayers - 1)
 		currentLayer++;
 	else
@@ -117,7 +117,7 @@ function goUp () {
 	MyCharacterView.move(MyCharacter.move(Utilities.Up));
 }
 
-function goDown () {
+function goDown() {
 	if (currentLayer === 0)
 		currentLayer = GridLayers - 1;
 	else

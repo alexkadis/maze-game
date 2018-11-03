@@ -14,14 +14,16 @@
 class MazeNavigator {
 
 	private Utilities: Utils;
-	private Char: Character;
+	private Character: Character;
+	private MazeGrid: Cell[][][];
 
-	constructor (mazeGrid: Cell[][][], endLocation: any) {
-		this.Char = new Character("navigator", new Cell(0, 0, 0), mazeGrid, endLocation);
+	constructor(mazeGrid: Cell[][][], endLocation: any) {
+		this.Character = new Character("navigator", new Cell(0, 0, 0), mazeGrid, endLocation);
 		this.Utilities = new Utils();
+		this.MazeGrid = mazeGrid;
 	}
 
-	public navigator () {
+	public navigator() {
 		this.Utilities.getRandomDirections();
 
 	}

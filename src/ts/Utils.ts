@@ -11,7 +11,7 @@ class Utils	 {
 	public readonly Back: string = "B";
 	// public self: Utils;
 
-	constructor () {
+	constructor() {
 		this.North = "N";
 		this.East = "E";
 		this.South = "S";
@@ -29,22 +29,36 @@ class Utils	 {
 		// this.self = new Utils();
 	}
 
-	public getRandomIntInclusive (min: number, max: number) {
+	public getRandomIntInclusive(min: number, max: number) {
 		min = Math.ceil(min);
 		max = Math.floor(max);
 		return Math.floor(Math.random() * (max - min + 1)) + min;
 		// The maximum is inclusive and the minimum is inclusive
 	}
 
-	public getRandomDirections () {
+	public getRandomDirections() {
 		return this.shuffle(this.Directions);
+	}
+
+	public getLocationsFromTemplate(str: string) {
+		const arr: any = str.split("|");
+		const end: string = JSON.parse(arr[1]);
+		const path: string = arr[0].split("");
+		return { End: end, Path: path };
+	}
+
+	public getNextActionFromTemplate(template: string[]) {
+		const next = template.shift();
+		if (typeof next !== undefined && next !== undefined)
+			return next;
+		return "";
 	}
 
 	/**
 	 * Shuffles array in place.
 	 * @param {Array} array items An array containing the items.
 	 */
-	private shuffle (array: any) {
+	private shuffle(array: any) {
 		let j;
 		let x;
 		let i;

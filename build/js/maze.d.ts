@@ -10,6 +10,11 @@ declare class Utils {
     constructor();
     getRandomIntInclusive(min: number, max: number): number;
     getRandomDirections(): any;
+    getLocationsFromTemplate(str: string): {
+        End: string;
+        Path: string;
+    };
+    getNextActionFromTemplate(template: string[]): string;
     /**
      * Shuffles array in place.
      * @param {Array} array items An array containing the items.
@@ -18,7 +23,7 @@ declare class Utils {
 }
 declare var LZString: {
     compressToEncodedURIComponent: (input: string) => any;
-    decompressFromEncodedURIComponent: (input: string) => string | null;
+    decompressFromEncodedURIComponent: (input: string) => string;
     compress: (uncompressed: string) => any;
     _compress: (uncompressed: string, bitsPerChar: number, getCharFromInt: any) => any;
     decompress: (compressed: string) => string | null;
@@ -117,17 +122,11 @@ declare class Maze {
     MazePath: string;
     MazePathCompressed: string;
     private IsMazeSolved;
-    private PathTemplate;
-    private NextActionInTemplate;
     private Utilities;
-    private CellsList;
     constructor(gridLayers: number, gridWidth: number, gridHeight: number, mazePathCompressed?: string | undefined);
     generateGrid(): any[];
-    protected getEndLocationFromTemplate(str: string): void;
-    protected getNextActionFromTemplate(): string;
-    protected fillMazeProcedural(): void;
-    protected encodeMaze(direction: string): void;
-    protected fillMazeRandom(): void;
+    protected fillMazeProcedural(decompressedPath: string): any;
+    protected fillMazeRandom(): string;
     protected carvePathBetweenCells(currentCell: Cell, nextCell: Cell, direction: string): {
         current: Cell;
         next: Cell;
@@ -163,7 +162,8 @@ declare function goUp(): void;
 declare function goDown(): void;
 declare class MazeNavigator {
     private Utilities;
-    private Char;
+    private Character;
+    private MazeGrid;
     constructor(mazeGrid: Cell[][][], endLocation: any);
     navigator(): void;
 }

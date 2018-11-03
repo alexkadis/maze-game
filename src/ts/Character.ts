@@ -11,7 +11,7 @@ class Character {
 	private IsMazeSolved: boolean;
 	private Utilities = new Utils();
 
-	constructor (name: string, startingLocation: Cell, mazeGrid: Cell[][][], public endLocation: any) {
+	constructor(name: string, startingLocation: Cell, mazeGrid: Cell[][][], public endLocation: any) {
 
 		this.Name = name;
 		this.CurrentLocation = startingLocation;
@@ -25,7 +25,7 @@ class Character {
 
 	}
 
-	public move (direction?: string) {
+	public move(direction?: string) {
 		switch (direction) {
 			case this.Utilities.North:
 				if (this.CurrentLocation.North && this.CurrentLocation.Y > 0)

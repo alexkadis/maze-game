@@ -12,13 +12,10 @@ class Maze {
 	public MazePath: string;
 	public MazePathCompressed: string;
 	private IsMazeSolved: boolean = false;
-	private PathTemplate: string[] = [];
-	private NextActionInTemplate: string = "";
+	// private PathTemplate: string[] = [];
 	private Utilities = new Utils();
 
-	private CellsList: Cell[];
-
-	constructor (public gridLayers: number, public gridWidth: number, public gridHeight: number, public mazePathCompressed?: string) {
+	constructor(public gridLayers: number, public gridWidth: number, public gridHeight: number, public mazePathCompressed?: string) {
 		this.GridLayers	= gridLayers;
 		this.GridWidth	= gridWidth;
 		this.GridHeight	= gridHeight;
@@ -27,34 +24,23 @@ class Maze {
 		this.MazeGrid = this.generateGrid();
 
 		// create the cells list
-		this.CellsList = [new Cell(0, 0, 0)];
 
-		if (mazePathCompressed !== undefined && typeof mazePathCompressed !== undefined &&  mazePathCompressed !== "") {
-			// it's procedural
+		if (mazePathCompressed !== undefined) {
+			// Procedural generated path
 			this.MazePathCompressed = mazePathCompressed;
-			const uncompressed =  LZString.decompressFromEncodedURIComponent(mazePathCompressed);
-			if (uncompressed !== undefined && uncompressed !== null) {
-				this.MazePath = uncompressed;
-				this.fillMazeProcedural();
-			} else {
-				this.MazePath = "";
-			}
+			this.MazePath = this.fillMazeProcedural(LZString.decompressFromEncodedURIComponent(this.MazePathCompressed));
 		} else {
-			// It's random
-			this.MazePath = "";
-			this.fillMazeRandom();
-			// tslint:disable:object-literal-sort-keys
+			// Random generated path
+			this.MazePath = this.fillMazeRandom();
 			this.EndLocation = {
 				Z: 0,
 				Y: this.Utilities.getRandomIntInclusive(1, this.GridHeight - 1),
 				X: this.Utilities.getRandomIntInclusive(1, this.GridWidth - 1)};
-			this.MazePath += "|" + JSON.stringify(this.EndLocation);
-
-			this.MazePathCompressed = LZString.compressToEncodedURIComponent(this.MazePath);
+			this.MazePathCompressed = LZString.compressToEncodedURIComponent(this.MazePath) + "|" + JSON.stringify(this.EndLocation);
 		}
 	}
 
-	public generateGrid () {
+	public generateGrid() {
 		const tempGrid: any[] = new Array(this.GridLayers);
 		for (let i = 0; i < this.GridLayers; i++) {
 			tempGrid[i] = new Array(this.GridHeight);
@@ -66,76 +52,60 @@ class Maze {
 		return tempGrid;
 	}
 
-	protected getEndLocationFromTemplate (str: string) {
-		const arr = str.split("|");
-		const end = JSON.parse(arr[1]);
-		this.EndLocation = end;
-		this.PathTemplate = arr[0].split("");
-	}
-
-	protected getNextActionFromTemplate () {
-		const next = this.PathTemplate.shift();
-		if (typeof next !== undefined && next !== undefined)
-			return this.NextActionInTemplate = next;
-		return this.NextActionInTemplate = "";
-	}
-
-	protected fillMazeProcedural () {
-		// let pro : string = "";
-
-		const decompressed = LZString.decompressFromEncodedURIComponent(this.MazePathCompressed);
-		if (decompressed !== undefined && typeof decompressed !== undefined &&  decompressed !== null) {
-			this.MazePath = decompressed;
-		}
-		this.getEndLocationFromTemplate(this.MazePath);
+	protected fillMazeProcedural(decompressedPath: string) {
+		const res: any = this.Utilities.getLocationsFromTemplate(decompressedPath);
+		this.EndLocation = res.End;
+		let next = res.Path;
 
 		let index: number = -1;
+		// tslint:disable-next-line:prefer-const
+		let cellsList: Cell[] = [new Cell(0, 0, 0)];
 
-		while (this.CellsList.length > 0) {
+		while (cellsList.length > 0) {
 			// index is the newest
-			index = this.CellsList.length - 1;
+			index = cellsList.length - 1;
 
-			const currentCell: Cell = this.CellsList[index];
+			const currentCell: Cell = cellsList[index];
 
-			this.getNextActionFromTemplate();
+			next = this.Utilities.getNextActionFromTemplate(next);
 
-			if (this.NextActionInTemplate === this.Utilities.Back) {
-				this.CellsList.splice(index, 1);
-			} else if (this.NextActionInTemplate === "") {
+			if (next === this.Utilities.Back) {
+				cellsList.splice(index, 1);
+			} else if (next === "") {
 				break;
 			} else {
-				const nextCell: Cell = this.directionModifier (this.CellsList[index], this.NextActionInTemplate);
-				const result: any = this.carvePathBetweenCells (currentCell, nextCell, this.NextActionInTemplate);
+				const nextCell: Cell = this.directionModifier(cellsList[index], next);
+				const result: any = this.carvePathBetweenCells(currentCell, nextCell, next);
 
 				this.MazeGrid[currentCell.Z][currentCell.Y][currentCell.X] = result.current;
 				this.MazeGrid[nextCell.Z][nextCell.Y][nextCell.X] = result.next;
-				this.CellsList.push(nextCell);
+				cellsList.push(nextCell);
 				index = -1;
 			}
 			if (index !== -1) {
-				this.CellsList.splice(index, 1);
+				cellsList.splice(index, 1);
 			}
 		}
-
+		return next;
 	}
 
-	protected encodeMaze (direction: string) {
-		this.MazePath += direction;
-	}
-
-	protected fillMazeRandom () {
+	protected fillMazeRandom() {
 		let index: number = -1;
+		let output: string = "";
 
-		while (this.CellsList.length > 0) {
+		// tslint:disable-next-line:prefer-const
+		let cellsList: Cell[] = [new Cell(0, 0, 0)];
+
+		while (cellsList.length > 0) {
 			// index is the newest
-			index = this.CellsList.length - 1;
+			index = cellsList.length - 1;
 
-			const currentCell: Cell = this.CellsList[index];
+			const currentCell: Cell = cellsList[index];
 
 			const directions: string[] = this.Utilities.getRandomDirections ();
 
 			for (let i = 0; i < directions.length; i++) {
-				const nextCell: Cell = this.directionModifier (this.CellsList[index], directions[i]);
+				const nextCell: Cell = this.directionModifier(cellsList[index], directions[i]);
 				if (this.isEmptyCell(nextCell.Z, nextCell.Y, nextCell.X)) {
 
 					// we found a workable direction
@@ -143,20 +113,21 @@ class Maze {
 					this.MazeGrid[currentCell.Z][currentCell.Y][currentCell.X] = result.current;
 					this.MazeGrid[nextCell.Z][nextCell.Y][nextCell.X] = result.next;
 
-					this.CellsList.push(nextCell);
-					this.encodeMaze(directions[i]);
+					cellsList.push(nextCell);
+					output += directions[i];
 					index = -1;
 					break;
 				}
 			}
 			if (index !== -1) {
-				this.CellsList.splice(index, 1);
-				this.encodeMaze(this.Utilities.Back);
+				cellsList.splice(index, 1);
+				output += this.Utilities.Back;
 			}
 		}
+		return output;
 	}
 
-	protected carvePathBetweenCells (currentCell: Cell, nextCell: Cell, direction: string) {
+	protected carvePathBetweenCells(currentCell: Cell, nextCell: Cell, direction: string) {
 		switch (direction) {
 			case this.Utilities.North:
 				currentCell.North = true;
@@ -186,7 +157,7 @@ class Maze {
 		return { current: currentCell, next: nextCell };
 	}
 
-	protected isEmptyCell (z: number, y: number, x: number) {
+	protected isEmptyCell(z: number, y: number, x: number) {
 		if (z >= 0 && z < this.GridLayers
 			&& 	y >= 0 && y < this.GridHeight
 			&&  x >= 0 && x < this.GridWidth
@@ -195,7 +166,7 @@ class Maze {
 		return false;
 	}
 
-	private directionModifier (cell: Cell, direction: string) {
+	private directionModifier(cell: Cell, direction: string) {
 		switch (direction) {
 			case this.Utilities.North:
 				return new Cell(cell.Z, cell.Y - 1, cell.X);

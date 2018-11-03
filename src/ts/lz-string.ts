@@ -96,11 +96,17 @@ var LZString = (function () {
 		},
 
 		//decompress from an output of compressToEncodedURIComponent
-		decompressFromEncodedURIComponent: function (input: string) {
-			if (input == null) return "";
-			if (input == "") return null;
+		decompressFromEncodedURIComponent: function (input: string): string {
 			input = input.replace(/ /g, "+");
-			return LZString._decompress(input.length, 32, function (index: any) { return getBaseValue(keyStrUriSafe, input.charAt(index)); });
+			let output: any = "";
+			if (input != null) {
+				// if (input == "") return null;
+				output = LZString._decompress(input.length, 32, function (index: any) { return getBaseValue(keyStrUriSafe, input.charAt(index)); });
+				if (output != null) {
+					return output;
+				}
+			}
+			return "";
 		},
 
 		compress: function (uncompressed: string) {
