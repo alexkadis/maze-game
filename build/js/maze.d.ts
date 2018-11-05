@@ -10,11 +10,15 @@ declare class Utils {
     constructor();
     getRandomIntInclusive(min: number, max: number): number;
     getRandomDirections(): any;
-    getLocationsFromTemplate(str: string): {
+    /**
+     * Given a decompressed template, return a path, start, and end
+     * @param template the decompressed template to break apart
+     */
+    getLocationsFromTemplate(template: string): {
+        Path: string[];
+        Start: string;
         End: string;
-        Path: string;
     };
-    getNextActionFromTemplate(template: string[]): string;
     /**
      * Shuffles array in place.
      * @param {Array} array items An array containing the items.
@@ -112,7 +116,9 @@ declare class Maze {
     gridLayers: number;
     gridWidth: number;
     gridHeight: number;
-    mazePathCompressed?: string | undefined;
+    mazeTemplateCompressed?: string | undefined;
+    startLocation?: any;
+    endLocation?: any;
     StartLocation: any;
     EndLocation: any;
     GridLayers: number;
@@ -120,12 +126,18 @@ declare class Maze {
     GridHeight: number;
     MazeGrid: Cell[][][];
     MazePath: string;
-    MazePathCompressed: string;
-    private IsMazeSolved;
+    MazeTemplateCompressed: string;
     private Utilities;
-    constructor(gridLayers: number, gridWidth: number, gridHeight: number, mazePathCompressed?: string | undefined);
+    constructor(gridLayers: number, gridWidth: number, gridHeight: number, mazeTemplateCompressed?: string | undefined, startLocation?: any, endLocation?: any);
     generateGrid(): any[];
-    protected fillMazeProcedural(decompressedPath: string): any;
+    /**
+     * Given a decompressed path, returns a maze path for a procedural maze
+     * @param mazeTemplateCompressed given decompressed string of directions (a path)
+     */
+    protected fillMazeProcedural(mazeTemplateCompressed: string): string;
+    /**
+     * Returns a maze path for a random maze
+     */
     protected fillMazeRandom(): string;
     protected carvePathBetweenCells(currentCell: Cell, nextCell: Cell, direction: string): {
         current: Cell;
@@ -152,6 +164,7 @@ declare let GridWidth: number;
 declare let MyCharacter: Character;
 declare let MyCharacterView: ICharacterView;
 declare let Utilities: Utils;
+declare let MyMaze: any;
 declare function main(): void;
 declare function showLayerHideOthers(layerChoice: number): void;
 declare function goNorth(): void;

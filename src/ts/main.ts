@@ -5,6 +5,7 @@ let GridWidth: number;
 let MyCharacter: Character;
 let MyCharacterView: ICharacterView;
 let Utilities: Utils;
+let MyMaze: any;
 
 function main() {
 	Utilities  = new Utils();
@@ -27,18 +28,19 @@ function main() {
 	// const myMaze = new Maze(GridLayers, GridHeight, GridWidth, exampleMaze);
 
 	const myMaze = new Maze(GridLayers, GridHeight, GridWidth);
-
+	MyMaze = myMaze;
 	const mazeViewer = new MazeView(myMaze.MazeGrid, myMaze.EndLocation);
 	mazeViewer.displayMaze();
 
 	// console.log(myMaze.MazePath);
-	// console.log(myMaze.MazePathCompressed);
+	// `console.log`(myMaze.MazePathCompressed);
 
 	// console.table(myMaze.MazeGrid[0][0]);
 
 	showLayerHideOthers(currentLayer);
 
-	MyCharacter = new Character("happyemoji", myMaze.MazeGrid[0][0][0], myMaze.MazeGrid, myMaze.EndLocation);
+	// MyCharacter = new Character("happyemoji", myMaze.MazeGrid[0][0][0], myMaze.MazeGrid, myMaze.EndLocation);
+	MyCharacter = new Character("happyemoji", myMaze);
 
 	MyCharacterView = new HTMLCharacterView(
 		MyCharacter.Name,

@@ -28,18 +28,29 @@ var Utils = /** @class */ (function () {
     Utils.prototype.getRandomDirections = function () {
         return this.shuffle(this.Directions);
     };
-    Utils.prototype.getLocationsFromTemplate = function (str) {
-        var arr = str.split("|");
-        var end = JSON.parse(arr[1]);
+    /**
+     * Given a decompressed template, return a path, start, and end
+     * @param template the decompressed template to break apart
+     */
+    Utils.prototype.getLocationsFromTemplate = function (template) {
+        template = LZString.decompressFromEncodedURIComponent(template);
+        var arr = template.split("|");
+        var start = JSON.parse(arr[1]);
+        var end = JSON.parse(arr[2]);
         var path = arr[0].split("");
-        return { End: end, Path: path };
+        return { Path: path, Start: start, End: end };
     };
-    Utils.prototype.getNextActionFromTemplate = function (template) {
-        var next = template.shift();
-        if (typeof next !== undefined && next !== undefined)
-            return next;
-        return "";
-    };
+    // 	next = template.shift();
+    // 	if(next === undefined) {
+    // 	next = "";
+    // }
+    // public getNextActionFromTemplate(template: string[]) {
+    // 	let next = template.shift();
+    // 	if (typeof next === undefined || next === undefined) {
+    // 		next = "";
+    // 	}
+    // 	return [next, template];
+    // }
     /**
      * Shuffles array in place.
      * @param {Array} array items An array containing the items.
@@ -662,14 +673,19 @@ var HTMLCharacterView = /** @class */ (function () {
     };
     return HTMLCharacterView;
 }());
+// Every maze should have
+// Start location
+// End location
+// Compressed Maze
 var Maze = /** @class */ (function () {
-    // private CellsList:;
-    function Maze(gridLayers, gridWidth, gridHeight, mazePathCompressed) {
+    function Maze(gridLayers, gridWidth, gridHeight, mazeTemplateCompressed, startLocation, endLocation) {
         this.gridLayers = gridLayers;
         this.gridWidth = gridWidth;
         this.gridHeight = gridHeight;
-        this.mazePathCompressed = mazePathCompressed;
-        this.IsMazeSolved = false;
+        this.mazeTemplateCompressed = mazeTemplateCompressed;
+        this.startLocation = startLocation;
+        this.endLocation = endLocation;
+        // private IsMazeSolved: boolean = false;
         // private PathTemplate: string[] = [];
         this.Utilities = new Utils();
         this.GridLayers = gridLayers;
@@ -677,22 +693,37 @@ var Maze = /** @class */ (function () {
         this.GridHeight = gridHeight;
         // generate the grid
         this.MazeGrid = this.generateGrid();
-        // create the cells list
-        // this.CellsList = [new Cell(0, 0, 0)];
-        if (mazePathCompressed !== undefined) {
+        if (mazeTemplateCompressed !== undefined) {
             // Procedural generated path
-            this.MazePathCompressed = mazePathCompressed;
-            this.MazePath = this.fillMazeProcedural(LZString.decompressFromEncodedURIComponent(this.MazePathCompressed));
+            this.MazeTemplateCompressed = mazeTemplateCompressed;
+            this.MazePath = this.fillMazeProcedural(this.MazeTemplateCompressed);
         }
         else {
             // Random generated path
+            if (startLocation === undefined) {
+                this.StartLocation = {
+                    Z: 0,
+                    Y: 0,
+                    X: 0
+                };
+            }
+            else {
+                this.StartLocation = startLocation;
+            }
+            if (endLocation === undefined) {
+                this.EndLocation = {
+                    Z: 0,
+                    Y: this.Utilities.getRandomIntInclusive(1, this.GridHeight - 1),
+                    X: this.Utilities.getRandomIntInclusive(1, this.GridWidth - 1)
+                };
+            }
+            else {
+                this.EndLocation = endLocation;
+            }
             this.MazePath = this.fillMazeRandom();
-            this.EndLocation = {
-                Z: 0,
-                Y: this.Utilities.getRandomIntInclusive(1, this.GridHeight - 1),
-                X: this.Utilities.getRandomIntInclusive(1, this.GridWidth - 1)
-            };
-            this.MazePathCompressed = LZString.compressToEncodedURIComponent(this.MazePath) + "|" + JSON.stringify(this.EndLocation);
+            this.MazeTemplateCompressed = LZString.compressToEncodedURIComponent(this.MazePath
+                + "|" + JSON.stringify(this.StartLocation)
+                + "|" + JSON.stringify(this.EndLocation));
         }
     }
     Maze.prototype.generateGrid = function () {
@@ -706,43 +737,55 @@ var Maze = /** @class */ (function () {
         }
         return tempGrid;
     };
-    Maze.prototype.fillMazeProcedural = function (decompressedPath) {
-        var res = this.Utilities.getLocationsFromTemplate(decompressedPath);
-        this.EndLocation = res.End;
-        var next = res.Path;
-        var index = -1;
+    /**
+     * Given a decompressed path, returns a maze path for a procedural maze
+     * @param mazeTemplateCompressed given decompressed string of directions (a path)
+     */
+    Maze.prototype.fillMazeProcedural = function (mazeTemplateCompressed) {
+        var result1 = this.Utilities.getLocationsFromTemplate(mazeTemplateCompressed);
+        // tslint:disable-next-line:prefer-const
+        var template = result1.Path;
+        this.EndLocation = result1.End;
+        this.StartLocation = result1.Start;
         // tslint:disable-next-line:prefer-const
         var cellsList = [new Cell(0, 0, 0)];
+        var next;
+        var mazePath = "";
+        var index = -1;
         while (cellsList.length > 0) {
             // index is the newest
             index = cellsList.length - 1;
             var currentCell = cellsList[index];
-            next = this.Utilities.getNextActionFromTemplate(next);
-            if (next === this.Utilities.Back) {
-                cellsList.splice(index, 1);
-            }
-            else if (next === "") {
+            next = template.shift();
+            if (next === "" || next === undefined) {
                 break;
+            }
+            else if (next === this.Utilities.Back) {
+                cellsList.splice(index, 1);
             }
             else {
                 var nextCell = this.directionModifier(cellsList[index], next);
-                var result = this.carvePathBetweenCells(currentCell, nextCell, next);
-                this.MazeGrid[currentCell.Z][currentCell.Y][currentCell.X] = result.current;
-                this.MazeGrid[nextCell.Z][nextCell.Y][nextCell.X] = result.next;
+                var result2 = this.carvePathBetweenCells(currentCell, nextCell, next);
+                this.MazeGrid[currentCell.Z][currentCell.Y][currentCell.X] = result2.current;
+                this.MazeGrid[nextCell.Z][nextCell.Y][nextCell.X] = result2.next;
                 cellsList.push(nextCell);
                 index = -1;
             }
             if (index !== -1) {
                 cellsList.splice(index, 1);
             }
+            mazePath += next;
         }
-        return next;
+        return mazePath;
     };
+    /**
+     * Returns a maze path for a random maze
+     */
     Maze.prototype.fillMazeRandom = function () {
         var index = -1;
         var output = "";
         // tslint:disable-next-line:prefer-const
-        var cellsList = [new Cell(0, 0, 0)];
+        var cellsList = [new Cell(this.StartLocation.Z, this.StartLocation.Y, this.StartLocation.X)];
         while (cellsList.length > 0) {
             // index is the newest
             index = cellsList.length - 1;
@@ -907,6 +950,7 @@ var GridWidth;
 var MyCharacter;
 var MyCharacterView;
 var Utilities;
+var MyMaze;
 function main() {
     Utilities = new Utils();
     currentLayer = 0;
@@ -924,10 +968,11 @@ function main() {
     // + "{\"Z\":0,\"Y\":6,\"X\":7}";
     // const myMaze = new Maze(GridLayers, GridHeight, GridWidth, exampleMaze);
     var myMaze = new Maze(GridLayers, GridHeight, GridWidth);
+    MyMaze = myMaze;
     var mazeViewer = new MazeView(myMaze.MazeGrid, myMaze.EndLocation);
     mazeViewer.displayMaze();
     // console.log(myMaze.MazePath);
-    // console.log(myMaze.MazePathCompressed);
+    // `console.log`(myMaze.MazePathCompressed);
     // console.table(myMaze.MazeGrid[0][0]);
     showLayerHideOthers(currentLayer);
     MyCharacter = new Character("happyemoji", myMaze.MazeGrid[0][0][0], myMaze.MazeGrid, myMaze.EndLocation);

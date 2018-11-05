@@ -40,19 +40,31 @@ class Utils	 {
 		return this.shuffle(this.Directions);
 	}
 
-	public getLocationsFromTemplate(str: string) {
-		const arr: any = str.split("|");
-		const end: string = JSON.parse(arr[1]);
-		const path: string = arr[0].split("");
-		return { End: end, Path: path };
+	/**
+	 * Given a decompressed template, return a path, start, and end
+	 * @param template the decompressed template to break apart
+	 */
+	public getLocationsFromTemplate(template: string) {
+		template = LZString.decompressFromEncodedURIComponent(template);
+		const arr: any = template.split("|");
+		const start: string = JSON.parse(arr[1]);
+		const end: string = JSON.parse(arr[2]);
+		const path: string[] = arr[0].split("");
+		return { Path: path, Start: start, End: end };
 	}
 
-	public getNextActionFromTemplate(template: string[]) {
-		const next = template.shift();
-		if (typeof next !== undefined && next !== undefined)
-			return next;
-		return "";
-	}
+	// 	next = template.shift();
+	// 	if(next === undefined) {
+	// 	next = "";
+	// }
+
+	// public getNextActionFromTemplate(template: string[]) {
+	// 	let next = template.shift();
+	// 	if (typeof next === undefined || next === undefined) {
+	// 		next = "";
+	// 	}
+	// 	return [next, template];
+	// }
 
 	/**
 	 * Shuffles array in place.

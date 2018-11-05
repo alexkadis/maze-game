@@ -1,3 +1,8 @@
+// Every maze should have
+// Start location
+// End location
+// Compressed Maze
+
 class Maze {
 	// End location isn't a cell... because it doesn't have walls
 	public StartLocation: any;
@@ -10,12 +15,19 @@ class Maze {
 
 	// public Maze: any;
 	public MazePath: string;
-	public MazePathCompressed: string;
-	private IsMazeSolved: boolean = false;
+	public MazeTemplateCompressed: string;
+	// private IsMazeSolved: boolean = false;
 	// private PathTemplate: string[] = [];
 	private Utilities = new Utils();
 
-	constructor(public gridLayers: number, public gridWidth: number, public gridHeight: number, public mazePathCompressed?: string) {
+	constructor(
+		public gridLayers: number,
+		public gridWidth: number,
+		public gridHeight: number,
+		public mazeTemplateCompressed?: string,
+		public startLocation?: any,
+		public endLocation?: any) {
+
 		this.GridLayers	= gridLayers;
 		this.GridWidth	= gridWidth;
 		this.GridHeight	= gridHeight;
@@ -23,20 +35,36 @@ class Maze {
 		// generate the grid
 		this.MazeGrid = this.generateGrid();
 
-		// create the cells list
-
-		if (mazePathCompressed !== undefined) {
+		if (mazeTemplateCompressed !== undefined) {
 			// Procedural generated path
-			this.MazePathCompressed = mazePathCompressed;
-			this.MazePath = this.fillMazeProcedural(LZString.decompressFromEncodedURIComponent(this.MazePathCompressed));
+			this.MazeTemplateCompressed = mazeTemplateCompressed;
+			this.MazePath = this.fillMazeProcedural(this.MazeTemplateCompressed);
 		} else {
 			// Random generated path
+			if (startLocation === undefined) {
+				this.StartLocation = {
+					Z: 0,
+					Y: 0,
+					X: 0,
+				};
+			} else {
+				this.StartLocation = startLocation;
+			}
+			if (endLocation === undefined) {
+				this.EndLocation = {
+					Z: 0,
+					Y: this.Utilities.getRandomIntInclusive(1, this.GridHeight - 1),
+					X: this.Utilities.getRandomIntInclusive(1, this.GridWidth - 1),
+				};
+			} else {
+				this.EndLocation = endLocation;
+			}
 			this.MazePath = this.fillMazeRandom();
-			this.EndLocation = {
-				Z: 0,
-				Y: this.Utilities.getRandomIntInclusive(1, this.GridHeight - 1),
-				X: this.Utilities.getRandomIntInclusive(1, this.GridWidth - 1)};
-			this.MazePathCompressed = LZString.compressToEncodedURIComponent(this.MazePath) + "|" + JSON.stringify(this.EndLocation);
+
+			this.MazeTemplateCompressed = LZString.compressToEncodedURIComponent(
+				this.MazePath
+				+ "|" + JSON.stringify(this.StartLocation)
+				+ "|" + JSON.stringify(this.EndLocation));
 		}
 	}
 
@@ -52,14 +80,24 @@ class Maze {
 		return tempGrid;
 	}
 
-	protected fillMazeProcedural(decompressedPath: string) {
-		const res: any = this.Utilities.getLocationsFromTemplate(decompressedPath);
-		this.EndLocation = res.End;
-		let next = res.Path;
+	/**
+	 * Given a decompressed path, returns a maze path for a procedural maze
+	 * @param mazeTemplateCompressed given decompressed string of directions (a path)
+	 */
+	protected fillMazeProcedural(mazeTemplateCompressed: string) {
+		const result1 = this.Utilities.getLocationsFromTemplate(mazeTemplateCompressed);
 
-		let index: number = -1;
+		// tslint:disable-next-line:prefer-const
+		let template: string[] = result1.Path;
+		this.EndLocation = result1.End;
+		this.StartLocation = result1.Start;
+
 		// tslint:disable-next-line:prefer-const
 		let cellsList: Cell[] = [new Cell(0, 0, 0)];
+
+		let next: string | undefined;
+		let mazePath: string = "";
+		let index: number = -1;
 
 		while (cellsList.length > 0) {
 			// index is the newest
@@ -67,34 +105,38 @@ class Maze {
 
 			const currentCell: Cell = cellsList[index];
 
-			next = this.Utilities.getNextActionFromTemplate(next);
+			next = template.shift();
 
-			if (next === this.Utilities.Back) {
-				cellsList.splice(index, 1);
-			} else if (next === "") {
+			if (next === "" || next === undefined) {
 				break;
+			} else if (next === this.Utilities.Back) {
+				cellsList.splice(index, 1);
 			} else {
 				const nextCell: Cell = this.directionModifier(cellsList[index], next);
-				const result: any = this.carvePathBetweenCells(currentCell, nextCell, next);
+				const result2: any = this.carvePathBetweenCells(currentCell, nextCell, next);
 
-				this.MazeGrid[currentCell.Z][currentCell.Y][currentCell.X] = result.current;
-				this.MazeGrid[nextCell.Z][nextCell.Y][nextCell.X] = result.next;
+				this.MazeGrid[currentCell.Z][currentCell.Y][currentCell.X] = result2.current;
+				this.MazeGrid[nextCell.Z][nextCell.Y][nextCell.X] = result2.next;
 				cellsList.push(nextCell);
 				index = -1;
 			}
 			if (index !== -1) {
 				cellsList.splice(index, 1);
 			}
+			mazePath += next;
 		}
-		return next;
+		return mazePath;
 	}
 
+	/**
+	 * Returns a maze path for a random maze
+	 */
 	protected fillMazeRandom() {
 		let index: number = -1;
 		let output: string = "";
 
 		// tslint:disable-next-line:prefer-const
-		let cellsList: Cell[] = [new Cell(0, 0, 0)];
+		let cellsList: Cell[] = [new Cell(this.StartLocation.Z, this.StartLocation.Y, this.StartLocation.X)];
 
 		while (cellsList.length > 0) {
 			// index is the newest
