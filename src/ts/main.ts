@@ -5,7 +5,7 @@ let GridWidth: number;
 let MyCharacter: Character;
 let MyCharacterView: ICharacterView;
 let Utilities: Utils;
-let MyMaze: any;
+let MyMaze: Maze;
 
 function main() {
 	Utilities  = new Utils();
@@ -14,42 +14,37 @@ function main() {
 	GridHeight = 8;
 	GridWidth = 8;
 
-	// const exampleMaze: string = "CIUQqiqmYMq3A6rErgDkTzIm7EHpwjoYbIyJE6y4pH7aqalG4EKqzAJwxIpa"
-	// + "VKLXSkSfLPWDA6qCJHy5MM2Sj4AhAhmqRYGg4mAGwYrMx2ZeBAiZjdeRZlUjaZW-QakR4MhsYMDXz8tUw11S"
-	// + "ltA6I1ZGJjEeJB4+PgU9IzMrUJkrLzMqMCxCm47Lwz0fKro0FoDfGrGpuaqgB8AbwAiAC1OgC4ABgAaToBNfoA2EYANfoB2AF8gA";
+	// Random Maze
+	MyMaze = new Maze(GridLayers, GridHeight, GridWidth);
 
-	// const uncompressed = "DEUEDEDEUUSSUSWSEEEDNESSUWUUNWWWNUSENDNDNWSUUWNUUWSWUSENUNWSSUEENENDNUWUWWSUEESDSUUSUUUSWSE"
-	// + "SWWNDEDSWNNDENUSUESSENDDWUSEEUEEDNWWUNEDDDWSEUSUBWWDNNUUEDSBBBWDBBUNNESEENDNNNESUUWWWWBBUUUSDSUUNUEENWNEDWWD"
-	// + "DDBWSBBBESSUESSDDNUNDBBBBBSSDDDNBWUNBSEUUUWWWBBBBBBBBBDWBBBBBBBBBBWBBBBBBEBBBBBBBBBBBBSSBBBBBBBBBBBBBBBBBBBB"
-	// + "BBBBBBBBBBBBBBBWWWNEBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBWWBBBBBNNWSUSDBBUUBBEBBBBBBBBBNBBBBBBBBBBBBBBBBBBBBBBB"
-	// + "BBBBBBBBDESWBBNWBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB|"
-	// + "{\"Z\":0,\"Y\":6,\"X\":7}";
-
-	// const myMaze = new Maze(GridLayers, GridHeight, GridWidth, exampleMaze);
-
-	const myMaze = new Maze(GridLayers, GridHeight, GridWidth);
-	MyMaze = myMaze;
-	const mazeViewer = new MazeView(myMaze.MazeGrid, myMaze.EndLocation);
+	const mazeViewer = new MazeView(MyMaze);
 	mazeViewer.displayMaze();
-
-	// console.log(myMaze.MazePath);
-	// `console.log`(myMaze.MazePathCompressed);
-
-	// console.table(myMaze.MazeGrid[0][0]);
-
 	showLayerHideOthers(currentLayer);
 
-	// MyCharacter = new Character("happyemoji", myMaze.MazeGrid[0][0][0], myMaze.MazeGrid, myMaze.EndLocation);
-	MyCharacter = new Character("happyemoji", myMaze);
+	MyCharacter = new Character("happyemoji", MyMaze);
 
 	MyCharacterView = new HTMLCharacterView(
-		MyCharacter.Name,
+		MyCharacter,
 		String.fromCharCode(0xD83D, 0xDE00),  // 😀
 		String.fromCharCode(0xD83D, 0xDE0E),  // 😎
 		String.fromCharCode(0xD83C, 0xDFC1),  // 🏁
 		String.fromCharCode(0xD83C, 0xDF89)); // 🎉
 
-	MyCharacterView.move(MyCharacter.move());
+	let lowest = 10000;
+	let path = "";
+	let MyNavigator: MazeNavigator;
+	for (let i = 0; i < 20; i++) {
+		MyNavigator = new MazeNavigator(MyMaze);
+		MyNavigator.Navigate();
+		if (MyNavigator.attempts < lowest) {
+			lowest = MyNavigator.attempts;
+			path = MyNavigator.path;
+		}
+		console.log(lowest);
+		console.log(path);
+	}
+	// MyCharacter.move();
+	// MyCharacterView.move();
 }
 // https://stackoverflow.com/questions/1402698/binding-arrow-keys-in-js-jquery
 document.addEventListener("keydown", function(e) {
@@ -95,19 +90,23 @@ function showLayerHideOthers(layerChoice: number) {
 }
 
 function goNorth() {
-	MyCharacterView.move(MyCharacter.move(Utilities.North));
+	MyCharacter.move(Utilities.North);
+	MyCharacterView.move();
 }
 
 function goEast() {
-	MyCharacterView.move(MyCharacter.move(Utilities.East));
+	MyCharacter.move(Utilities.East);
+	MyCharacterView.move();
 }
 
 function goSouth() {
-	MyCharacterView.move(MyCharacter.move(Utilities.South));
+	MyCharacter.move(Utilities.South);
+	MyCharacterView.move();
 }
 
 function goWest() {
-	MyCharacterView.move(MyCharacter.move(Utilities.West));
+	MyCharacter.move(Utilities.West);
+	MyCharacterView.move();
 }
 
 function goUp() {
@@ -116,7 +115,8 @@ function goUp() {
 	else
 		currentLayer = 0;
 	showLayerHideOthers (currentLayer);
-	MyCharacterView.move(MyCharacter.move(Utilities.Up));
+	MyCharacter.move(Utilities.Up);
+	MyCharacterView.move();
 }
 
 function goDown() {
@@ -125,5 +125,6 @@ function goDown() {
 	else
 		currentLayer--;
 	showLayerHideOthers (currentLayer);
-	MyCharacterView.move(MyCharacter.move(Utilities.Down));
+	MyCharacter.move(Utilities.Down);
+	MyCharacterView.move();
 }

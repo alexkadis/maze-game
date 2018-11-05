@@ -13,19 +13,36 @@
 
 class MazeNavigator {
 
+	public attempts: number = 0;
+	public path: string = "";
 	private Utilities: Utils;
 	private Character: Character;
-	private MazeGrid: Cell[][][];
+	private MyMaze: Maze;
 
-	constructor(mazeGrid: Cell[][][], endLocation: any) {
-		this.Character = new Character("navigator", new Cell(0, 0, 0), mazeGrid, endLocation);
+	constructor(myMaze: Maze) {
+		this.MyMaze = myMaze;
+		this.MyMaze.SetMazeSolvedToFalse();
 		this.Utilities = new Utils();
-		this.MazeGrid = mazeGrid;
+		this.Character = new Character("navigator", myMaze);
 	}
 
-	public navigator() {
-		this.Utilities.getRandomDirections();
-
+	public Navigate() {
+		let moved = false;
+		while (!this.MyMaze.IsMazeSolved(this.Character.CurrentLocation)) {
+			const directions = this.Utilities.getRandomDirections();
+			for (let i = 0; i < directions.length; i++) {
+				if (this.Character.CanMoveDirection(directions[i])) {
+					this.Character.move(directions[i]);
+					this.path += directions[i];
+					this.attempts++;
+					moved = true;
+					break;
+				}
+			}
+			if (!moved) {
+				this.Character.CurrentLocation = this.Character.PreviousLocation;
+			}
+			moved = false;
+		}
 	}
-
 }

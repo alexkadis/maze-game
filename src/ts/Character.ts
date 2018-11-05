@@ -1,81 +1,94 @@
 class Character {
 	public Name: string;
-
-	public CurrentLocation: Cell;
-	public EndLocation: any;
-
-	private GridLayers: number;
-	private GridWidth: number;
-	private GridHeight: number;
-	private MazeGrid: Cell[][][];
-	private IsMazeSolved: boolean;
+	public CurrentLocation: any;
+	public PreviousLocation: any;
+	public MyMaze: Maze;
 	private Utilities = new Utils();
 
-	constructor(name: string, startingLocation: Cell, mazeGrid: Cell[][][], public endLocation: any) {
-
+	constructor(name: string, myMaze: Maze) {
 		this.Name = name;
-		this.CurrentLocation = startingLocation;
-
-		this.MazeGrid = mazeGrid;
-		this.GridLayers = this.MazeGrid.length;
-		this.GridWidth = this.MazeGrid[0].length;
-		this.GridHeight = this.MazeGrid[0][0].length;
-		this.EndLocation = endLocation;
-		this.IsMazeSolved = false;
-
+		this.MyMaze = myMaze;
+		this.CurrentLocation = this.MyMaze.StartLocation;
+		this.move("");
 	}
 
-	public move(direction?: string) {
+	/**
+	 * If the direction parameter is valid, change the current location to that cell
+	 * @param direction Direction to move the character
+	 */
+	public move(direction: string) {
+		// Make a clean copy (not a reference)
+		this.PreviousLocation = JSON.parse(JSON.stringify(this.CurrentLocation));
+
+		if (this.CanMoveDirection(direction)) {
+			switch (direction) {
+				case this.Utilities.North:
+					this.SetRelativeLocation(0, -1, 0);
+					break;
+				case this.Utilities.East:
+					this.SetRelativeLocation(0, 0, 1);
+					break;
+				case this.Utilities.South:
+					this.SetRelativeLocation(0, 1, 0);
+					break;
+				case this.Utilities.West:
+					this.SetRelativeLocation(0, 0, -1);
+					break;
+				case this.Utilities.Up:
+					if (this.CurrentLocation.Z === this.MyMaze.GridLayers - 1) {
+						this.SetExactLocation(0, null, null);
+					} else {
+						this.SetRelativeLocation(1, 0, 0);
+					}
+					break;
+				case this.Utilities.Down:
+					if (this.CurrentLocation.Z === 0) {
+						this.SetExactLocation(this.MyMaze.GridLayers - 1, null, null);
+					} else {
+						this.SetRelativeLocation(-1, 0, 0);
+					}
+					break;
+			}
+			return true;
+		}
+		return false;
+	}
+
+	public SetExactLocation(z: number | null, y: number | null, x: number | null) {
+		if (z !== null) {
+			this.CurrentLocation.Z = z;
+		}
+		if (y !== null) {
+			this.CurrentLocation.Y = y;
+		}
+		if (x !== null) {
+			this.CurrentLocation.X = x;
+		}
+	}
+
+	public SetRelativeLocation(z: number, y: number, x: number) {
+		this.CurrentLocation.Z += z;
+		this.CurrentLocation.Y += y;
+		this.CurrentLocation.X += x;
+	}
+
+	public CanMoveDirection(direction: string) {
+		if (direction === this.Utilities.Up || direction === this.Utilities.Down) {
+			return true;
+		}
 		switch (direction) {
 			case this.Utilities.North:
-				if (this.CurrentLocation.North && this.CurrentLocation.Y > 0)
-					this.CurrentLocation = this.MazeGrid[this.CurrentLocation.Z][this.CurrentLocation.Y - 1][this.CurrentLocation.X];
+				return this.MyMaze.MazeGrid[this.CurrentLocation.Z][this.CurrentLocation.Y][this.CurrentLocation.X].North;
 				break;
 			case this.Utilities.East:
-				if (this.CurrentLocation.East && this.CurrentLocation.X < this.GridWidth - 1)
-					this.CurrentLocation = this.MazeGrid[this.CurrentLocation.Z][this.CurrentLocation.Y][this.CurrentLocation.X + 1];
+				return this.MyMaze.MazeGrid[this.CurrentLocation.Z][this.CurrentLocation.Y][this.CurrentLocation.X].East;
 				break;
 			case this.Utilities.South:
-				if (this.CurrentLocation.South && this.CurrentLocation.Y < this.GridHeight - 1)
-					this.CurrentLocation = this.MazeGrid[this.CurrentLocation.Z][this.CurrentLocation.Y + 1][this.CurrentLocation.X];
+				return this.MyMaze.MazeGrid[this.CurrentLocation.Z][this.CurrentLocation.Y][this.CurrentLocation.X].South;
 				break;
 			case this.Utilities.West:
-				if (this.CurrentLocation.West && this.CurrentLocation.X > 0)
-					this.CurrentLocation = this.MazeGrid[this.CurrentLocation.Z][this.CurrentLocation.Y][this.CurrentLocation.X - 1];
-				break;
-			case this.Utilities.Up:
-				if (this.CurrentLocation.Z === this.GridLayers - 1)
-					this.CurrentLocation = this.MazeGrid[0][this.CurrentLocation.Y][this.CurrentLocation.X];
-				else
-					this.CurrentLocation = this.MazeGrid[this.CurrentLocation.Z + 1][this.CurrentLocation.Y][this.CurrentLocation.X];
-				break;
-			case this.Utilities.Down:
-				if (this.CurrentLocation.Z === 0)
-					this.CurrentLocation = this.MazeGrid[this.GridLayers - 1][this.CurrentLocation.Y][this.CurrentLocation.X];
-				else
-					this.CurrentLocation = this.MazeGrid[this.CurrentLocation.Z - 1][this.CurrentLocation.Y][this.CurrentLocation.X];
+				return this.MyMaze.MazeGrid[this.CurrentLocation.Z][this.CurrentLocation.Y][this.CurrentLocation.X].West;
 				break;
 		}
-
-		if (this.MazeGrid[this.CurrentLocation.Z][this.CurrentLocation.Y][this.CurrentLocation.X] ===
-				this.MazeGrid[this.EndLocation.Z][this.EndLocation.Y][this.EndLocation.X]) {
-				// SOLVED THE MAZE!
-				this.IsMazeSolved = true;
-		}
-
-		return {
-			Character: {
-				Z: this.CurrentLocation.Z,
-				Y: this.CurrentLocation.Y,
-				X: this.CurrentLocation.X,
-			},
-			End: {
-				Z: this.EndLocation.Z,
-				Y: this.EndLocation.Y,
-				X: this.EndLocation.X,
-			},
-			IsMazeSolved: this.IsMazeSolved,
-		};
-
 	}
 }

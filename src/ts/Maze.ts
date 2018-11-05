@@ -16,9 +16,10 @@ class Maze {
 	// public Maze: any;
 	public MazePath: string;
 	public MazeTemplateCompressed: string;
-	// private IsMazeSolved: boolean = false;
 	// private PathTemplate: string[] = [];
 	private Utilities = new Utils();
+
+	private MazeSolved: boolean = false;
 
 	constructor(
 		public gridLayers: number,
@@ -65,6 +66,20 @@ class Maze {
 				this.MazePath
 				+ "|" + JSON.stringify(this.StartLocation)
 				+ "|" + JSON.stringify(this.EndLocation));
+		}
+	}
+	public SetMazeSolvedToFalse() {
+		this.MazeSolved = false;
+	}
+
+	public IsMazeSolved(currentLocation: any) {
+		// If the maze has already been solved, don't change that fact
+		if (this.MazeSolved) {
+			return true;
+		} else {
+			return this.MazeSolved = (currentLocation.Z === this.EndLocation.Z
+				&& currentLocation.Y === this.EndLocation.Y
+				&& currentLocation.X === this.EndLocation.X);
 		}
 	}
 

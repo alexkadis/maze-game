@@ -59,58 +59,42 @@ declare class Cell implements ICell {
     constructor(z: number, y: number, x: number);
 }
 declare class Character {
-    endLocation: any;
     Name: string;
-    CurrentLocation: Cell;
-    EndLocation: any;
-    private GridLayers;
-    private GridWidth;
-    private GridHeight;
-    private MazeGrid;
-    private IsMazeSolved;
+    CurrentLocation: any;
+    PreviousLocation: any;
+    MyMaze: Maze;
     private Utilities;
-    constructor(name: string, startingLocation: Cell, mazeGrid: Cell[][][], endLocation: any);
-    move(direction?: string): {
-        Character: {
-            Z: number;
-            Y: number;
-            X: number;
-        };
-        End: {
-            Z: any;
-            Y: any;
-            X: any;
-        };
-        IsMazeSolved: boolean;
-    };
+    constructor(name: string, myMaze: Maze);
+    /**
+     * If the direction parameter is valid, change the current location to that cell
+     * @param direction Direction to move the character
+     */
+    move(direction: string): boolean;
+    SetExactLocation(z: number | null, y: number | null, x: number | null): void;
+    SetRelativeLocation(z: number, y: number, x: number): void;
+    CanMoveDirection(direction: string): boolean | undefined;
 }
 interface ICharacterView {
-    IsMazeSolved: boolean;
-    Name: string;
+    MyCharacter: Character;
     CharacterIcon: string;
     SolvedCharacterIcon: string;
     CurrentCharacterIcon: string;
     EndIcon: string;
     SolvedEndIcon: string;
     CurrentEndIcon: string;
-    CharacterLocation: any;
-    EndLocation: any;
-    move(newLocations: any): any;
+    move(): any;
 }
 declare class HTMLCharacterView implements ICharacterView {
-    IsMazeSolved: boolean;
-    Name: string;
+    MyCharacter: Character;
     CharacterIcon: string;
     SolvedCharacterIcon: string;
     EndIcon: string;
     SolvedEndIcon: string;
     CurrentCharacterIcon: string;
     CurrentEndIcon: string;
-    CharacterLocation: any;
-    EndLocation: any;
-    constructor(name: string, characterIcon: string, solvedCharacterEndIcon: string, mazeEndIcon: string, solvedMazeEndIcon: string);
-    setCharacterIcon(): void;
-    move(locations: any): void;
+    constructor(myCharacter: Character, characterIcon: string, solvedCharacterEndIcon: string, mazeEndIcon: string, solvedMazeEndIcon: string);
+    move(): void;
+    private IsSolved;
 }
 declare class Maze {
     gridLayers: number;
@@ -128,7 +112,10 @@ declare class Maze {
     MazePath: string;
     MazeTemplateCompressed: string;
     private Utilities;
+    private MazeSolved;
     constructor(gridLayers: number, gridWidth: number, gridHeight: number, mazeTemplateCompressed?: string | undefined, startLocation?: any, endLocation?: any);
+    SetMazeSolvedToFalse(): void;
+    IsMazeSolved(currentLocation: any): boolean;
     generateGrid(): any[];
     /**
      * Given a decompressed path, returns a maze path for a procedural maze
@@ -147,12 +134,9 @@ declare class Maze {
     private directionModifier;
 }
 declare class MazeView {
-    mazegrid: Cell[][][];
-    endCell: Cell;
-    MazeGrid: Cell[][][];
-    EndCell: Cell;
-    private GridWidth;
-    constructor(mazegrid: Cell[][][], endCell: Cell);
+    myMaze: Maze;
+    private MyMaze;
+    constructor(myMaze: Maze);
     displayMaze(): void;
     private getClassesFromCell;
     private getNameFromLayer;
@@ -164,7 +148,7 @@ declare let GridWidth: number;
 declare let MyCharacter: Character;
 declare let MyCharacterView: ICharacterView;
 declare let Utilities: Utils;
-declare let MyMaze: any;
+declare let MyMaze: Maze;
 declare function main(): void;
 declare function showLayerHideOthers(layerChoice: number): void;
 declare function goNorth(): void;
@@ -174,10 +158,12 @@ declare function goWest(): void;
 declare function goUp(): void;
 declare function goDown(): void;
 declare class MazeNavigator {
+    attempts: number;
+    path: string;
     private Utilities;
     private Character;
-    private MazeGrid;
-    constructor(mazeGrid: Cell[][][], endLocation: any);
-    navigator(): void;
+    private MyMaze;
+    constructor(myMaze: Maze);
+    Navigate(): void;
 }
 //# sourceMappingURL=maze.d.ts.map

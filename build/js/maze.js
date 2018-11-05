@@ -2,7 +2,6 @@
 var Utils = /** @class */ (function () {
     // public self: Utils;
     function Utils() {
-        this.Back = "B";
         this.North = "N";
         this.East = "E";
         this.South = "S";
@@ -17,6 +16,7 @@ var Utils = /** @class */ (function () {
             this.Up,
             this.Down,
         ];
+        this.Back = "B";
         // this.self = new Utils();
     }
     Utils.prototype.getRandomIntInclusive = function (min, max) {
@@ -40,17 +40,6 @@ var Utils = /** @class */ (function () {
         var path = arr[0].split("");
         return { Path: path, Start: start, End: end };
     };
-    // 	next = template.shift();
-    // 	if(next === undefined) {
-    // 	next = "";
-    // }
-    // public getNextActionFromTemplate(template: string[]) {
-    // 	let next = template.shift();
-    // 	if (typeof next === undefined || next === undefined) {
-    // 		next = "";
-    // 	}
-    // 	return [next, template];
-    // }
     /**
      * Shuffles array in place.
      * @param {Array} array items An array containing the items.
@@ -557,104 +546,111 @@ var Cell = /** @class */ (function () {
     return Cell;
 }());
 var Character = /** @class */ (function () {
-    function Character(name, startingLocation, mazeGrid, endLocation) {
-        this.endLocation = endLocation;
+    function Character(name, myMaze) {
         this.Utilities = new Utils();
         this.Name = name;
-        this.CurrentLocation = startingLocation;
-        this.MazeGrid = mazeGrid;
-        this.GridLayers = this.MazeGrid.length;
-        this.GridWidth = this.MazeGrid[0].length;
-        this.GridHeight = this.MazeGrid[0][0].length;
-        this.EndLocation = endLocation;
-        this.IsMazeSolved = false;
+        this.MyMaze = myMaze;
+        this.CurrentLocation = this.MyMaze.StartLocation;
+        this.move("");
     }
+    /**
+     * If the direction parameter is valid, change the current location to that cell
+     * @param direction Direction to move the character
+     */
     Character.prototype.move = function (direction) {
+        // Make a clean copy (not a reference)
+        this.PreviousLocation = JSON.parse(JSON.stringify(this.CurrentLocation));
+        if (this.CanMoveDirection(direction)) {
+            switch (direction) {
+                case this.Utilities.North:
+                    this.SetRelativeLocation(0, -1, 0);
+                    break;
+                case this.Utilities.East:
+                    this.SetRelativeLocation(0, 0, 1);
+                    break;
+                case this.Utilities.South:
+                    this.SetRelativeLocation(0, 1, 0);
+                    break;
+                case this.Utilities.West:
+                    this.SetRelativeLocation(0, 0, -1);
+                    break;
+                case this.Utilities.Up:
+                    if (this.CurrentLocation.Z === this.MyMaze.GridLayers - 1) {
+                        this.SetExactLocation(0, null, null);
+                    }
+                    else {
+                        this.SetRelativeLocation(1, 0, 0);
+                    }
+                    break;
+                case this.Utilities.Down:
+                    if (this.CurrentLocation.Z === 0) {
+                        this.SetExactLocation(this.MyMaze.GridLayers - 1, null, null);
+                    }
+                    else {
+                        this.SetRelativeLocation(-1, 0, 0);
+                    }
+                    break;
+            }
+            return true;
+        }
+        return false;
+    };
+    Character.prototype.SetExactLocation = function (z, y, x) {
+        if (z !== null) {
+            this.CurrentLocation.Z = z;
+        }
+        if (y !== null) {
+            this.CurrentLocation.Y = y;
+        }
+        if (x !== null) {
+            this.CurrentLocation.X = x;
+        }
+    };
+    Character.prototype.SetRelativeLocation = function (z, y, x) {
+        this.CurrentLocation.Z += z;
+        this.CurrentLocation.Y += y;
+        this.CurrentLocation.X += x;
+    };
+    Character.prototype.CanMoveDirection = function (direction) {
+        if (direction === this.Utilities.Up || direction === this.Utilities.Down) {
+            return true;
+        }
         switch (direction) {
             case this.Utilities.North:
-                if (this.CurrentLocation.North && this.CurrentLocation.Y > 0)
-                    this.CurrentLocation = this.MazeGrid[this.CurrentLocation.Z][this.CurrentLocation.Y - 1][this.CurrentLocation.X];
+                return this.MyMaze.MazeGrid[this.CurrentLocation.Z][this.CurrentLocation.Y][this.CurrentLocation.X].North;
                 break;
             case this.Utilities.East:
-                if (this.CurrentLocation.East && this.CurrentLocation.X < this.GridWidth - 1)
-                    this.CurrentLocation = this.MazeGrid[this.CurrentLocation.Z][this.CurrentLocation.Y][this.CurrentLocation.X + 1];
+                return this.MyMaze.MazeGrid[this.CurrentLocation.Z][this.CurrentLocation.Y][this.CurrentLocation.X].East;
                 break;
             case this.Utilities.South:
-                if (this.CurrentLocation.South && this.CurrentLocation.Y < this.GridHeight - 1)
-                    this.CurrentLocation = this.MazeGrid[this.CurrentLocation.Z][this.CurrentLocation.Y + 1][this.CurrentLocation.X];
+                return this.MyMaze.MazeGrid[this.CurrentLocation.Z][this.CurrentLocation.Y][this.CurrentLocation.X].South;
                 break;
             case this.Utilities.West:
-                if (this.CurrentLocation.West && this.CurrentLocation.X > 0)
-                    this.CurrentLocation = this.MazeGrid[this.CurrentLocation.Z][this.CurrentLocation.Y][this.CurrentLocation.X - 1];
-                break;
-            case this.Utilities.Up:
-                if (this.CurrentLocation.Z === this.GridLayers - 1)
-                    this.CurrentLocation = this.MazeGrid[0][this.CurrentLocation.Y][this.CurrentLocation.X];
-                else
-                    this.CurrentLocation = this.MazeGrid[this.CurrentLocation.Z + 1][this.CurrentLocation.Y][this.CurrentLocation.X];
-                break;
-            case this.Utilities.Down:
-                if (this.CurrentLocation.Z === 0)
-                    this.CurrentLocation = this.MazeGrid[this.GridLayers - 1][this.CurrentLocation.Y][this.CurrentLocation.X];
-                else
-                    this.CurrentLocation = this.MazeGrid[this.CurrentLocation.Z - 1][this.CurrentLocation.Y][this.CurrentLocation.X];
+                return this.MyMaze.MazeGrid[this.CurrentLocation.Z][this.CurrentLocation.Y][this.CurrentLocation.X].West;
                 break;
         }
-        if (this.MazeGrid[this.CurrentLocation.Z][this.CurrentLocation.Y][this.CurrentLocation.X] ===
-            this.MazeGrid[this.EndLocation.Z][this.EndLocation.Y][this.EndLocation.X]) {
-            // SOLVED THE MAZE!
-            this.IsMazeSolved = true;
-        }
-        return {
-            Character: {
-                Z: this.CurrentLocation.Z,
-                Y: this.CurrentLocation.Y,
-                X: this.CurrentLocation.X
-            },
-            End: {
-                Z: this.EndLocation.Z,
-                Y: this.EndLocation.Y,
-                X: this.EndLocation.X
-            },
-            IsMazeSolved: this.IsMazeSolved
-        };
     };
     return Character;
 }());
 var HTMLCharacterView = /** @class */ (function () {
-    function HTMLCharacterView(name, characterIcon, solvedCharacterEndIcon, mazeEndIcon, solvedMazeEndIcon) {
-        this.IsMazeSolved = false;
-        this.Name = name;
+    function HTMLCharacterView(myCharacter, characterIcon, solvedCharacterEndIcon, mazeEndIcon, solvedMazeEndIcon) {
+        this.MyCharacter = myCharacter;
         this.CharacterIcon = characterIcon;
         this.SolvedCharacterIcon = solvedCharacterEndIcon;
         this.EndIcon = mazeEndIcon;
         this.SolvedEndIcon = solvedMazeEndIcon;
         this.CurrentCharacterIcon = characterIcon;
         this.CurrentEndIcon = mazeEndIcon;
-        this.CharacterLocation = { Z: -1, Y: -1, X: -1 };
-        this.EndLocation = { Z: -1, Y: -1, X: -1 };
+        this.move();
     }
-    HTMLCharacterView.prototype.setCharacterIcon = function () {
-        if (this.IsMazeSolved) {
-            // SOLVED THE MAZE!
-            this.CurrentCharacterIcon = this.SolvedCharacterIcon;
-            this.CurrentEndIcon = this.SolvedEndIcon;
-        }
-        else {
-            this.CurrentCharacterIcon = this.CharacterIcon;
-            this.CurrentEndIcon = this.EndIcon;
-        }
-    };
-    HTMLCharacterView.prototype.move = function (locations) {
-        var selectedCells = document.querySelectorAll(".y" + this.CharacterLocation.Y + "x" + this.CharacterLocation.X);
+    HTMLCharacterView.prototype.move = function () {
+        // Move the character on *every* level, not just the current level
+        var selectedCells = document.querySelectorAll(".y" + this.MyCharacter.PreviousLocation.Y + "x" + this.MyCharacter.PreviousLocation.X);
         for (var i = 0; i < selectedCells.length; i++) {
             selectedCells[i].innerHTML = "";
         }
-        this.CharacterLocation = locations.Character;
-        this.EndLocation = locations.End;
-        this.IsMazeSolved = locations.IsMazeSolved;
         var playAgain = document.querySelector("#play-again");
-        if (this.IsMazeSolved) {
+        if (this.IsSolved()) {
             playAgain.style.display = "block";
             this.CurrentCharacterIcon = this.SolvedCharacterIcon;
             this.CurrentEndIcon = this.SolvedEndIcon;
@@ -664,12 +660,15 @@ var HTMLCharacterView = /** @class */ (function () {
             this.CurrentCharacterIcon = this.CharacterIcon;
             this.CurrentEndIcon = this.EndIcon;
         }
-        var end = document.querySelector(".winter.y" + this.EndLocation.Y + "x" + this.EndLocation.X);
+        var end = document.querySelector(".winter.y" + this.MyCharacter.MyMaze.EndLocation.Y + "x" + this.MyCharacter.MyMaze.EndLocation.X);
         end.innerHTML = this.CurrentEndIcon;
-        selectedCells = document.querySelectorAll(".y" + this.CharacterLocation.Y + "x" + this.CharacterLocation.X);
+        selectedCells = document.querySelectorAll(".y" + this.MyCharacter.CurrentLocation.Y + "x" + this.MyCharacter.CurrentLocation.X);
         for (var i = 0; i < selectedCells.length; i++) {
             selectedCells[i].innerHTML = this.CurrentCharacterIcon;
         }
+    };
+    HTMLCharacterView.prototype.IsSolved = function () {
+        return this.MyCharacter.MyMaze.IsMazeSolved(this.MyCharacter.CurrentLocation);
     };
     return HTMLCharacterView;
 }());
@@ -685,9 +684,9 @@ var Maze = /** @class */ (function () {
         this.mazeTemplateCompressed = mazeTemplateCompressed;
         this.startLocation = startLocation;
         this.endLocation = endLocation;
-        // private IsMazeSolved: boolean = false;
         // private PathTemplate: string[] = [];
         this.Utilities = new Utils();
+        this.MazeSolved = false;
         this.GridLayers = gridLayers;
         this.GridWidth = gridWidth;
         this.GridHeight = gridHeight;
@@ -726,6 +725,20 @@ var Maze = /** @class */ (function () {
                 + "|" + JSON.stringify(this.EndLocation));
         }
     }
+    Maze.prototype.SetMazeSolvedToFalse = function () {
+        this.MazeSolved = false;
+    };
+    Maze.prototype.IsMazeSolved = function (currentLocation) {
+        // If the maze has already been solved, don't change that fact
+        if (this.MazeSolved) {
+            return true;
+        }
+        else {
+            return this.MazeSolved = (currentLocation.Z === this.EndLocation.Z
+                && currentLocation.Y === this.EndLocation.Y
+                && currentLocation.X === this.EndLocation.X);
+        }
+    };
     Maze.prototype.generateGrid = function () {
         var tempGrid = new Array(this.GridLayers);
         for (var i = 0; i < this.GridLayers; i++) {
@@ -876,17 +889,14 @@ var Maze = /** @class */ (function () {
     return Maze;
 }());
 var MazeView = /** @class */ (function () {
-    function MazeView(mazegrid, endCell) {
-        this.mazegrid = mazegrid;
-        this.endCell = endCell;
-        this.MazeGrid = mazegrid;
-        this.GridWidth = mazegrid[0][0].length;
-        this.EndCell = endCell;
+    function MazeView(myMaze) {
+        this.myMaze = myMaze;
+        this.MyMaze = myMaze;
     }
     MazeView.prototype.displayMaze = function () {
         // $(`#play-again`).hide();
         var html = "";
-        for (var layer = 0; layer < this.MazeGrid.length; layer++) {
+        for (var layer = 0; layer < this.MyMaze.MazeGrid.length; layer++) {
             var layerName = this.getNameFromLayer(layer);
             html += "<div id=\"layer" + layer + "\" class=\"" + layerName + "\">";
             html += "<h3 class=\"" + layerName + " maze-header\">"
@@ -895,10 +905,10 @@ var MazeView = /** @class */ (function () {
                 + "<button onclick=\"goUp()\" class=\"up-button\" aria-label=\"Move Forward\">&nbsp;</button>"
                 + "</h3>";
             html += "<table id=\"layer" + layer + "-table\" class=\"maze-table " + layerName + "\">";
-            for (var row = 0; row < this.MazeGrid[layer].length; row++) {
+            for (var row = 0; row < this.MyMaze.MazeGrid[layer].length; row++) {
                 html += "<tr class='r'>";
-                for (var column = 0; column < this.GridWidth; column++) {
-                    var classes = this.getClassesFromCell(this.MazeGrid[layer][row][column]);
+                for (var column = 0; column < this.MyMaze.GridWidth; column++) {
+                    var classes = this.getClassesFromCell(this.MyMaze.MazeGrid[layer][row][column]);
                     html += "<td class=\"cell " + classes + " " + layerName + " y" + row + "x" + column + "\">&nbsp;";
                     html += "</td>";
                 }
@@ -923,7 +933,7 @@ var MazeView = /** @class */ (function () {
             classes += " up ";
         if (!cell.Down)
             classes += " down ";
-        if (this.MazeGrid[cell.Z][cell.Y][cell.X] === this.EndCell)
+        if ({ Z: cell.Z, Y: cell.Y, X: cell.X } === this.MyMaze.EndLocation)
             classes += " end ";
         return classes;
     };
@@ -957,30 +967,31 @@ function main() {
     GridLayers = 4;
     GridHeight = 8;
     GridWidth = 8;
-    // const exampleMaze: string = "CIUQqiqmYMq3A6rErgDkTzIm7EHpwjoYbIyJE6y4pH7aqalG4EKqzAJwxIpa"
-    // + "VKLXSkSfLPWDA6qCJHy5MM2Sj4AhAhmqRYGg4mAGwYrMx2ZeBAiZjdeRZlUjaZW-QakR4MhsYMDXz8tUw11S"
-    // + "ltA6I1ZGJjEeJB4+PgU9IzMrUJkrLzMqMCxCm47Lwz0fKro0FoDfGrGpuaqgB8AbwAiAC1OgC4ABgAaToBNfoA2EYANfoB2AF8gA";
-    // const uncompressed = "DEUEDEDEUUSSUSWSEEEDNESSUWUUNWWWNUSENDNDNWSUUWNUUWSWUSENUNWSSUEENENDNUWUWWSUEESDSUUSUUUSWSE"
-    // + "SWWNDEDSWNNDENUSUESSENDDWUSEEUEEDNWWUNEDDDWSEUSUBWWDNNUUEDSBBBWDBBUNNESEENDNNNESUUWWWWBBUUUSDSUUNUEENWNEDWWD"
-    // + "DDBWSBBBESSUESSDDNUNDBBBBBSSDDDNBWUNBSEUUUWWWBBBBBBBBBDWBBBBBBBBBBWBBBBBBEBBBBBBBBBBBBSSBBBBBBBBBBBBBBBBBBBB"
-    // + "BBBBBBBBBBBBBBBWWWNEBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBWWBBBBBNNWSUSDBBUUBBEBBBBBBBBBNBBBBBBBBBBBBBBBBBBBBBBB"
-    // + "BBBBBBBBDESWBBNWBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB|"
-    // + "{\"Z\":0,\"Y\":6,\"X\":7}";
-    // const myMaze = new Maze(GridLayers, GridHeight, GridWidth, exampleMaze);
-    var myMaze = new Maze(GridLayers, GridHeight, GridWidth);
-    MyMaze = myMaze;
-    var mazeViewer = new MazeView(myMaze.MazeGrid, myMaze.EndLocation);
+    // Random Maze
+    MyMaze = new Maze(GridLayers, GridHeight, GridWidth);
+    var mazeViewer = new MazeView(MyMaze);
     mazeViewer.displayMaze();
-    // console.log(myMaze.MazePath);
-    // `console.log`(myMaze.MazePathCompressed);
-    // console.table(myMaze.MazeGrid[0][0]);
     showLayerHideOthers(currentLayer);
-    MyCharacter = new Character("happyemoji", myMaze.MazeGrid[0][0][0], myMaze.MazeGrid, myMaze.EndLocation);
-    MyCharacterView = new HTMLCharacterView(MyCharacter.Name, String.fromCharCode(0xD83D, 0xDE00), // 😀
+    MyCharacter = new Character("happyemoji", MyMaze);
+    MyCharacterView = new HTMLCharacterView(MyCharacter, String.fromCharCode(0xD83D, 0xDE00), // 😀
     String.fromCharCode(0xD83D, 0xDE0E), // 😎
     String.fromCharCode(0xD83C, 0xDFC1), // 🏁
     String.fromCharCode(0xD83C, 0xDF89)); // 🎉
-    MyCharacterView.move(MyCharacter.move());
+    var lowest = 10000;
+    var path = "";
+    var MyNavigator;
+    for (var i = 0; i < 20; i++) {
+        MyNavigator = new MazeNavigator(MyMaze);
+        MyNavigator.Navigate();
+        if (MyNavigator.attempts < lowest) {
+            lowest = MyNavigator.attempts;
+            path = MyNavigator.path;
+        }
+        console.log(lowest);
+        console.log(path);
+    }
+    // MyCharacter.move();
+    // MyCharacterView.move();
 }
 // https://stackoverflow.com/questions/1402698/binding-arrow-keys-in-js-jquery
 document.addEventListener("keydown", function (e) {
@@ -1024,16 +1035,20 @@ function showLayerHideOthers(layerChoice) {
     }
 }
 function goNorth() {
-    MyCharacterView.move(MyCharacter.move(Utilities.North));
+    MyCharacter.move(Utilities.North);
+    MyCharacterView.move();
 }
 function goEast() {
-    MyCharacterView.move(MyCharacter.move(Utilities.East));
+    MyCharacter.move(Utilities.East);
+    MyCharacterView.move();
 }
 function goSouth() {
-    MyCharacterView.move(MyCharacter.move(Utilities.South));
+    MyCharacter.move(Utilities.South);
+    MyCharacterView.move();
 }
 function goWest() {
-    MyCharacterView.move(MyCharacter.move(Utilities.West));
+    MyCharacter.move(Utilities.West);
+    MyCharacterView.move();
 }
 function goUp() {
     if (currentLayer < GridLayers - 1)
@@ -1041,7 +1056,8 @@ function goUp() {
     else
         currentLayer = 0;
     showLayerHideOthers(currentLayer);
-    MyCharacterView.move(MyCharacter.move(Utilities.Up));
+    MyCharacter.move(Utilities.Up);
+    MyCharacterView.move();
 }
 function goDown() {
     if (currentLayer === 0)
@@ -1049,7 +1065,8 @@ function goDown() {
     else
         currentLayer--;
     showLayerHideOthers(currentLayer);
-    MyCharacterView.move(MyCharacter.move(Utilities.Down));
+    MyCharacter.move(Utilities.Down);
+    MyCharacterView.move();
 }
 /*
     Use the Character class to move completely randomly through the maze
@@ -1064,13 +1081,32 @@ function goDown() {
 
 */
 var MazeNavigator = /** @class */ (function () {
-    function MazeNavigator(mazeGrid, endLocation) {
-        this.Character = new Character("navigator", new Cell(0, 0, 0), mazeGrid, endLocation);
+    function MazeNavigator(myMaze) {
+        this.attempts = 0;
+        this.path = "";
+        this.MyMaze = myMaze;
+        this.MyMaze.SetMazeSolvedToFalse();
         this.Utilities = new Utils();
-        this.MazeGrid = mazeGrid;
+        this.Character = new Character("navigator", myMaze);
     }
-    MazeNavigator.prototype.navigator = function () {
-        this.Utilities.getRandomDirections();
+    MazeNavigator.prototype.Navigate = function () {
+        var moved = false;
+        while (!this.MyMaze.IsMazeSolved(this.Character.CurrentLocation)) {
+            var directions = this.Utilities.getRandomDirections();
+            for (var i = 0; i < directions.length; i++) {
+                if (this.Character.CanMoveDirection(directions[i])) {
+                    this.Character.move(directions[i]);
+                    this.path += directions[i];
+                    this.attempts++;
+                    moved = true;
+                    break;
+                }
+            }
+            if (!moved) {
+                this.Character.CurrentLocation = this.Character.PreviousLocation;
+            }
+            moved = false;
+        }
     };
     return MazeNavigator;
 }());

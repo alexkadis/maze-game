@@ -8,7 +8,7 @@ class Utils	 {
 	public readonly Down: string;
 	public readonly Directions: string[];
 
-	public readonly Back: string = "B";
+	public readonly Back: string;
 	// public self: Utils;
 
 	constructor() {
@@ -26,6 +26,7 @@ class Utils	 {
 			this.Up,
 			this.Down,
 		];
+		this.Back = "B";
 		// this.self = new Utils();
 	}
 
@@ -52,19 +53,6 @@ class Utils	 {
 		const path: string[] = arr[0].split("");
 		return { Path: path, Start: start, End: end };
 	}
-
-	// 	next = template.shift();
-	// 	if(next === undefined) {
-	// 	next = "";
-	// }
-
-	// public getNextActionFromTemplate(template: string[]) {
-	// 	let next = template.shift();
-	// 	if (typeof next === undefined || next === undefined) {
-	// 		next = "";
-	// 	}
-	// 	return [next, template];
-	// }
 
 	/**
 	 * Shuffles array in place.
