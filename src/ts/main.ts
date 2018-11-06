@@ -6,6 +6,7 @@ let MyCharacter: Character;
 let MyCharacterView: ICharacterView;
 let Utilities: Utils;
 let MyMaze: Maze;
+// let MyNavigator: MazeNavigator;
 
 function main() {
 	Utilities  = new Utils();
@@ -29,23 +30,8 @@ function main() {
 		String.fromCharCode(0xD83D, 0xDE0E),  // 😎
 		String.fromCharCode(0xD83C, 0xDFC1),  // 🏁
 		String.fromCharCode(0xD83C, 0xDF89)); // 🎉
-
-	let lowest = 10000;
-	let path = "";
-	let MyNavigator: MazeNavigator;
-	for (let i = 0; i < 20; i++) {
-		MyNavigator = new MazeNavigator(MyMaze);
-		MyNavigator.Navigate();
-		if (MyNavigator.attempts < lowest) {
-			lowest = MyNavigator.attempts;
-			path = MyNavigator.path;
-		}
-		console.log(lowest);
-		console.log(path);
-	}
-	// MyCharacter.move();
-	// MyCharacterView.move();
 }
+
 // https://stackoverflow.com/questions/1402698/binding-arrow-keys-in-js-jquery
 document.addEventListener("keydown", function(e) {
 	e = e || window.event;

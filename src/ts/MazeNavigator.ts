@@ -15,15 +15,14 @@ class MazeNavigator {
 
 	public attempts: number = 0;
 	public path: string = "";
+	public Character: Character;
 	private Utilities: Utils;
-	private Character: Character;
 	private MyMaze: Maze;
 
 	constructor(myMaze: Maze) {
 		this.MyMaze = myMaze;
-		this.MyMaze.SetMazeSolvedToFalse();
 		this.Utilities = new Utils();
-		this.Character = new Character("navigator", myMaze);
+		this.Character = new Character("navigator" + this.Utilities.getRandomIntInclusive(0,1000), myMaze);
 	}
 
 	public Navigate() {
@@ -44,5 +43,6 @@ class MazeNavigator {
 			}
 			moved = false;
 		}
+		this.Character.ResetCharacter();
 	}
 }

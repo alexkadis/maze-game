@@ -13,10 +13,12 @@ class Maze {
 	public GridHeight: number;
 	public MazeGrid: Cell[][][];
 
-	// public Maze: any;
 	public MazePath: string;
 	public MazeTemplateCompressed: string;
-	// private PathTemplate: string[] = [];
+
+	public MazeDifficulty: number = 0;
+	public BestPath: string = "";
+
 	private Utilities = new Utils();
 
 	private MazeSolved: boolean = false;
@@ -68,6 +70,7 @@ class Maze {
 				+ "|" + JSON.stringify(this.EndLocation));
 		}
 	}
+
 	public SetMazeSolvedToFalse() {
 		this.MazeSolved = false;
 	}
@@ -83,7 +86,28 @@ class Maze {
 		}
 	}
 
-	public generateGrid() {
+	public determineMazeDifficulty(attempts: number = 3000) {
+		let lowest = Number.MAX_VALUE;
+		let path = "";
+	
+		for (let i = 0; i < attempts; i++) {
+			let MyNavigator: MazeNavigator = new MazeNavigator(this);
+			MyNavigator.Navigate();
+			if (MyNavigator.attempts < lowest) {
+				lowest = MyNavigator.attempts;
+				path = MyNavigator.path;
+			}
+		}
+		this.MazeDifficulty = lowest;
+		this.BestPath = path;
+	
+		// let t0 = performance.now();
+		// let t1 = performance.now();
+		// let tTotal = t1-t0;
+		// console.log("Total time in seconds: " + tTotal / 1000);
+	}
+
+	private generateGrid() {
 		const tempGrid: any[] = new Array(this.GridLayers);
 		for (let i = 0; i < this.GridLayers; i++) {
 			tempGrid[i] = new Array(this.GridHeight);
@@ -99,7 +123,7 @@ class Maze {
 	 * Given a decompressed path, returns a maze path for a procedural maze
 	 * @param mazeTemplateCompressed given decompressed string of directions (a path)
 	 */
-	protected fillMazeProcedural(mazeTemplateCompressed: string) {
+	private fillMazeProcedural(mazeTemplateCompressed: string) {
 		const result1 = this.Utilities.getLocationsFromTemplate(mazeTemplateCompressed);
 
 		// tslint:disable-next-line:prefer-const
@@ -146,7 +170,7 @@ class Maze {
 	/**
 	 * Returns a maze path for a random maze
 	 */
-	protected fillMazeRandom() {
+	private fillMazeRandom() {
 		let index: number = -1;
 		let output: string = "";
 
@@ -184,7 +208,7 @@ class Maze {
 		return output;
 	}
 
-	protected carvePathBetweenCells(currentCell: Cell, nextCell: Cell, direction: string) {
+	private carvePathBetweenCells(currentCell: Cell, nextCell: Cell, direction: string) {
 		switch (direction) {
 			case this.Utilities.North:
 				currentCell.North = true;
@@ -214,7 +238,7 @@ class Maze {
 		return { current: currentCell, next: nextCell };
 	}
 
-	protected isEmptyCell(z: number, y: number, x: number) {
+	private isEmptyCell(z: number, y: number, x: number) {
 		if (z >= 0 && z < this.GridLayers
 			&& 	y >= 0 && y < this.GridHeight
 			&&  x >= 0 && x < this.GridWidth

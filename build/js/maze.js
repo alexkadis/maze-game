@@ -549,8 +549,8 @@ var Character = /** @class */ (function () {
     function Character(name, myMaze) {
         this.Utilities = new Utils();
         this.Name = name;
-        this.MyMaze = myMaze;
-        this.CurrentLocation = this.MyMaze.StartLocation;
+        this.ThisMaze = myMaze;
+        this.CurrentLocation = JSON.parse(JSON.stringify(this.ThisMaze.StartLocation));
         this.move("");
     }
     /**
@@ -575,7 +575,7 @@ var Character = /** @class */ (function () {
                     this.SetRelativeLocation(0, 0, -1);
                     break;
                 case this.Utilities.Up:
-                    if (this.CurrentLocation.Z === this.MyMaze.GridLayers - 1) {
+                    if (this.CurrentLocation.Z === this.ThisMaze.GridLayers - 1) {
                         this.SetExactLocation(0, null, null);
                     }
                     else {
@@ -584,7 +584,7 @@ var Character = /** @class */ (function () {
                     break;
                 case this.Utilities.Down:
                     if (this.CurrentLocation.Z === 0) {
-                        this.SetExactLocation(this.MyMaze.GridLayers - 1, null, null);
+                        this.SetExactLocation(this.ThisMaze.GridLayers - 1, null, null);
                     }
                     else {
                         this.SetRelativeLocation(-1, 0, 0);
@@ -595,6 +595,16 @@ var Character = /** @class */ (function () {
         }
         return false;
     };
+    Character.prototype.ResetCharacter = function () {
+        this.ThisMaze.SetMazeSolvedToFalse();
+        this.CurrentLocation = JSON.parse(JSON.stringify(this.ThisMaze.StartLocation));
+    };
+    /**
+     * Moves the character to an *exact* location within the grid
+     * @param z Z-Axis
+     * @param y Y-Axis
+     * @param x X-Axis
+     */
     Character.prototype.SetExactLocation = function (z, y, x) {
         if (z !== null) {
             this.CurrentLocation.Z = z;
@@ -606,27 +616,37 @@ var Character = /** @class */ (function () {
             this.CurrentLocation.X = x;
         }
     };
+    /**
+     * Moves the character to a location relative to the current location within the grid
+     * @param z Z-Axis
+     * @param y Y-Axis
+     * @param x X-Axis
+     */
     Character.prototype.SetRelativeLocation = function (z, y, x) {
         this.CurrentLocation.Z += z;
         this.CurrentLocation.Y += y;
         this.CurrentLocation.X += x;
     };
+    /**
+     * Checks to see if a character can move a direction
+     * @param direction The direction the character wants to move
+     */
     Character.prototype.CanMoveDirection = function (direction) {
         if (direction === this.Utilities.Up || direction === this.Utilities.Down) {
             return true;
         }
         switch (direction) {
             case this.Utilities.North:
-                return this.MyMaze.MazeGrid[this.CurrentLocation.Z][this.CurrentLocation.Y][this.CurrentLocation.X].North;
+                return this.ThisMaze.MazeGrid[this.CurrentLocation.Z][this.CurrentLocation.Y][this.CurrentLocation.X].North;
                 break;
             case this.Utilities.East:
-                return this.MyMaze.MazeGrid[this.CurrentLocation.Z][this.CurrentLocation.Y][this.CurrentLocation.X].East;
+                return this.ThisMaze.MazeGrid[this.CurrentLocation.Z][this.CurrentLocation.Y][this.CurrentLocation.X].East;
                 break;
             case this.Utilities.South:
-                return this.MyMaze.MazeGrid[this.CurrentLocation.Z][this.CurrentLocation.Y][this.CurrentLocation.X].South;
+                return this.ThisMaze.MazeGrid[this.CurrentLocation.Z][this.CurrentLocation.Y][this.CurrentLocation.X].South;
                 break;
             case this.Utilities.West:
-                return this.MyMaze.MazeGrid[this.CurrentLocation.Z][this.CurrentLocation.Y][this.CurrentLocation.X].West;
+                return this.ThisMaze.MazeGrid[this.CurrentLocation.Z][this.CurrentLocation.Y][this.CurrentLocation.X].West;
                 break;
         }
     };
@@ -660,7 +680,7 @@ var HTMLCharacterView = /** @class */ (function () {
             this.CurrentCharacterIcon = this.CharacterIcon;
             this.CurrentEndIcon = this.EndIcon;
         }
-        var end = document.querySelector(".winter.y" + this.MyCharacter.MyMaze.EndLocation.Y + "x" + this.MyCharacter.MyMaze.EndLocation.X);
+        var end = document.querySelector(".winter.y" + this.MyCharacter.ThisMaze.EndLocation.Y + "x" + this.MyCharacter.ThisMaze.EndLocation.X);
         end.innerHTML = this.CurrentEndIcon;
         selectedCells = document.querySelectorAll(".y" + this.MyCharacter.CurrentLocation.Y + "x" + this.MyCharacter.CurrentLocation.X);
         for (var i = 0; i < selectedCells.length; i++) {
@@ -668,7 +688,7 @@ var HTMLCharacterView = /** @class */ (function () {
         }
     };
     HTMLCharacterView.prototype.IsSolved = function () {
-        return this.MyCharacter.MyMaze.IsMazeSolved(this.MyCharacter.CurrentLocation);
+        return this.MyCharacter.ThisMaze.IsMazeSolved(this.MyCharacter.CurrentLocation);
     };
     return HTMLCharacterView;
 }());
@@ -684,7 +704,8 @@ var Maze = /** @class */ (function () {
         this.mazeTemplateCompressed = mazeTemplateCompressed;
         this.startLocation = startLocation;
         this.endLocation = endLocation;
-        // private PathTemplate: string[] = [];
+        this.MazeDifficulty = 0;
+        this.BestPath = "";
         this.Utilities = new Utils();
         this.MazeSolved = false;
         this.GridLayers = gridLayers;
@@ -738,6 +759,25 @@ var Maze = /** @class */ (function () {
                 && currentLocation.Y === this.EndLocation.Y
                 && currentLocation.X === this.EndLocation.X);
         }
+    };
+    Maze.prototype.determineMazeDifficulty = function (attempts) {
+        if (attempts === void 0) { attempts = 3000; }
+        var lowest = Number.MAX_VALUE;
+        var path = "";
+        for (var i = 0; i < attempts; i++) {
+            var MyNavigator = new MazeNavigator(this);
+            MyNavigator.Navigate();
+            if (MyNavigator.attempts < lowest) {
+                lowest = MyNavigator.attempts;
+                path = MyNavigator.path;
+            }
+        }
+        this.MazeDifficulty = lowest;
+        this.BestPath = path;
+        // let t0 = performance.now();
+        // let t1 = performance.now();
+        // let tTotal = t1-t0;
+        // console.log("Total time in seconds: " + tTotal / 1000);
     };
     Maze.prototype.generateGrid = function () {
         var tempGrid = new Array(this.GridLayers);
@@ -961,6 +1001,7 @@ var MyCharacter;
 var MyCharacterView;
 var Utilities;
 var MyMaze;
+// let MyNavigator: MazeNavigator;
 function main() {
     Utilities = new Utils();
     currentLayer = 0;
@@ -977,21 +1018,6 @@ function main() {
     String.fromCharCode(0xD83D, 0xDE0E), // 😎
     String.fromCharCode(0xD83C, 0xDFC1), // 🏁
     String.fromCharCode(0xD83C, 0xDF89)); // 🎉
-    var lowest = 10000;
-    var path = "";
-    var MyNavigator;
-    for (var i = 0; i < 20; i++) {
-        MyNavigator = new MazeNavigator(MyMaze);
-        MyNavigator.Navigate();
-        if (MyNavigator.attempts < lowest) {
-            lowest = MyNavigator.attempts;
-            path = MyNavigator.path;
-        }
-        console.log(lowest);
-        console.log(path);
-    }
-    // MyCharacter.move();
-    // MyCharacterView.move();
 }
 // https://stackoverflow.com/questions/1402698/binding-arrow-keys-in-js-jquery
 document.addEventListener("keydown", function (e) {
@@ -1085,9 +1111,8 @@ var MazeNavigator = /** @class */ (function () {
         this.attempts = 0;
         this.path = "";
         this.MyMaze = myMaze;
-        this.MyMaze.SetMazeSolvedToFalse();
         this.Utilities = new Utils();
-        this.Character = new Character("navigator", myMaze);
+        this.Character = new Character("navigator" + this.Utilities.getRandomIntInclusive(0, 1000), myMaze);
     }
     MazeNavigator.prototype.Navigate = function () {
         var moved = false;
@@ -1107,6 +1132,7 @@ var MazeNavigator = /** @class */ (function () {
             }
             moved = false;
         }
+        this.Character.ResetCharacter();
     };
     return MazeNavigator;
 }());

@@ -62,7 +62,7 @@ declare class Character {
     Name: string;
     CurrentLocation: any;
     PreviousLocation: any;
-    MyMaze: Maze;
+    ThisMaze: Maze;
     private Utilities;
     constructor(name: string, myMaze: Maze);
     /**
@@ -70,8 +70,25 @@ declare class Character {
      * @param direction Direction to move the character
      */
     move(direction: string): boolean;
+    ResetCharacter(): void;
+    /**
+     * Moves the character to an *exact* location within the grid
+     * @param z Z-Axis
+     * @param y Y-Axis
+     * @param x X-Axis
+     */
     SetExactLocation(z: number | null, y: number | null, x: number | null): void;
+    /**
+     * Moves the character to a location relative to the current location within the grid
+     * @param z Z-Axis
+     * @param y Y-Axis
+     * @param x X-Axis
+     */
     SetRelativeLocation(z: number, y: number, x: number): void;
+    /**
+     * Checks to see if a character can move a direction
+     * @param direction The direction the character wants to move
+     */
     CanMoveDirection(direction: string): boolean | undefined;
 }
 interface ICharacterView {
@@ -111,26 +128,26 @@ declare class Maze {
     MazeGrid: Cell[][][];
     MazePath: string;
     MazeTemplateCompressed: string;
+    MazeDifficulty: number;
+    BestPath: string;
     private Utilities;
     private MazeSolved;
     constructor(gridLayers: number, gridWidth: number, gridHeight: number, mazeTemplateCompressed?: string | undefined, startLocation?: any, endLocation?: any);
     SetMazeSolvedToFalse(): void;
     IsMazeSolved(currentLocation: any): boolean;
-    generateGrid(): any[];
+    determineMazeDifficulty(attempts?: number): void;
+    private generateGrid;
     /**
      * Given a decompressed path, returns a maze path for a procedural maze
      * @param mazeTemplateCompressed given decompressed string of directions (a path)
      */
-    protected fillMazeProcedural(mazeTemplateCompressed: string): string;
+    private fillMazeProcedural;
     /**
      * Returns a maze path for a random maze
      */
-    protected fillMazeRandom(): string;
-    protected carvePathBetweenCells(currentCell: Cell, nextCell: Cell, direction: string): {
-        current: Cell;
-        next: Cell;
-    };
-    protected isEmptyCell(z: number, y: number, x: number): boolean;
+    private fillMazeRandom;
+    private carvePathBetweenCells;
+    private isEmptyCell;
     private directionModifier;
 }
 declare class MazeView {
@@ -160,8 +177,8 @@ declare function goDown(): void;
 declare class MazeNavigator {
     attempts: number;
     path: string;
+    Character: Character;
     private Utilities;
-    private Character;
     private MyMaze;
     constructor(myMaze: Maze);
     Navigate(): void;

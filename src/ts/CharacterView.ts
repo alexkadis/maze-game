@@ -56,7 +56,7 @@ class HTMLCharacterView implements ICharacterView {
 			this.CurrentEndIcon = this.EndIcon;
 		}
 
-		const end = (document.querySelector(`.winter.y${this.MyCharacter.MyMaze.EndLocation.Y}x${this.MyCharacter.MyMaze.EndLocation.X}`) as HTMLElement);
+		const end = (document.querySelector(`.winter.y${this.MyCharacter.ThisMaze.EndLocation.Y}x${this.MyCharacter.ThisMaze.EndLocation.X}`) as HTMLElement);
 
 		end.innerHTML = this.CurrentEndIcon;
 
@@ -68,6 +68,6 @@ class HTMLCharacterView implements ICharacterView {
 	}
 
 	private IsSolved() {
-		return this.MyCharacter.MyMaze.IsMazeSolved(this.MyCharacter.CurrentLocation);
+		return this.MyCharacter.ThisMaze.IsMazeSolved(this.MyCharacter.CurrentLocation);
 	}
 }
