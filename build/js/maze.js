@@ -32,13 +32,23 @@ var Utils = /** @class */ (function () {
      * Given a decompressed template, return a path, start, and end
      * @param template the decompressed template to break apart
      */
-    Utils.prototype.getLocationsFromTemplate = function (template) {
-        template = LZString.decompressFromEncodedURIComponent(template);
-        var arr = template.split("|");
-        var start = JSON.parse(arr[1]);
-        var end = JSON.parse(arr[2]);
-        var path = arr[0].split("");
-        return { Path: path, Start: start, End: end };
+    Utils.prototype.uncompressTemplate = function (template) {
+        return JSON.parse(LZString.decompressFromEncodedURIComponent(template));
+        // const arr: any = template.split("|");
+        // const start: string = JSON.parse(arr[1]);
+        // const end: string = JSON.parse(arr[2]);
+        // const path: string[] = arr[0].split("");
+        // return { Path: path, Start: start, End: end };
+    };
+    Utils.prototype.compressTemplate = function (myMaze) {
+        var template = {
+            MazePath: myMaze.MazePath,
+            Start: JSON.stringify(myMaze.StartLocation),
+            End: JSON.stringify(myMaze.EndLocation),
+            BestPath: myMaze.BestPath,
+            Difficulty: myMaze.MazeDifficulty
+        };
+        return LZString.compressToEncodedURIComponent(JSON.stringify(template));
     };
     /**
      * Shuffles array in place.
@@ -741,9 +751,7 @@ var Maze = /** @class */ (function () {
                 this.EndLocation = endLocation;
             }
             this.MazePath = this.fillMazeRandom();
-            this.MazeTemplateCompressed = LZString.compressToEncodedURIComponent(this.MazePath
-                + "|" + JSON.stringify(this.StartLocation)
-                + "|" + JSON.stringify(this.EndLocation));
+            this.MazeTemplateCompressed = Utilities.compressTemplate(this);
         }
     }
     Maze.prototype.SetMazeSolvedToFalse = function () {
@@ -795,11 +803,18 @@ var Maze = /** @class */ (function () {
      * @param mazeTemplateCompressed given decompressed string of directions (a path)
      */
     Maze.prototype.fillMazeProcedural = function (mazeTemplateCompressed) {
-        var result1 = this.Utilities.getLocationsFromTemplate(mazeTemplateCompressed);
+        var template = this.Utilities.uncompressTemplate(mazeTemplateCompressed);
         // tslint:disable-next-line:prefer-const
-        var template = result1.Path;
-        this.EndLocation = result1.End;
-        this.StartLocation = result1.Start;
+        var path = template.MazePath.split("");
+        this.StartLocation = template.Start;
+        this.EndLocation = template.End;
+        this.BestPath = template.BestPath;
+        this.MazeDifficulty = template.MazeDifficulty;
+        // MazePath: myMaze.MazePath,
+        // Start: JSON.stringify(myMaze.StartLocation),
+        // End: JSON.stringify(myMaze.EndLocation),
+        // BestPath: myMaze.BestPath,
+        // Difficulty: myMaze.MazeDifficulty,
         // tslint:disable-next-line:prefer-const
         var cellsList = [new Cell(0, 0, 0)];
         var next;
@@ -809,7 +824,7 @@ var Maze = /** @class */ (function () {
             // index is the newest
             index = cellsList.length - 1;
             var currentCell = cellsList[index];
-            next = template.shift();
+            next = path.shift();
             if (next === "" || next === undefined) {
                 break;
             }

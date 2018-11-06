@@ -45,13 +45,19 @@ class Utils	 {
 	 * Given a decompressed template, return a path, start, and end
 	 * @param template the decompressed template to break apart
 	 */
-	public getLocationsFromTemplate(template: string) {
-		template = LZString.decompressFromEncodedURIComponent(template);
-		const arr: any = template.split("|");
-		const start: string = JSON.parse(arr[1]);
-		const end: string = JSON.parse(arr[2]);
-		const path: string[] = arr[0].split("");
-		return { Path: path, Start: start, End: end };
+	public uncompressTemplate(template: string) {
+		return JSON.parse(LZString.decompressFromEncodedURIComponent(template));
+	}
+
+	public compressTemplate(myMaze: Maze) {
+		const template = {
+			MazePath: myMaze.MazePath,
+			Start: JSON.stringify(myMaze.StartLocation),
+			End: JSON.stringify(myMaze.EndLocation),
+			BestPath: myMaze.BestPath,
+			Difficulty: myMaze.MazeDifficulty,
+		};
+		return LZString.compressToEncodedURIComponent(JSON.stringify(template));
 	}
 
 	/**

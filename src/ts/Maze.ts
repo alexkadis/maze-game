@@ -1,8 +1,3 @@
-// Every maze should have
-// Start location
-// End location
-// Compressed Maze
-
 class Maze {
 	// End location isn't a cell... because it doesn't have walls
 	public StartLocation: any;
@@ -64,10 +59,7 @@ class Maze {
 			}
 			this.MazePath = this.fillMazeRandom();
 
-			this.MazeTemplateCompressed = LZString.compressToEncodedURIComponent(
-				this.MazePath
-				+ "|" + JSON.stringify(this.StartLocation)
-				+ "|" + JSON.stringify(this.EndLocation));
+			this.MazeTemplateCompressed = Utilities.compressTemplate(this);
 		}
 	}
 
@@ -89,9 +81,9 @@ class Maze {
 	public determineMazeDifficulty(attempts: number = 3000) {
 		let lowest = Number.MAX_VALUE;
 		let path = "";
-	
+
 		for (let i = 0; i < attempts; i++) {
-			let MyNavigator: MazeNavigator = new MazeNavigator(this);
+			const MyNavigator: MazeNavigator = new MazeNavigator(this);
 			MyNavigator.Navigate();
 			if (MyNavigator.attempts < lowest) {
 				lowest = MyNavigator.attempts;
@@ -100,7 +92,7 @@ class Maze {
 		}
 		this.MazeDifficulty = lowest;
 		this.BestPath = path;
-	
+
 		// let t0 = performance.now();
 		// let t1 = performance.now();
 		// let tTotal = t1-t0;
@@ -124,12 +116,20 @@ class Maze {
 	 * @param mazeTemplateCompressed given decompressed string of directions (a path)
 	 */
 	private fillMazeProcedural(mazeTemplateCompressed: string) {
-		const result1 = this.Utilities.getLocationsFromTemplate(mazeTemplateCompressed);
+		const template = this.Utilities.uncompressTemplate(mazeTemplateCompressed);
 
 		// tslint:disable-next-line:prefer-const
-		let template: string[] = result1.Path;
-		this.EndLocation = result1.End;
-		this.StartLocation = result1.Start;
+		let path: string[] = template.MazePath.split("");
+		this.StartLocation = template.Start;
+		this.EndLocation = template.End;
+		this.BestPath = template.BestPath;
+		this.MazeDifficulty = template.MazeDifficulty;
+
+		// MazePath: myMaze.MazePath,
+		// Start: JSON.stringify(myMaze.StartLocation),
+		// End: JSON.stringify(myMaze.EndLocation),
+		// BestPath: myMaze.BestPath,
+		// Difficulty: myMaze.MazeDifficulty,
 
 		// tslint:disable-next-line:prefer-const
 		let cellsList: Cell[] = [new Cell(0, 0, 0)];
@@ -144,7 +144,7 @@ class Maze {
 
 			const currentCell: Cell = cellsList[index];
 
-			next = template.shift();
+			next = path.shift();
 
 			if (next === "" || next === undefined) {
 				break;

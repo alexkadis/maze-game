@@ -14,11 +14,8 @@ declare class Utils {
      * Given a decompressed template, return a path, start, and end
      * @param template the decompressed template to break apart
      */
-    getLocationsFromTemplate(template: string): {
-        Path: string[];
-        Start: string;
-        End: string;
-    };
+    uncompressTemplate(template: string): any;
+    compressTemplate(myMaze: Maze): any;
     /**
      * Shuffles array in place.
      * @param {Array} array items An array containing the items.
