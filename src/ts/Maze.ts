@@ -59,7 +59,7 @@ class Maze {
 			}
 			this.MazePath = this.fillMazeRandom();
 
-			this.MazeTemplateCompressed = Utilities.compressTemplate(this);
+			this.MazeTemplateCompressed = this.Utilities.compressTemplate(this);
 		}
 	}
 
