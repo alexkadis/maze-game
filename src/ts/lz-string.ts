@@ -9,7 +9,6 @@
 // LZ-based compression algorithm, version 1.4.4
 var LZString = (function () {
 
-	// private property
 	var f = String.fromCharCode;
 	var keyStrBase64 = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=";
 	var keyStrUriSafe = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+-$";

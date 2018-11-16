@@ -45,19 +45,52 @@ class Utils	 {
 	 * Given a decompressed template, return a path, start, and end
 	 * @param template the decompressed template to break apart
 	 */
-	public uncompressTemplate(template: string) {
-		return JSON.parse(LZString.decompressFromEncodedURIComponent(template));
+	public uncompressTemplate(template: any) {
+		const decompressed = LZString.decompressFromEncodedURIComponent(template);
+		// console.log(decompressed);
+		let decompressedObject = JSON.parse(decompressed);
+		// let decompressedObject = JSON.parse(template);
+		decompressedObject["StartLocation"] = JSON.parse(decompressedObject["StartLocation"]);
+		decompressedObject["EndLocation"] = JSON.parse(decompressedObject["EndLocation"]);
+		decompressedObject["MazeDifficulty"] = parseInt(decompressedObject["MazeDifficulty"], 10);
+		decompressedObject["GridWidth"] = parseInt(decompressedObject["GridWidth"], 10);
+		decompressedObject["GridHeight"] = parseInt(decompressedObject["GridHeight"], 10);
+		decompressedObject["GridLayers"] = parseInt(decompressedObject["GridLayers"], 10);
+		return decompressedObject;
+	}
+
+	public compressionTest(MyMaze: Maze) {
+		console.log("BASE64:");
+		console.log(this.b64EncodeUnicode(JSON.stringify(this.compressTemplate(MyMaze))));
+		console.log("LZ String:");
+		console.log(LZString.compressToEncodedURIComponent(JSON.stringify(this.compressTemplate(MyMaze))));
+	}
+	
+	public b64EncodeUnicode(str: string) {
+		// first we use encodeURIComponent to get percent-encoded UTF-8,
+		// then we convert the percent encodings into raw bytes which
+		// can be fed into btoa.
+		return btoa(encodeURIComponent(str).replace(/%([0-9A-F]{2})/g,
+			function toSolidBytes(match, p1) {
+				 // @ts-ignore
+				return String.fromCharCode('0x' + p1);
+		}));
 	}
 
 	public compressTemplate(myMaze: Maze) {
 		const template = {
 			MazePath: myMaze.MazePath,
-			Start: JSON.stringify(myMaze.StartLocation),
-			End: JSON.stringify(myMaze.EndLocation),
+			StartLocation: JSON.stringify(myMaze.StartLocation),
+			EndLocation: JSON.stringify(myMaze.EndLocation),
 			BestPath: myMaze.BestPath,
-			Difficulty: myMaze.MazeDifficulty,
+			MazeDifficulty: myMaze.MazeDifficulty,
+			GridWidth: myMaze.GridWidth,
+			GridHeight: myMaze.GridHeight,
+			GridLayers: myMaze.GridLayers,
 		};
+		// console.log(template);
 		return LZString.compressToEncodedURIComponent(JSON.stringify(template));
+		// return JSON.stringify(template);
 	}
 
 	/**

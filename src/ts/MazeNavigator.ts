@@ -1,3 +1,4 @@
+class MazeNavigator {
 /*
 	Use the Character class to move completely randomly through the maze
 	from the given starting point to the given ending point.
@@ -10,8 +11,6 @@
 	then back up until you get to where you want to go.
 
 */
-
-class MazeNavigator {
 
 	public attempts: number = 0;
 	public path: string = "";

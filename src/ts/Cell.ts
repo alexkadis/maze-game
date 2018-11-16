@@ -1,19 +1,4 @@
-interface ICell {
-	North: boolean;
-	East: boolean;
-	South: boolean;
-	West: boolean;
-	Up: boolean;
-	Down: boolean;
-
-	Z: number;
-	Y: number;
-	X: number;
-
-	[direction: string]: any;
-}
-
-class Cell implements ICell {
+class Cell	 {
 	public North: boolean;
 	public East: boolean;
 	public South: boolean;

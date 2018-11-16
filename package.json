@@ -8,6 +8,7 @@
   "author": "Alex Kadis",
   "license": "UNLICENSED",
   "scripts": {
+	"test-setup": "mocha --require ts-node/register test/**/TestSetup.ts",
 	"test": "mocha --require ts-node/register test/**/*.ts",
 	"build-scss": "sass ./src/scss/base.scss ./build/css/base.css",
 	"build-ts": "tsc --build",

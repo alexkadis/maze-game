@@ -14,7 +14,9 @@ declare class Utils {
      * Given a decompressed template, return a path, start, and end
      * @param template the decompressed template to break apart
      */
-    uncompressTemplate(template: string): any;
+    uncompressTemplate(template: any): any;
+    compressionTest(MyMaze: Maze): void;
+    b64EncodeUnicode(str: string): string;
     compressTemplate(myMaze: Maze): any;
     /**
      * Shuffles array in place.
@@ -30,19 +32,7 @@ declare var LZString: {
     decompress: (compressed: string) => string | null;
     _decompress: (length: number, resetValue: number, getNextValue: any) => string | null;
 };
-interface ICell {
-    North: boolean;
-    East: boolean;
-    South: boolean;
-    West: boolean;
-    Up: boolean;
-    Down: boolean;
-    Z: number;
-    Y: number;
-    X: number;
-    [direction: string]: any;
-}
-declare class Cell implements ICell {
+declare class Cell {
     North: boolean;
     East: boolean;
     South: boolean;
@@ -111,12 +101,6 @@ declare class HTMLCharacterView implements ICharacterView {
     private IsSolved;
 }
 declare class Maze {
-    gridLayers: number;
-    gridWidth: number;
-    gridHeight: number;
-    mazeTemplateCompressed?: string | undefined;
-    startLocation?: any;
-    endLocation?: any;
     StartLocation: any;
     EndLocation: any;
     GridLayers: number;
@@ -129,7 +113,7 @@ declare class Maze {
     BestPath: string;
     private Utilities;
     private MazeSolved;
-    constructor(gridLayers: number, gridWidth: number, gridHeight: number, mazeTemplateCompressed?: string | undefined, startLocation?: any, endLocation?: any);
+    constructor(gridLayers: number, gridWidth: number, gridHeight: number, mazeTemplateCompressed?: string, startLocation?: any, endLocation?: any);
     SetMazeSolvedToFalse(): void;
     IsMazeSolved(currentLocation: any): boolean;
     determineMazeDifficulty(attempts?: number): void;

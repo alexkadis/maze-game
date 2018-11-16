@@ -33,22 +33,47 @@ var Utils = /** @class */ (function () {
      * @param template the decompressed template to break apart
      */
     Utils.prototype.uncompressTemplate = function (template) {
-        return JSON.parse(LZString.decompressFromEncodedURIComponent(template));
-        // const arr: any = template.split("|");
-        // const start: string = JSON.parse(arr[1]);
-        // const end: string = JSON.parse(arr[2]);
-        // const path: string[] = arr[0].split("");
-        // return { Path: path, Start: start, End: end };
+        var decompressed = LZString.decompressFromEncodedURIComponent(template);
+        // console.log(decompressed);
+        var decompressedObject = JSON.parse(decompressed);
+        // let decompressedObject = JSON.parse(template);
+        decompressedObject["StartLocation"] = JSON.parse(decompressedObject["StartLocation"]);
+        decompressedObject["EndLocation"] = JSON.parse(decompressedObject["EndLocation"]);
+        decompressedObject["MazeDifficulty"] = parseInt(decompressedObject["MazeDifficulty"], 10);
+        decompressedObject["GridWidth"] = parseInt(decompressedObject["GridWidth"], 10);
+        decompressedObject["GridHeight"] = parseInt(decompressedObject["GridHeight"], 10);
+        decompressedObject["GridLayers"] = parseInt(decompressedObject["GridLayers"], 10);
+        return decompressedObject;
+    };
+    Utils.prototype.compressionTest = function (MyMaze) {
+        console.log("BASE64:");
+        console.log(this.b64EncodeUnicode(JSON.stringify(this.compressTemplate(MyMaze))));
+        console.log("LZ String:");
+        console.log(LZString.compressToEncodedURIComponent(JSON.stringify(this.compressTemplate(MyMaze))));
+    };
+    Utils.prototype.b64EncodeUnicode = function (str) {
+        // first we use encodeURIComponent to get percent-encoded UTF-8,
+        // then we convert the percent encodings into raw bytes which
+        // can be fed into btoa.
+        return btoa(encodeURIComponent(str).replace(/%([0-9A-F]{2})/g, function toSolidBytes(match, p1) {
+            // @ts-ignore
+            return String.fromCharCode('0x' + p1);
+        }));
     };
     Utils.prototype.compressTemplate = function (myMaze) {
         var template = {
             MazePath: myMaze.MazePath,
-            Start: JSON.stringify(myMaze.StartLocation),
-            End: JSON.stringify(myMaze.EndLocation),
+            StartLocation: JSON.stringify(myMaze.StartLocation),
+            EndLocation: JSON.stringify(myMaze.EndLocation),
             BestPath: myMaze.BestPath,
-            Difficulty: myMaze.MazeDifficulty
+            MazeDifficulty: myMaze.MazeDifficulty,
+            GridWidth: myMaze.GridWidth,
+            GridHeight: myMaze.GridHeight,
+            GridLayers: myMaze.GridLayers
         };
+        // console.log(template);
         return LZString.compressToEncodedURIComponent(JSON.stringify(template));
+        // return JSON.stringify(template);
     };
     /**
      * Shuffles array in place.
@@ -78,7 +103,6 @@ var Utils = /** @class */ (function () {
 //
 // LZ-based compression algorithm, version 1.4.4
 var LZString = (function () {
-    // private property
     var f = String.fromCharCode;
     var keyStrBase64 = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=";
     var keyStrUriSafe = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+-$";
@@ -702,18 +726,8 @@ var HTMLCharacterView = /** @class */ (function () {
     };
     return HTMLCharacterView;
 }());
-// Every maze should have
-// Start location
-// End location
-// Compressed Maze
 var Maze = /** @class */ (function () {
     function Maze(gridLayers, gridWidth, gridHeight, mazeTemplateCompressed, startLocation, endLocation) {
-        this.gridLayers = gridLayers;
-        this.gridWidth = gridWidth;
-        this.gridHeight = gridHeight;
-        this.mazeTemplateCompressed = mazeTemplateCompressed;
-        this.startLocation = startLocation;
-        this.endLocation = endLocation;
         this.MazeDifficulty = 0;
         this.BestPath = "";
         this.Utilities = new Utils();
@@ -751,7 +765,7 @@ var Maze = /** @class */ (function () {
                 this.EndLocation = endLocation;
             }
             this.MazePath = this.fillMazeRandom();
-            this.MazeTemplateCompressed = Utilities.compressTemplate(this);
+            this.MazeTemplateCompressed = this.Utilities.compressTemplate(this);
         }
     }
     Maze.prototype.SetMazeSolvedToFalse = function () {
@@ -806,10 +820,14 @@ var Maze = /** @class */ (function () {
         var template = this.Utilities.uncompressTemplate(mazeTemplateCompressed);
         // tslint:disable-next-line:prefer-const
         var path = template.MazePath.split("");
-        this.StartLocation = template.Start;
-        this.EndLocation = template.End;
+        this.StartLocation = template.StartLocation;
+        this.EndLocation = template.EndLocation;
         this.BestPath = template.BestPath;
         this.MazeDifficulty = template.MazeDifficulty;
+        this.GridWidth = template.GridWidth;
+        this.GridHeight = template.GridHeight;
+        this.GridLayers = template.GridLayers;
+        this.MazeGrid = this.generateGrid();
         // MazePath: myMaze.MazePath,
         // Start: JSON.stringify(myMaze.StartLocation),
         // End: JSON.stringify(myMaze.EndLocation),
@@ -928,7 +946,7 @@ var Maze = /** @class */ (function () {
                 return new Cell(cell.Z, cell.Y, cell.X - 1);
             case this.Utilities.Up:
                 // if we're at the top layer, loop around
-                if (cell.Z === this.gridLayers - 1)
+                if (cell.Z === this.GridLayers - 1)
                     return new Cell(0, cell.Y, cell.X);
                 else
                     return new Cell(cell.Z + 1, cell.Y, cell.X);
@@ -1025,6 +1043,8 @@ function main() {
     GridWidth = 8;
     // Random Maze
     MyMaze = new Maze(GridLayers, GridHeight, GridWidth);
+    // Procedural Maze
+    MyMaze = new Maze(0, 0, 0, "N4IgsghgXgpgChALgCxALhAUQMq4Kp4ByA6gCLZ7bnaaZHHFE5OGGnVN51eYnmaleDUoVqE8DYtkZtBAugCFyZWkUoUpVHI2YayknbxKjWRzAsoTSMglcZdpNaetxzBXNjTUkpKk70ocCiEGIndXMgVsBRjaZ3M8BUIYlJjE2IFokXYSVLylMmoY0wkuFOj8yqq8xlT9GiU0lPTq1rzWAnlSKOIotrbzatpW2or+8YnJqemZypAAGhBsRAgAJ0QAGQB7AGMkAEstgDt0EGAAHRAALUu0AAZ5y4BNW4fLgA1XgF8FrCOAE22e0QhxOGAu11ejxAL3QAHZoZ90ABmH6LBQwADOiAQKFOv0gsFI+wAZiT9jsAK4AG0QAE90A8QABxVb7f7Edl4tAADkWrPZAAkYPsAObIRDoPkstmAiB0mCrTHoAAsXyAA");
     var mazeViewer = new MazeView(MyMaze);
     mazeViewer.displayMaze();
     showLayerHideOthers(currentLayer);
@@ -1109,20 +1129,20 @@ function goDown() {
     MyCharacter.move(Utilities.Down);
     MyCharacterView.move();
 }
-/*
-    Use the Character class to move completely randomly through the maze
-    from the given starting point to the given ending point.
-
-    It's given a generated maze grid with starting and ending points
-    It will keep going any random direction until it finds the end.
-    Like any other character, it can't move through walls
-    Another posibility - make it a little smarter, have it navigate the way
-    that the maze generating algorithm works: keep moving until you can't,
-    then back up until you get to where you want to go.
-
-*/
 var MazeNavigator = /** @class */ (function () {
     function MazeNavigator(myMaze) {
+        /*
+            Use the Character class to move completely randomly through the maze
+            from the given starting point to the given ending point.
+        
+            It's given a generated maze grid with starting and ending points
+            It will keep going any random direction until it finds the end.
+            Like any other character, it can't move through walls
+            Another posibility - make it a little smarter, have it navigate the way
+            that the maze generating algorithm works: keep moving until you can't,
+            then back up until you get to where you want to go.
+        
+        */
         this.attempts = 0;
         this.path = "";
         this.MyMaze = myMaze;

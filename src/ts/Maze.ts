@@ -19,12 +19,12 @@ class Maze {
 	private MazeSolved: boolean = false;
 
 	constructor(
-		public gridLayers: number,
-		public gridWidth: number,
-		public gridHeight: number,
-		public mazeTemplateCompressed?: string,
-		public startLocation?: any,
-		public endLocation?: any) {
+		gridLayers: number,
+		gridWidth: number,
+		gridHeight: number,
+		mazeTemplateCompressed?: string,
+		startLocation?: any,
+		endLocation?: any) {
 
 		this.GridLayers	= gridLayers;
 		this.GridWidth	= gridWidth;
@@ -120,11 +120,14 @@ class Maze {
 
 		// tslint:disable-next-line:prefer-const
 		let path: string[] = template.MazePath.split("");
-		this.StartLocation = template.Start;
-		this.EndLocation = template.End;
+		this.StartLocation = template.StartLocation;
+		this.EndLocation = template.EndLocation;
 		this.BestPath = template.BestPath;
 		this.MazeDifficulty = template.MazeDifficulty;
-
+		this.GridWidth = template.GridWidth;
+		this.GridHeight = template.GridHeight;
+		this.GridLayers = template.GridLayers;
+		this.MazeGrid = this.generateGrid();
 		// MazePath: myMaze.MazePath,
 		// Start: JSON.stringify(myMaze.StartLocation),
 		// End: JSON.stringify(myMaze.EndLocation),
@@ -259,7 +262,7 @@ class Maze {
 				return new Cell(cell.Z, cell.Y, cell.X - 1);
 			case this.Utilities.Up:
 				// if we're at the top layer, loop around
-				if (cell.Z === this.gridLayers - 1)
+				if (cell.Z === this.GridLayers - 1)
 					return new Cell(0, cell.Y, cell.X);
 				else
 					return new Cell(cell.Z + 1, cell.Y, cell.X);
