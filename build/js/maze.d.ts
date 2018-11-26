@@ -129,6 +129,7 @@ declare class Maze {
     private fillMazeRandom;
     private carvePathBetweenCells;
     private isEmptyCell;
+    private isValidCell;
     private directionModifier;
 }
 declare class MazeView {
@@ -148,6 +149,7 @@ declare let MyCharacterView: ICharacterView;
 declare let Utilities: Utils;
 declare let MyMaze: Maze;
 declare function main(): void;
+declare function testBestPath(): void;
 declare function showLayerHideOthers(layerChoice: number): void;
 declare function goNorth(): void;
 declare function goEast(): void;
@@ -156,12 +158,13 @@ declare function goWest(): void;
 declare function goUp(): void;
 declare function goDown(): void;
 declare class MazeNavigator {
-    attempts: number;
+    moves: number;
     path: string;
     Character: Character;
     private Utilities;
     private MyMaze;
     constructor(myMaze: Maze);
     Navigate(): void;
+    isNavigatablePath(possiblePath: string): boolean;
 }
 //# sourceMappingURL=maze.d.ts.map

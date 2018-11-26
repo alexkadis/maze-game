@@ -85,8 +85,8 @@ class Maze {
 		for (let i = 0; i < attempts; i++) {
 			const MyNavigator: MazeNavigator = new MazeNavigator(this);
 			MyNavigator.Navigate();
-			if (MyNavigator.attempts < lowest) {
-				lowest = MyNavigator.attempts;
+			if (MyNavigator.moves < lowest) {
+				lowest = MyNavigator.moves;
 				path = MyNavigator.path;
 			}
 		}
@@ -155,10 +155,11 @@ class Maze {
 				cellsList.splice(index, 1);
 			} else {
 				const nextCell: Cell = this.directionModifier(cellsList[index], next);
-				const result2: any = this.carvePathBetweenCells(currentCell, nextCell, next);
+				// const result2: any = 
+				this.carvePathBetweenCells(currentCell, nextCell, next);
 
-				this.MazeGrid[currentCell.Z][currentCell.Y][currentCell.X] = result2.current;
-				this.MazeGrid[nextCell.Z][nextCell.Y][nextCell.X] = result2.next;
+				this.MazeGrid[currentCell.Z][currentCell.Y][currentCell.X] = currentCell;
+				this.MazeGrid[nextCell.Z][nextCell.Y][nextCell.X] = nextCell;
 				cellsList.push(nextCell);
 				index = -1;
 			}
@@ -193,9 +194,9 @@ class Maze {
 				if (this.isEmptyCell(nextCell.Z, nextCell.Y, nextCell.X)) {
 
 					// we found a workable direction
-					const result: any = this.carvePathBetweenCells (currentCell, nextCell, directions[i]);
-					this.MazeGrid[currentCell.Z][currentCell.Y][currentCell.X] = result.current;
-					this.MazeGrid[nextCell.Z][nextCell.Y][nextCell.X] = result.next;
+					this.carvePathBetweenCells (currentCell, nextCell, directions[i]);
+					this.MazeGrid[currentCell.Z][currentCell.Y][currentCell.X] = currentCell;
+					this.MazeGrid[nextCell.Z][nextCell.Y][nextCell.X] = nextCell;
 
 					cellsList.push(nextCell);
 					output += directions[i];
@@ -238,21 +239,29 @@ class Maze {
 				nextCell.Up = true;
 				break;
 		}
-		return { current: currentCell, next: nextCell };
+		// return { current: currentCell, next: nextCell };
 	}
 
 	private isEmptyCell(z: number, y: number, x: number) {
-		if (z >= 0 && z < this.GridLayers
-			&& 	y >= 0 && y < this.GridHeight
-			&&  x >= 0 && x < this.GridWidth
+		if (this.isValidCell(z, y, x)
 			&&  (this.MazeGrid[z][y][x] === null || this.MazeGrid[z][y][x] === undefined))
-					return true;
+				return true;
 		return false;
 	}
 
+	private isValidCell(z: number, y: number, x: number) {
+		if (	z >= 0 && z < this.GridLayers
+			&& 	y >= 0 && y < this.GridHeight
+			&&  x >= 0 && x < this.GridWidth)
+				return true;
+		return false;
+	}
 	private directionModifier(cell: Cell, direction: string) {
 		switch (direction) {
 			case this.Utilities.North:
+				// TODO: This has to be a bug, right?
+				// you would think it'd be cell.Y + 1, but I can't get that to work...
+				// it has to be a problem with isEmptyCell, but I don't see any issues there
 				return new Cell(cell.Z, cell.Y - 1, cell.X);
 			case this.Utilities.East:
 				return new Cell(cell.Z, cell.Y, cell.X + 1);

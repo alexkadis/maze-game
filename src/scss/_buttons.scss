@@ -17,6 +17,10 @@ button {
 		grid-area: #{$direction};
 		margin: auto;
 	}
+	.#{$direction}-button:hover {
+		background-image: url(../img/#{$direction}.png);
+		opacity: 0.75;
+	}
 }
 
 

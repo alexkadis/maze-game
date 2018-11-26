@@ -25,5 +25,17 @@
 		"text",
 		"typescriptreact",
 		"yml"
-	]
+	],
+	"liveSassCompile.settings.formats":[
+        {
+            "format": "expanded",
+            "extensionName": ".css",
+            "savePath": "/build/css/"
+        },
+        {
+            "extensionName": ".min.css",
+            "format": "compressed",
+            "savePath": "/build/css/"
+        }
+    ],
 }

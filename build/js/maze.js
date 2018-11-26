@@ -789,8 +789,8 @@ var Maze = /** @class */ (function () {
         for (var i = 0; i < attempts; i++) {
             var MyNavigator = new MazeNavigator(this);
             MyNavigator.Navigate();
-            if (MyNavigator.attempts < lowest) {
-                lowest = MyNavigator.attempts;
+            if (MyNavigator.moves < lowest) {
+                lowest = MyNavigator.moves;
                 path = MyNavigator.path;
             }
         }
@@ -851,9 +851,10 @@ var Maze = /** @class */ (function () {
             }
             else {
                 var nextCell = this.directionModifier(cellsList[index], next);
-                var result2 = this.carvePathBetweenCells(currentCell, nextCell, next);
-                this.MazeGrid[currentCell.Z][currentCell.Y][currentCell.X] = result2.current;
-                this.MazeGrid[nextCell.Z][nextCell.Y][nextCell.X] = result2.next;
+                // const result2: any = 
+                this.carvePathBetweenCells(currentCell, nextCell, next);
+                this.MazeGrid[currentCell.Z][currentCell.Y][currentCell.X] = currentCell;
+                this.MazeGrid[nextCell.Z][nextCell.Y][nextCell.X] = nextCell;
                 cellsList.push(nextCell);
                 index = -1;
             }
@@ -881,9 +882,9 @@ var Maze = /** @class */ (function () {
                 var nextCell = this.directionModifier(cellsList[index], directions[i]);
                 if (this.isEmptyCell(nextCell.Z, nextCell.Y, nextCell.X)) {
                     // we found a workable direction
-                    var result = this.carvePathBetweenCells(currentCell, nextCell, directions[i]);
-                    this.MazeGrid[currentCell.Z][currentCell.Y][currentCell.X] = result.current;
-                    this.MazeGrid[nextCell.Z][nextCell.Y][nextCell.X] = result.next;
+                    this.carvePathBetweenCells(currentCell, nextCell, directions[i]);
+                    this.MazeGrid[currentCell.Z][currentCell.Y][currentCell.X] = currentCell;
+                    this.MazeGrid[nextCell.Z][nextCell.Y][nextCell.X] = nextCell;
                     cellsList.push(nextCell);
                     output += directions[i];
                     index = -1;
@@ -924,19 +925,27 @@ var Maze = /** @class */ (function () {
                 nextCell.Up = true;
                 break;
         }
-        return { current: currentCell, next: nextCell };
+        // return { current: currentCell, next: nextCell };
     };
     Maze.prototype.isEmptyCell = function (z, y, x) {
+        if (this.isValidCell(z, y, x)
+            && (this.MazeGrid[z][y][x] === null || this.MazeGrid[z][y][x] === undefined))
+            return true;
+        return false;
+    };
+    Maze.prototype.isValidCell = function (z, y, x) {
         if (z >= 0 && z < this.GridLayers
             && y >= 0 && y < this.GridHeight
-            && x >= 0 && x < this.GridWidth
-            && (this.MazeGrid[z][y][x] === null || this.MazeGrid[z][y][x] === undefined))
+            && x >= 0 && x < this.GridWidth)
             return true;
         return false;
     };
     Maze.prototype.directionModifier = function (cell, direction) {
         switch (direction) {
             case this.Utilities.North:
+                // TODO: This has to be a bug, right?
+                // you would think it'd be cell.Y + 1, but I can't get that to work...
+                // it has to be a problem with isEmptyCell, but I don't see any issues there
                 return new Cell(cell.Z, cell.Y - 1, cell.X);
             case this.Utilities.East:
                 return new Cell(cell.Z, cell.Y, cell.X + 1);
@@ -1042,9 +1051,9 @@ function main() {
     GridHeight = 8;
     GridWidth = 8;
     // Random Maze
-    MyMaze = new Maze(GridLayers, GridHeight, GridWidth);
+    // MyMaze = new Maze(GridLayers, GridHeight, GridWidth);
     // Procedural Maze
-    MyMaze = new Maze(0, 0, 0, "N4IgsghgXgpgChALgCxALhAUQMq4Kp4ByA6gCLZ7bnaaZHHFE5OGGnVN51eYnmaleDUoVqE8DYtkZtBAugCFyZWkUoUpVHI2YayknbxKjWRzAsoTSMglcZdpNaetxzBXNjTUkpKk70ocCiEGIndXMgVsBRjaZ3M8BUIYlJjE2IFokXYSVLylMmoY0wkuFOj8yqq8xlT9GiU0lPTq1rzWAnlSKOIotrbzatpW2or+8YnJqemZypAAGhBsRAgAJ0QAGQB7AGMkAEstgDt0EGAAHRAALUu0AAZ5y4BNW4fLgA1XgF8FrCOAE22e0QhxOGAu11ejxAL3QAHZoZ90ABmH6LBQwADOiAQKFOv0gsFI+wAZiT9jsAK4AG0QAE90A8QABxVb7f7Edl4tAADkWrPZAAkYPsAObIRDoPkstmAiB0mCrTHoAAsXyAA");
+    MyMaze = new Maze(0, 0, 0, "N4IgsghgXgpgChALgCxALhAEWwZUwUQDlMcB1HAVQp3yNIvMuqp0qKuM0KPws7tKFqPCrXwk8ZEuVG96wkh3LZi+MoNIESXenmykD3YoU1qCxAzgBCQ7gxpXNV5zaFqaZUXk2spRXAamNhRWXC4unOHBvFRWPCaC4ia+IeK8hJwyIRmYgqIETKp4hFaSzCwhziVRGobh+FHhpI3OzS3tpR1d3TXVNfTErT3dbe0NwxOTU9MzkyAANCA4iBAATogAMgD2AMZIAJZbAHboIMAAOiAAWpdoAAzzlwCatw+XABqvAL4LIPhHABNtntEIcThgLtdXo8QC90ABWGGfdAANh+iysMAAzogEChTr9ILBMPsAGak-Y7ACuABtEABPdAPEAAcVW+wBpA5+LQAA5FmyOQAJGD7ADmyEQ6H5rPZQIg9Jgqyx6AALF8gA");
     var mazeViewer = new MazeView(MyMaze);
     mazeViewer.displayMaze();
     showLayerHideOthers(currentLayer);
@@ -1054,35 +1063,62 @@ function main() {
     String.fromCharCode(0xD83C, 0xDFC1), // 🏁
     String.fromCharCode(0xD83C, 0xDF89)); // 🎉
 }
-// https://stackoverflow.com/questions/1402698/binding-arrow-keys-in-js-jquery
-document.addEventListener("keydown", function (e) {
-    e = e || window.event;
-    switch (e.which || e.keyCode) {
-        case 65: // a
-        case 37: // left
-            goWest();
-            break;
-        case 87: // w
-        case 38: // up
-            goNorth();
-            break;
-        case 68: // d
-        case 39: // right
-            goEast();
-            break;
-        case 83: // s
-        case 40: // down
-            goSouth();
-            break;
-        case 81: // 1
-            goDown();
-            break;
-        case 69: // 1
-            goUp();
-            break;
-        default: return; // exit this handler for other keys
-    }
-    e.preventDefault(); // prevent the default action (scroll / move caret)
+function testBestPath() {
+    var path = MyMaze.BestPath.split("");
+    path.forEach(function (direction) {
+        switch (direction) {
+            case "N":
+                goNorth();
+                break;
+            case "S":
+                goSouth();
+                break;
+            case "E":
+                goEast();
+                break;
+            case "W":
+                goWest();
+                break;
+            case "U":
+                goUp();
+                break;
+            case "D":
+                goDown();
+                break;
+        }
+    });
+}
+document.addEventListener('DOMContentLoaded', function () {
+    // https://stackoverflow.com/questions/1402698/binding-arrow-keys-in-js-jquery
+    document.addEventListener("keydown", function (e) {
+        e = e || window.event;
+        switch (e.which || e.keyCode) {
+            case 65: // a
+            case 37: // left
+                goWest();
+                break;
+            case 87: // w
+            case 38: // up
+                goNorth();
+                break;
+            case 68: // d
+            case 39: // right
+                goEast();
+                break;
+            case 83: // s
+            case 40: // down
+                goSouth();
+                break;
+            case 81: // 1
+                goDown();
+                break;
+            case 69: // 1
+                goUp();
+                break;
+            default: return; // exit this handler for other keys
+        }
+        e.preventDefault(); // prevent the default action (scroll / move caret)
+    });
 });
 function showLayerHideOthers(layerChoice) {
     if (GridLayers > 1) {
@@ -1143,31 +1179,47 @@ var MazeNavigator = /** @class */ (function () {
             then back up until you get to where you want to go.
         
         */
-        this.attempts = 0;
+        this.moves = 0;
         this.path = "";
         this.MyMaze = myMaze;
         this.Utilities = new Utils();
         this.Character = new Character("navigator" + this.Utilities.getRandomIntInclusive(0, 1000), myMaze);
     }
     MazeNavigator.prototype.Navigate = function () {
-        var moved = false;
+        // let moved = false;
         while (!this.MyMaze.IsMazeSolved(this.Character.CurrentLocation)) {
             var directions = this.Utilities.getRandomDirections();
             for (var i = 0; i < directions.length; i++) {
                 if (this.Character.CanMoveDirection(directions[i])) {
                     this.Character.move(directions[i]);
                     this.path += directions[i];
-                    this.attempts++;
-                    moved = true;
+                    this.moves++;
+                    // moved = true;
                     break;
                 }
             }
-            if (!moved) {
-                this.Character.CurrentLocation = this.Character.PreviousLocation;
-            }
-            moved = false;
+            // if (!moved) {
+            // 	this.Character.CurrentLocation = this.Character.PreviousLocation;
+            // }
+            // moved = false;
         }
+        console.log("IsNavigatablePath: " + this.isNavigatablePath(this.path));
         this.Character.ResetCharacter();
+    };
+    MazeNavigator.prototype.isNavigatablePath = function (possiblePath) {
+        var isValidPath = false;
+        var path = possiblePath.split("");
+        for (var i = 0; i < path.length; i++) {
+            var next = path.shift();
+            if (next === undefined) {
+                next = "";
+            }
+            if (this.Character.CanMoveDirection(next)) {
+                this.Character.move(next);
+                this.moves++;
+            }
+        }
+        return this.MyMaze.IsMazeSolved(this.Character.CurrentLocation);
     };
     return MazeNavigator;
 }());

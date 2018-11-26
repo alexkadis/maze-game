@@ -12,7 +12,7 @@ class MazeNavigator {
 
 */
 
-	public attempts: number = 0;
+	public moves: number = 0;
 	public path: string = "";
 	public Character: Character;
 	private Utilities: Utils;
@@ -25,23 +25,46 @@ class MazeNavigator {
 	}
 
 	public Navigate() {
-		let moved = false;
+		// let moved = false;
 		while (!this.MyMaze.IsMazeSolved(this.Character.CurrentLocation)) {
 			const directions = this.Utilities.getRandomDirections();
 			for (let i = 0; i < directions.length; i++) {
 				if (this.Character.CanMoveDirection(directions[i])) {
 					this.Character.move(directions[i]);
 					this.path += directions[i];
-					this.attempts++;
-					moved = true;
+					this.moves++;
+					// moved = true;
 					break;
 				}
 			}
-			if (!moved) {
-				this.Character.CurrentLocation = this.Character.PreviousLocation;
-			}
-			moved = false;
+			// if (!moved) {
+			// 	this.Character.CurrentLocation = this.Character.PreviousLocation;
+			// }
+			// moved = false;
 		}
+		console.log("IsNavigatablePath: " + this.isNavigatablePath(this.path));
 		this.Character.ResetCharacter();
 	}
+
+
+	public isNavigatablePath(possiblePath: string)
+	{
+		let isValidPath = false;
+		let path: string[] = possiblePath.split("");
+
+		for (let i = 0; i < path.length; i++)
+		{
+			let next = path.shift();
+			if (next === undefined) {
+				next = "";
+			}
+			if (this.Character.CanMoveDirection(next))
+			{
+				this.Character.move(next);
+				this.moves++;
+			}
+		}
+		return this.MyMaze.IsMazeSolved(this.Character.CurrentLocation);
+	}
+
 }
