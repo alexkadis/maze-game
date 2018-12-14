@@ -1,7 +1,7 @@
 "use strict";
-var Utils = /** @class */ (function () {
+class Utils {
     // public self: Utils;
-    function Utils() {
+    constructor() {
         this.North = "N";
         this.East = "E";
         this.South = "S";
@@ -19,23 +19,23 @@ var Utils = /** @class */ (function () {
         this.Back = "B";
         // this.self = new Utils();
     }
-    Utils.prototype.getRandomIntInclusive = function (min, max) {
+    getRandomIntInclusive(min, max) {
         min = Math.ceil(min);
         max = Math.floor(max);
         return Math.floor(Math.random() * (max - min + 1)) + min;
         // The maximum is inclusive and the minimum is inclusive
-    };
-    Utils.prototype.getRandomDirections = function () {
+    }
+    getRandomDirections() {
         return this.shuffle(this.Directions);
-    };
+    }
     /**
      * Given a decompressed template, return a path, start, and end
      * @param template the decompressed template to break apart
      */
-    Utils.prototype.uncompressTemplate = function (template) {
-        var decompressed = LZString.decompressFromEncodedURIComponent(template);
+    uncompressTemplate(template) {
+        const decompressed = LZString.decompressFromEncodedURIComponent(template);
         // console.log(decompressed);
-        var decompressedObject = JSON.parse(decompressed);
+        let decompressedObject = JSON.parse(decompressed);
         // let decompressedObject = JSON.parse(template);
         decompressedObject["StartLocation"] = JSON.parse(decompressedObject["StartLocation"]);
         decompressedObject["EndLocation"] = JSON.parse(decompressedObject["EndLocation"]);
@@ -44,14 +44,14 @@ var Utils = /** @class */ (function () {
         decompressedObject["GridHeight"] = parseInt(decompressedObject["GridHeight"], 10);
         decompressedObject["GridLayers"] = parseInt(decompressedObject["GridLayers"], 10);
         return decompressedObject;
-    };
-    Utils.prototype.compressionTest = function (MyMaze) {
+    }
+    compressionTest(MyMaze) {
         console.log("BASE64:");
         console.log(this.b64EncodeUnicode(JSON.stringify(this.compressTemplate(MyMaze))));
         console.log("LZ String:");
         console.log(LZString.compressToEncodedURIComponent(JSON.stringify(this.compressTemplate(MyMaze))));
-    };
-    Utils.prototype.b64EncodeUnicode = function (str) {
+    }
+    b64EncodeUnicode(str) {
         // first we use encodeURIComponent to get percent-encoded UTF-8,
         // then we convert the percent encodings into raw bytes which
         // can be fed into btoa.
@@ -59,9 +59,9 @@ var Utils = /** @class */ (function () {
             // @ts-ignore
             return String.fromCharCode('0x' + p1);
         }));
-    };
-    Utils.prototype.compressTemplate = function (myMaze) {
-        var template = {
+    }
+    compressTemplate(myMaze) {
+        const template = {
             MazePath: myMaze.MazePath,
             StartLocation: JSON.stringify(myMaze.StartLocation),
             EndLocation: JSON.stringify(myMaze.EndLocation),
@@ -69,20 +69,20 @@ var Utils = /** @class */ (function () {
             MazeDifficulty: myMaze.MazeDifficulty,
             GridWidth: myMaze.GridWidth,
             GridHeight: myMaze.GridHeight,
-            GridLayers: myMaze.GridLayers
+            GridLayers: myMaze.GridLayers,
         };
         // console.log(template);
         return LZString.compressToEncodedURIComponent(JSON.stringify(template));
         // return JSON.stringify(template);
-    };
+    }
     /**
      * Shuffles array in place.
      * @param {Array} array items An array containing the items.
      */
-    Utils.prototype.shuffle = function (array) {
-        var j;
-        var x;
-        var i;
+    shuffle(array) {
+        let j;
+        let x;
+        let i;
         for (i = array.length - 1; i > 0; i--) {
             j = Math.floor(Math.random() * (i + 1));
             x = array[i];
@@ -90,9 +90,8 @@ var Utils = /** @class */ (function () {
             array[j] = x;
         }
         return array;
-    };
-    return Utils;
-}());
+    }
+}
 // Copyright (c) 2013 Pieroxy <pieroxy@pieroxy.net>
 // This work is free. You can redistribute it and/or modify it
 // under the terms of the WTFPL, Version 2
@@ -178,7 +177,7 @@ var LZString = (function () {
         //decompress from an output of compressToEncodedURIComponent
         decompressFromEncodedURIComponent: function (input) {
             input = input.replace(/ /g, "+");
-            var output = "";
+            let output = "";
             if (input != null) {
                 // if (input == "") return null;
                 output = LZString._decompress(input.length, 32, function (index) { return getBaseValue(keyStrUriSafe, input.charAt(index)); });
@@ -565,8 +564,8 @@ var LZString = (function () {
 //			 return LZString;
 //		 });
 // }
-var Cell = /** @class */ (function () {
-    function Cell(z, y, x) {
+class Cell {
+    constructor(z, y, x) {
         this.North = false;
         this.East = false;
         this.South = false;
@@ -577,10 +576,9 @@ var Cell = /** @class */ (function () {
         this.Y = y;
         this.X = x;
     }
-    return Cell;
-}());
-var Character = /** @class */ (function () {
-    function Character(name, myMaze) {
+}
+class Character {
+    constructor(name, myMaze) {
         this.Utilities = new Utils();
         this.Name = name;
         this.ThisMaze = myMaze;
@@ -591,7 +589,7 @@ var Character = /** @class */ (function () {
      * If the direction parameter is valid, change the current location to that cell
      * @param direction Direction to move the character
      */
-    Character.prototype.move = function (direction) {
+    move(direction) {
         // Make a clean copy (not a reference)
         this.PreviousLocation = JSON.parse(JSON.stringify(this.CurrentLocation));
         if (this.CanMoveDirection(direction)) {
@@ -628,18 +626,18 @@ var Character = /** @class */ (function () {
             return true;
         }
         return false;
-    };
-    Character.prototype.ResetCharacter = function () {
+    }
+    ResetCharacter() {
         this.ThisMaze.SetMazeSolvedToFalse();
         this.CurrentLocation = JSON.parse(JSON.stringify(this.ThisMaze.StartLocation));
-    };
+    }
     /**
      * Moves the character to an *exact* location within the grid
      * @param z Z-Axis
      * @param y Y-Axis
      * @param x X-Axis
      */
-    Character.prototype.SetExactLocation = function (z, y, x) {
+    SetExactLocation(z, y, x) {
         if (z !== null) {
             this.CurrentLocation.Z = z;
         }
@@ -649,23 +647,23 @@ var Character = /** @class */ (function () {
         if (x !== null) {
             this.CurrentLocation.X = x;
         }
-    };
+    }
     /**
      * Moves the character to a location relative to the current location within the grid
      * @param z Z-Axis
      * @param y Y-Axis
      * @param x X-Axis
      */
-    Character.prototype.SetRelativeLocation = function (z, y, x) {
+    SetRelativeLocation(z, y, x) {
         this.CurrentLocation.Z += z;
         this.CurrentLocation.Y += y;
         this.CurrentLocation.X += x;
-    };
+    }
     /**
      * Checks to see if a character can move a direction
      * @param direction The direction the character wants to move
      */
-    Character.prototype.CanMoveDirection = function (direction) {
+    CanMoveDirection(direction) {
         if (direction === this.Utilities.Up || direction === this.Utilities.Down) {
             return true;
         }
@@ -683,11 +681,10 @@ var Character = /** @class */ (function () {
                 return this.ThisMaze.MazeGrid[this.CurrentLocation.Z][this.CurrentLocation.Y][this.CurrentLocation.X].West;
                 break;
         }
-    };
-    return Character;
-}());
-var HTMLCharacterView = /** @class */ (function () {
-    function HTMLCharacterView(myCharacter, characterIcon, solvedCharacterEndIcon, mazeEndIcon, solvedMazeEndIcon) {
+    }
+}
+class HTMLCharacterView {
+    constructor(myCharacter, characterIcon, solvedCharacterEndIcon, mazeEndIcon, solvedMazeEndIcon) {
         this.MyCharacter = myCharacter;
         this.CharacterIcon = characterIcon;
         this.SolvedCharacterIcon = solvedCharacterEndIcon;
@@ -697,13 +694,13 @@ var HTMLCharacterView = /** @class */ (function () {
         this.CurrentEndIcon = mazeEndIcon;
         this.move();
     }
-    HTMLCharacterView.prototype.move = function () {
+    move() {
         // Move the character on *every* level, not just the current level
-        var selectedCells = document.querySelectorAll(".y" + this.MyCharacter.PreviousLocation.Y + "x" + this.MyCharacter.PreviousLocation.X);
-        for (var i = 0; i < selectedCells.length; i++) {
+        let selectedCells = document.querySelectorAll(`.y${this.MyCharacter.PreviousLocation.Y}x${this.MyCharacter.PreviousLocation.X}`);
+        for (let i = 0; i < selectedCells.length; i++) {
             selectedCells[i].innerHTML = "";
         }
-        var playAgain = document.querySelector("#play-again");
+        const playAgain = document.querySelector("#play-again");
         if (this.IsSolved()) {
             playAgain.style.display = "block";
             this.CurrentCharacterIcon = this.SolvedCharacterIcon;
@@ -714,20 +711,19 @@ var HTMLCharacterView = /** @class */ (function () {
             this.CurrentCharacterIcon = this.CharacterIcon;
             this.CurrentEndIcon = this.EndIcon;
         }
-        var end = document.querySelector(".winter.y" + this.MyCharacter.ThisMaze.EndLocation.Y + "x" + this.MyCharacter.ThisMaze.EndLocation.X);
+        const end = document.querySelector(`.winter.y${this.MyCharacter.ThisMaze.EndLocation.Y}x${this.MyCharacter.ThisMaze.EndLocation.X}`);
         end.innerHTML = this.CurrentEndIcon;
-        selectedCells = document.querySelectorAll(".y" + this.MyCharacter.CurrentLocation.Y + "x" + this.MyCharacter.CurrentLocation.X);
-        for (var i = 0; i < selectedCells.length; i++) {
+        selectedCells = document.querySelectorAll(`.y${this.MyCharacter.CurrentLocation.Y}x${this.MyCharacter.CurrentLocation.X}`);
+        for (let i = 0; i < selectedCells.length; i++) {
             selectedCells[i].innerHTML = this.CurrentCharacterIcon;
         }
-    };
-    HTMLCharacterView.prototype.IsSolved = function () {
+    }
+    IsSolved() {
         return this.MyCharacter.ThisMaze.IsMazeSolved(this.MyCharacter.CurrentLocation);
-    };
-    return HTMLCharacterView;
-}());
-var Maze = /** @class */ (function () {
-    function Maze(gridLayers, gridWidth, gridHeight, mazeTemplateCompressed, startLocation, endLocation) {
+    }
+}
+class Maze {
+    constructor(gridLayers, gridWidth, gridHeight, mazeTemplateCompressed, startLocation, endLocation) {
         this.MazeDifficulty = 0;
         this.BestPath = "";
         this.Utilities = new Utils();
@@ -748,7 +744,7 @@ var Maze = /** @class */ (function () {
                 this.StartLocation = {
                     Z: 0,
                     Y: 0,
-                    X: 0
+                    X: 0,
                 };
             }
             else {
@@ -758,7 +754,7 @@ var Maze = /** @class */ (function () {
                 this.EndLocation = {
                     Z: 0,
                     Y: this.Utilities.getRandomIntInclusive(1, this.GridHeight - 1),
-                    X: this.Utilities.getRandomIntInclusive(1, this.GridWidth - 1)
+                    X: this.Utilities.getRandomIntInclusive(1, this.GridWidth - 1),
                 };
             }
             else {
@@ -768,10 +764,10 @@ var Maze = /** @class */ (function () {
             this.MazeTemplateCompressed = this.Utilities.compressTemplate(this);
         }
     }
-    Maze.prototype.SetMazeSolvedToFalse = function () {
+    SetMazeSolvedToFalse() {
         this.MazeSolved = false;
-    };
-    Maze.prototype.IsMazeSolved = function (currentLocation) {
+    }
+    IsMazeSolved(currentLocation) {
         // If the maze has already been solved, don't change that fact
         if (this.MazeSolved) {
             return true;
@@ -781,13 +777,12 @@ var Maze = /** @class */ (function () {
                 && currentLocation.Y === this.EndLocation.Y
                 && currentLocation.X === this.EndLocation.X);
         }
-    };
-    Maze.prototype.determineMazeDifficulty = function (attempts) {
-        if (attempts === void 0) { attempts = 3000; }
-        var lowest = Number.MAX_VALUE;
-        var path = "";
-        for (var i = 0; i < attempts; i++) {
-            var MyNavigator = new MazeNavigator(this);
+    }
+    determineMazeDifficulty(attempts = 3000) {
+        let lowest = Number.MAX_VALUE;
+        let path = "";
+        for (let i = 0; i < attempts; i++) {
+            const MyNavigator = new MazeNavigator(this);
             MyNavigator.Navigate();
             if (MyNavigator.moves < lowest) {
                 lowest = MyNavigator.moves;
@@ -800,26 +795,26 @@ var Maze = /** @class */ (function () {
         // let t1 = performance.now();
         // let tTotal = t1-t0;
         // console.log("Total time in seconds: " + tTotal / 1000);
-    };
-    Maze.prototype.generateGrid = function () {
-        var tempGrid = new Array(this.GridLayers);
-        for (var i = 0; i < this.GridLayers; i++) {
+    }
+    generateGrid() {
+        const tempGrid = new Array(this.GridLayers);
+        for (let i = 0; i < this.GridLayers; i++) {
             tempGrid[i] = new Array(this.GridHeight);
-            for (var j = 0; j < this.GridHeight; j++) {
+            for (let j = 0; j < this.GridHeight; j++) {
                 tempGrid[i][j] = new Array(this.GridWidth);
                 tempGrid[i][j].fill();
             }
         }
         return tempGrid;
-    };
+    }
     /**
      * Given a decompressed path, returns a maze path for a procedural maze
      * @param mazeTemplateCompressed given decompressed string of directions (a path)
      */
-    Maze.prototype.fillMazeProcedural = function (mazeTemplateCompressed) {
-        var template = this.Utilities.uncompressTemplate(mazeTemplateCompressed);
+    fillMazeProcedural(mazeTemplateCompressed) {
+        const template = this.Utilities.uncompressTemplate(mazeTemplateCompressed);
         // tslint:disable-next-line:prefer-const
-        var path = template.MazePath.split("");
+        let path = template.MazePath.split("");
         this.StartLocation = template.StartLocation;
         this.EndLocation = template.EndLocation;
         this.BestPath = template.BestPath;
@@ -834,14 +829,14 @@ var Maze = /** @class */ (function () {
         // BestPath: myMaze.BestPath,
         // Difficulty: myMaze.MazeDifficulty,
         // tslint:disable-next-line:prefer-const
-        var cellsList = [new Cell(0, 0, 0)];
-        var next;
-        var mazePath = "";
-        var index = -1;
+        let cellsList = [new Cell(0, 0, 0)];
+        let next;
+        let mazePath = "";
+        let index = -1;
         while (cellsList.length > 0) {
             // index is the newest
             index = cellsList.length - 1;
-            var currentCell = cellsList[index];
+            const currentCell = cellsList[index];
             next = path.shift();
             if (next === "" || next === undefined) {
                 break;
@@ -850,7 +845,7 @@ var Maze = /** @class */ (function () {
                 cellsList.splice(index, 1);
             }
             else {
-                var nextCell = this.directionModifier(cellsList[index], next);
+                const nextCell = this.directionModifier(cellsList[index], next);
                 // const result2: any = 
                 this.carvePathBetweenCells(currentCell, nextCell, next);
                 this.MazeGrid[currentCell.Z][currentCell.Y][currentCell.X] = currentCell;
@@ -864,22 +859,22 @@ var Maze = /** @class */ (function () {
             mazePath += next;
         }
         return mazePath;
-    };
+    }
     /**
      * Returns a maze path for a random maze
      */
-    Maze.prototype.fillMazeRandom = function () {
-        var index = -1;
-        var output = "";
+    fillMazeRandom() {
+        let index = -1;
+        let output = "";
         // tslint:disable-next-line:prefer-const
-        var cellsList = [new Cell(this.StartLocation.Z, this.StartLocation.Y, this.StartLocation.X)];
+        let cellsList = [new Cell(this.StartLocation.Z, this.StartLocation.Y, this.StartLocation.X)];
         while (cellsList.length > 0) {
             // index is the newest
             index = cellsList.length - 1;
-            var currentCell = cellsList[index];
-            var directions = this.Utilities.getRandomDirections();
-            for (var i = 0; i < directions.length; i++) {
-                var nextCell = this.directionModifier(cellsList[index], directions[i]);
+            const currentCell = cellsList[index];
+            const directions = this.Utilities.getRandomDirections();
+            for (let i = 0; i < directions.length; i++) {
+                const nextCell = this.directionModifier(cellsList[index], directions[i]);
                 if (this.isEmptyCell(nextCell.Z, nextCell.Y, nextCell.X)) {
                     // we found a workable direction
                     this.carvePathBetweenCells(currentCell, nextCell, directions[i]);
@@ -897,8 +892,8 @@ var Maze = /** @class */ (function () {
             }
         }
         return output;
-    };
-    Maze.prototype.carvePathBetweenCells = function (currentCell, nextCell, direction) {
+    }
+    carvePathBetweenCells(currentCell, nextCell, direction) {
         switch (direction) {
             case this.Utilities.North:
                 currentCell.North = true;
@@ -926,21 +921,21 @@ var Maze = /** @class */ (function () {
                 break;
         }
         // return { current: currentCell, next: nextCell };
-    };
-    Maze.prototype.isEmptyCell = function (z, y, x) {
+    }
+    isEmptyCell(z, y, x) {
         if (this.isValidCell(z, y, x)
             && (this.MazeGrid[z][y][x] === null || this.MazeGrid[z][y][x] === undefined))
             return true;
         return false;
-    };
-    Maze.prototype.isValidCell = function (z, y, x) {
+    }
+    isValidCell(z, y, x) {
         if (z >= 0 && z < this.GridLayers
             && y >= 0 && y < this.GridHeight
             && x >= 0 && x < this.GridWidth)
             return true;
         return false;
-    };
-    Maze.prototype.directionModifier = function (cell, direction) {
+    }
+    directionModifier(cell, direction) {
         switch (direction) {
             case this.Utilities.North:
                 // TODO: This has to be a bug, right?
@@ -967,31 +962,30 @@ var Maze = /** @class */ (function () {
                     return new Cell(cell.Z - 1, cell.Y, cell.X);
         }
         return new Cell(cell.Z, cell.Y, cell.Z);
-    };
-    return Maze;
-}());
-var MazeView = /** @class */ (function () {
-    function MazeView(myMaze) {
+    }
+}
+class MazeView {
+    constructor(myMaze) {
         this.myMaze = myMaze;
         this.MyMaze = myMaze;
     }
-    MazeView.prototype.displayMaze = function () {
+    displayMaze() {
         // $(`#play-again`).hide();
-        var html = "";
-        for (var layer = 0; layer < this.MyMaze.MazeGrid.length; layer++) {
-            var layerName = this.getNameFromLayer(layer);
-            html += "<div id=\"layer" + layer + "\" class=\"" + layerName + "\">";
-            html += "<h3 class=\"" + layerName + " maze-header\">"
-                + "<button onclick=\"goDown()\" class=\"down-button\" aria-label=\"Move Back\">&nbsp;</button>"
-                + ("<span class=\"" + layerName + " layer-name\">" + layerName + "</span>")
-                + "<button onclick=\"goUp()\" class=\"up-button\" aria-label=\"Move Forward\">&nbsp;</button>"
-                + "</h3>";
-            html += "<table id=\"layer" + layer + "-table\" class=\"maze-table " + layerName + "\">";
-            for (var row = 0; row < this.MyMaze.MazeGrid[layer].length; row++) {
+        let html = "";
+        for (let layer = 0; layer < this.MyMaze.MazeGrid.length; layer++) {
+            const layerName = this.getNameFromLayer(layer);
+            html += `<div id="layer${layer}" class="${layerName}">`;
+            html += `<h3 class="${layerName} maze-header">`
+                + `<button onclick="goDown()" class="down-button" aria-label="Move Back">&nbsp;</button>`
+                + `<span class="${layerName} layer-name">${layerName}</span>`
+                + `<button onclick="goUp()" class="up-button" aria-label="Move Forward">&nbsp;</button>`
+                + `</h3>`;
+            html += `<table id="layer${layer}-table" class="maze-table ${layerName}">`;
+            for (let row = 0; row < this.MyMaze.MazeGrid[layer].length; row++) {
                 html += "<tr class='r'>";
-                for (var column = 0; column < this.MyMaze.GridWidth; column++) {
-                    var classes = this.getClassesFromCell(this.MyMaze.MazeGrid[layer][row][column]);
-                    html += "<td class=\"cell " + classes + " " + layerName + " y" + row + "x" + column + "\">&nbsp;";
+                for (let column = 0; column < this.MyMaze.GridWidth; column++) {
+                    const classes = this.getClassesFromCell(this.MyMaze.MazeGrid[layer][row][column]);
+                    html += `<td class="cell ${classes} ${layerName} y${row}x${column}">&nbsp;`;
                     html += "</td>";
                 }
                 html += "</tr> <!-- end row -->\n";
@@ -1000,9 +994,9 @@ var MazeView = /** @class */ (function () {
             html += "</div>";
         }
         document.body.querySelector("#maze-game").innerHTML = html;
-    };
-    MazeView.prototype.getClassesFromCell = function (cell) {
-        var classes = "";
+    }
+    getClassesFromCell(cell) {
+        let classes = "";
         if (!cell.North)
             classes += " top ";
         if (!cell.East)
@@ -1018,8 +1012,8 @@ var MazeView = /** @class */ (function () {
         if ({ Z: cell.Z, Y: cell.Y, X: cell.X } === this.MyMaze.EndLocation)
             classes += " end ";
         return classes;
-    };
-    MazeView.prototype.getNameFromLayer = function (layer) {
+    }
+    getNameFromLayer(layer) {
         switch (layer) {
             case 0:
                 return "winter";
@@ -1032,17 +1026,16 @@ var MazeView = /** @class */ (function () {
             default:
                 return "";
         }
-    };
-    return MazeView;
-}());
-var currentLayer;
-var GridLayers;
-var GridHeight;
-var GridWidth;
-var MyCharacter;
-var MyCharacterView;
-var Utilities;
-var MyMaze;
+    }
+}
+let currentLayer;
+let GridLayers;
+let GridHeight;
+let GridWidth;
+let MyCharacter;
+let MyCharacterView;
+let Utilities;
+let MyMaze;
 // let MyNavigator: MazeNavigator;
 function main() {
     Utilities = new Utils();
@@ -1054,7 +1047,7 @@ function main() {
     // MyMaze = new Maze(GridLayers, GridHeight, GridWidth);
     // Procedural Maze
     MyMaze = new Maze(0, 0, 0, "N4IgsghgXgpgChALgCxALhAEWwZUwUQDlMcB1HAVQp3yNIvMuqp0qKuM0KPws7tKFqPCrXwk8ZEuVG96wkh3LZi+MoNIESXenmykD3YoU1qCxAzgBCQ7gxpXNV5zaFqaZUXk2spRXAamNhRWXC4unOHBvFRWPCaC4ia+IeK8hJwyIRmYgqIETKp4hFaSzCwhziVRGobh+FHhpI3OzS3tpR1d3TXVNfTErT3dbe0NwxOTU9MzkyAANCA4iBAATogAMgD2AMZIAJZbAHboIMAAOiAAWpdoAAzzlwCatw+XABqvAL4LIPhHABNtntEIcThgLtdXo8QC90ABWGGfdAANh+iysMAAzogEChTr9ILBMPsAGak-Y7ACuABtEABPdAPEAAcVW+wBpA5+LQAA5FmyOQAJGD7ADmyEQ6H5rPZQIg9Jgqyx6AALF8gA");
-    var mazeViewer = new MazeView(MyMaze);
+    const mazeViewer = new MazeView(MyMaze);
     mazeViewer.displayMaze();
     showLayerHideOthers(currentLayer);
     MyCharacter = new Character("happyemoji", MyMaze);
@@ -1064,8 +1057,8 @@ function main() {
     String.fromCharCode(0xD83C, 0xDF89)); // 🎉
 }
 function testBestPath() {
-    var path = MyMaze.BestPath.split("");
-    path.forEach(function (direction) {
+    let path = MyMaze.BestPath.split("");
+    path.forEach(direction => {
         switch (direction) {
             case "N":
                 goNorth();
@@ -1088,7 +1081,7 @@ function testBestPath() {
         }
     });
 }
-document.addEventListener('DOMContentLoaded', function () {
+document.addEventListener('DOMContentLoaded', () => {
     // https://stackoverflow.com/questions/1402698/binding-arrow-keys-in-js-jquery
     document.addEventListener("keydown", function (e) {
         e = e || window.event;
@@ -1122,8 +1115,8 @@ document.addEventListener('DOMContentLoaded', function () {
 });
 function showLayerHideOthers(layerChoice) {
     if (GridLayers > 1) {
-        for (var layer = 0; layer < GridLayers; layer++) {
-            var layerId = "#layer" + layer;
+        for (let layer = 0; layer < GridLayers; layer++) {
+            const layerId = `#layer${layer}`;
             if (layer === layerChoice)
                 document.body.querySelector(layerId).style.display = "block";
             else
@@ -1165,8 +1158,8 @@ function goDown() {
     MyCharacter.move(Utilities.Down);
     MyCharacterView.move();
 }
-var MazeNavigator = /** @class */ (function () {
-    function MazeNavigator(myMaze) {
+class MazeNavigator {
+    constructor(myMaze) {
         /*
             Use the Character class to move completely randomly through the maze
             from the given starting point to the given ending point.
@@ -1185,11 +1178,11 @@ var MazeNavigator = /** @class */ (function () {
         this.Utilities = new Utils();
         this.Character = new Character("navigator" + this.Utilities.getRandomIntInclusive(0, 1000), myMaze);
     }
-    MazeNavigator.prototype.Navigate = function () {
+    Navigate() {
         // let moved = false;
         while (!this.MyMaze.IsMazeSolved(this.Character.CurrentLocation)) {
-            var directions = this.Utilities.getRandomDirections();
-            for (var i = 0; i < directions.length; i++) {
+            const directions = this.Utilities.getRandomDirections();
+            for (let i = 0; i < directions.length; i++) {
                 if (this.Character.CanMoveDirection(directions[i])) {
                     this.Character.move(directions[i]);
                     this.path += directions[i];
@@ -1205,12 +1198,12 @@ var MazeNavigator = /** @class */ (function () {
         }
         console.log("IsNavigatablePath: " + this.isNavigatablePath(this.path));
         this.Character.ResetCharacter();
-    };
-    MazeNavigator.prototype.isNavigatablePath = function (possiblePath) {
-        var isValidPath = false;
-        var path = possiblePath.split("");
-        for (var i = 0; i < path.length; i++) {
-            var next = path.shift();
+    }
+    isNavigatablePath(possiblePath) {
+        let isValidPath = false;
+        let path = possiblePath.split("");
+        for (let i = 0; i < path.length; i++) {
+            let next = path.shift();
             if (next === undefined) {
                 next = "";
             }
@@ -1220,6 +1213,5 @@ var MazeNavigator = /** @class */ (function () {
             }
         }
         return this.MyMaze.IsMazeSolved(this.Character.CurrentLocation);
-    };
-    return MazeNavigator;
-}());
+    }
+}
