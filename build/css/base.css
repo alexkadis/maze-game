@@ -82,18 +82,25 @@ table.maze-table .cell.winter {
 
 table.maze-table .top.winter {
   border-top: 4px solid var(--winter-dark);
+  border-image: url(http://127.0.0.1:5500/build/img/SnowIceTexture0004.jpg);
 }
 
 table.maze-table .right.winter {
   border-right: 4px solid var(--winter-dark);
+  border-image: url(http://127.0.0.1:5500/build/img/SnowIceTexture0004.jpg);
 }
 
 table.maze-table .bottom.winter {
   border-bottom: 4px solid var(--winter-dark);
+  border-image: url(http://127.0.0.1:5500/build/img/SnowIceTexture0004.jpg);
 }
 
 table.maze-table .left.winter {
-  border-left: 4px solid var(--winter-dark);
+  border-left: 4px solid !important;
+  -webkit-border-image: url('http://127.0.0.1:5500/build/img/SnowIceTexture0004.jpg') 30 !important;
+  -o-border-image: url('http://127.0.0.1:5500/build/img/SnowIceTexture0004.jpg') 30 !important;
+  border-image: url('http://127.0.0.1:5500/build/img/SnowIceTexture0004.jpg') 30 !important;
+
 }
 
 /* spring */
@@ -271,7 +278,11 @@ button {
   grid-area: game-buttons;
   display: -ms-grid;
   display: grid;
-      grid-template-areas: " . . . . ." ". . north . ." ". west . east ." ". . south . ." " . . . . .";
+      grid-template-areas: " . . . . ."
+ ". . north . ."
+ ". west . east ."
+ ". . south . ."
+ " . . . . .";
   -ms-flex-line-pack: center;
       align-content: center;
   -ms-grid-columns: 1fr 50px 50px 50px 1fr;
@@ -380,7 +391,10 @@ dl.keyboard-shortcuts {
   display: -ms-grid;
   display: grid;
   grid-area: keyboard-shortcuts;
-      grid-template-areas: ". kbd-down kbd-north kbd-up ." ". kbt-down kbt-north kbt-up ." ". kbd-west kbd-south kbd-east ." ". kbt-west kbt-south kbt-east .";
+      grid-template-areas: ". kbd-down kbd-north kbd-up ."
+ ". kbt-down kbt-north kbt-up ."
+ ". kbd-west kbd-south kbd-east ."
+ ". kbt-west kbt-south kbt-east .";
   -ms-grid-columns: 1fr 0.5fr 0.5fr 0.5fr 1fr;
       grid-template-columns: 1fr 0.5fr 0.5fr 0.5fr 1fr;
   grid-gap: 5px;
@@ -472,7 +486,12 @@ a {
     margin: 20px auto;
     display: -ms-grid;
     display: grid;
-        grid-template-areas: "header 			header					maze-game " "game-description	game-description		maze-game" "game-buttons		shortcuts				maze-game" "footer				footer					maze-game" "play-again 		play-again				maze-game" ".					.						maze-game";
+        grid-template-areas: "header 			header					maze-game "
+ "game-description	game-description		maze-game"
+ "game-buttons		shortcuts				maze-game"
+ "footer				footer					maze-game"
+ "play-again 		play-again				maze-game"
+ ".					.						maze-game";
   }
   table.maze-table {
     width: 43vw;
@@ -503,7 +522,12 @@ a {
     margin: 0px auto;
     display: -ms-grid;
     display: grid;
-        grid-template-areas: "header" "game-description" "game-buttons" "play-again" "maze-game" "footer";
+        grid-template-areas: "header"
+ "game-description"
+ "game-buttons"
+ "play-again"
+ "maze-game"
+ "footer";
   }
   #shortcuts {
     display: none;
