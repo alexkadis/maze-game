@@ -118,7 +118,7 @@ Up and Down aren't used for display in my maze.
 ### Procedural mazes
 I now have the ability to generate procedural mazes. I'll use that to create different *levels* that users can try. 
 
-Next I'm creating a maze solving class (CharacterNavigator) to determine how difficult a maze is to solve based on how many moves it takes to solve. It's not going to be perfect since there's 
+Next I'm creating a maze solving class (CharacterNavigator) to determine how difficult a maze is to solve based on how many moves it takes to solve.
 
 ### Location of "IsMazeSolved"
 Currently the maze is marked as "solved" in Character/ICharacterView, logically it makes more sense to have that in Maze, should I change that?
